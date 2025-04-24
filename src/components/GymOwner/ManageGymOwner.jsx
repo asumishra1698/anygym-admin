@@ -1,82 +1,83 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckIcon, XIcon, EyeIcon, PencilIcon } from "@heroicons/react/solid";
 import Sidebar from "../../reuseable/Sidebar";
 
-const ManageAreaManager = () => {
+const ManageGymOwner = () => {
   const navigate = useNavigate();
-  const [selectedManager, setSelectedManager] = useState(null); // State to store the selected manager for the popup
+  const [selectedOwner, setSelectedOwner] = useState(null); // State to store the selected gym owner for the popup
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to toggle the details popup
   const [statuses, setStatuses] = useState({}); // State to track approval/rejection statuses
-  const [actionPopup, setActionPopup] = useState({ isOpen: false, action: "", manager: null }); // State for approve/reject popup
+  const [actionPopup, setActionPopup] = useState({
+    isOpen: false,
+    action: "",
+    owner: null,
+  }); // State for approve/reject popup
   const [reason, setReason] = useState(""); // State to store the reason for the action
 
-  const areaManagers = [
+  const gymOwners = [
     {
       id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
+      name: "Alice Johnson",
+      email: "alice.johnson@example.com",
       phone: "+91 9876543210",
-      dob: "1990-01-01",
+      dob: "1985-05-15",
       address: "123 Main Street, City, Country",
       idNumber: "1234-5678-9012",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
+      image: "https://via.placeholder.com/150",
     },
     {
       id: 2,
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
+      name: "Bob Smith",
+      email: "bob.smith@example.com",
       phone: "+91 9876543211",
-      dob: "1992-05-15",
+      dob: "1990-08-20",
       address: "456 Elm Street, City, Country",
       idNumber: "2345-6789-0123",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
+      image: "https://via.placeholder.com/150",
     },
     {
       id: 3,
-      name: "Michael Johnson",
-      email: "michael.johnson@example.com",
+      name: "Charlie Brown",
+      email: "charlie.brown@example.com",
       phone: "+91 9876543212",
-      dob: "1985-09-20",
+      dob: "1980-12-25",
       address: "789 Oak Street, City, Country",
       idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
+      image: "https://via.placeholder.com/150",
     },
   ];
 
-  const handleApprove = (manager) => {
-    setActionPopup({ isOpen: true, action: "approve", manager });
+  const handleApprove = (owner) => {
+    setActionPopup({ isOpen: true, action: "approve", owner });
   };
 
-  const handleReject = (manager) => {
-    setActionPopup({ isOpen: true, action: "reject", manager });
+  const handleReject = (owner) => {
+    setActionPopup({ isOpen: true, action: "reject", owner });
   };
 
   const handleSubmitAction = () => {
     if (actionPopup.action === "approve") {
-      setStatuses((prev) => ({ ...prev, [actionPopup.manager.id]: "approved" }));
+      setStatuses((prev) => ({ ...prev, [actionPopup.owner.id]: "approved" }));
     } else if (actionPopup.action === "reject") {
-      setStatuses((prev) => ({ ...prev, [actionPopup.manager.id]: "rejected" }));
+      setStatuses((prev) => ({ ...prev, [actionPopup.owner.id]: "rejected" }));
     }
-    setActionPopup({ isOpen: false, action: "", manager: null });
+    setActionPopup({ isOpen: false, action: "", owner: null });
     setReason(""); // Clear the reason
   };
 
-  const handleView = (manager) => {
-    setSelectedManager(manager);
-    setIsPopupOpen(true);
+  const handleView = (owner) => {
+    setSelectedOwner(owner); // Set the selected gym owner
+    setIsPopupOpen(true); // Open the popup
   };
 
   const closePopup = () => {
-    setIsPopupOpen(false);
-    setSelectedManager(null);
+    setIsPopupOpen(false); // Close the popup
+    setSelectedOwner(null); // Clear the selected gym owner
   };
 
-  const handleEdit = (manager) => {
-    navigate(`/edit-area-manager/${manager.id}`, { state: { manager } });
+  const handleEdit = (owner) => {
+    navigate(`/edit-gym-owner/${owner.id}`, { state: { owner } });
   };
 
   return (
@@ -89,54 +90,44 @@ const ManageAreaManager = () => {
       {/* Main Content */}
       <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">Area Manager</h2>
-          <div className="flex space-x-4">
-            {/* <button
-              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              All Approved
-            </button>
+          <h2 className="text-2xl font-semibold text-gray-700">Gym Owners</h2>
+          <div className="flex space-x-4">           
             <button
-              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              All Rejected
-            </button> */}
-            <button
-              onClick={() => navigate("/add-manager")}
+              onClick={() => navigate("/add-gym-owner")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
-              + Add Area Manager
+              + Add Gym Owner
             </button>
           </div>
         </div>
 
-        {/* Area Manager Cards */}
+        {/* Gym Owner Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {areaManagers.map((manager) => (
+          {gymOwners.map((owner) => (
             <div
-              key={manager.id}
+              key={owner.id}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
             >
               <img
-                src={manager.image}
-                alt={manager.name}
+                src={owner.image}
+                alt={owner.name}
                 className="w-24 h-24 rounded-full mb-4"
               />
-              <h3 className="text-lg font-bold text-gray-800">{manager.name}</h3>
-              <p className="text-sm text-gray-600">{manager.email}</p>
+              <h3 className="text-lg font-bold text-gray-800">{owner.name}</h3>
+              <p className="text-sm text-gray-600">{owner.email}</p>
               <div className="flex space-x-4 mt-4">
                 {/* View Button */}
                 <button
-                  onClick={() => handleView(manager)}
+                  onClick={() => handleView(owner)}
                   className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
                   title="View"
                 >
                   <EyeIcon className="w-5 h-5" />
                 </button>
                 {/* Approve Button */}
-                {!statuses[manager.id] && (
+                {!statuses[owner.id] && (
                   <button
-                    onClick={() => handleApprove(manager)}
+                    onClick={() => handleApprove(owner)}
                     className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
                     title="Approve"
                   >
@@ -144,9 +135,9 @@ const ManageAreaManager = () => {
                   </button>
                 )}
                 {/* Reject Button */}
-                {!statuses[manager.id] && (
+                {!statuses[owner.id] && (
                   <button
-                    onClick={() => handleReject(manager)}
+                    onClick={() => handleReject(owner)}
                     className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
                     title="Reject"
                   >
@@ -155,7 +146,7 @@ const ManageAreaManager = () => {
                 )}
                 {/* Edit Button */}
                 <button
-                  onClick={() => handleEdit(manager)}
+                  onClick={() => handleEdit(owner)}
                   className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
                   title="Edit"
                 >
@@ -163,12 +154,12 @@ const ManageAreaManager = () => {
                 </button>
               </div>
               {/* Badge */}
-              {statuses[manager.id] === "approved" && (
+              {statuses[owner.id] === "approved" && (
                 <span className="absolute top-2 right-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
                   Approved
                 </span>
               )}
-              {statuses[manager.id] === "rejected" && (
+              {statuses[owner.id] === "rejected" && (
                 <span className="absolute top-2 right-2 bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">
                   Rejected
                 </span>
@@ -179,11 +170,11 @@ const ManageAreaManager = () => {
       </main>
 
       {/* Popup for Viewing Details */}
-      {isPopupOpen && selectedManager && (
+      {isPopupOpen && selectedOwner && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Manager Details</h2>
+              <h2 className="text-xl font-bold text-gray-800">Owner Details</h2>
               <button
                 onClick={closePopup}
                 className="text-gray-500 hover:text-gray-700"
@@ -193,19 +184,19 @@ const ManageAreaManager = () => {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src={selectedManager.image}
-                alt={selectedManager.name}
+                src={selectedOwner.image}
+                alt={selectedOwner.name}
                 className="w-24 h-24 rounded-full mb-4"
               />
               <h3 className="text-lg font-bold text-gray-800">
-                {selectedManager.name}
+                {selectedOwner.name}
               </h3>
-              <p className="text-sm text-gray-600">{selectedManager.email}</p>
-              <p className="text-sm text-gray-600">{selectedManager.phone}</p>
-              <p className="text-sm text-gray-600">{selectedManager.dob}</p>
-              <p className="text-sm text-gray-600">{selectedManager.address}</p>
+              <p className="text-sm text-gray-600">{selectedOwner.email}</p>
+              <p className="text-sm text-gray-600">{selectedOwner.phone}</p>
+              <p className="text-sm text-gray-600">{selectedOwner.dob}</p>
+              <p className="text-sm text-gray-600">{selectedOwner.address}</p>
               <p className="text-sm text-gray-600">
-                ID: {selectedManager.idNumber}
+                ID: {selectedOwner.idNumber}
               </p>
             </div>
           </div>
@@ -217,7 +208,9 @@ const ManageAreaManager = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
-              {actionPopup.action === "approve" ? "Approve Manager" : "Reject Manager"}
+              {actionPopup.action === "approve"
+                ? "Approve Owner"
+                : "Reject Owner"}
             </h2>
             <textarea
               className="w-full border border-gray-300 rounded-lg p-2 mb-4"
@@ -227,7 +220,9 @@ const ManageAreaManager = () => {
             />
             <div className="flex justify-end space-x-4">
               <button
-                onClick={() => setActionPopup({ isOpen: false, action: "", manager: null })}
+                onClick={() =>
+                  setActionPopup({ isOpen: false, action: "", owner: null })
+                }
                 className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
               >
                 Cancel
@@ -246,4 +241,4 @@ const ManageAreaManager = () => {
   );
 };
 
-export default ManageAreaManager;
+export default ManageGymOwner;

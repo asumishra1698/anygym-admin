@@ -42,7 +42,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/gym-owner"
+              to="/manage-gym-owner"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <UserGroupIcon className="w-5 h-5 mr-3" />

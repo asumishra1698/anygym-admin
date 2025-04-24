@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import Sidebar from "../../reuseable/Sidebar";
 
-const AddAreaManager = () => {
+const AddGymOwner = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
-    dob: "",
     phone: "",
+    dob: "",
     address: "",
     idNumber: "",
-    profilePicture: null, // Added field for profile picture
+    profilePicture: null,
   });
 
   const handleChange = (e) => {
@@ -24,7 +23,7 @@ const AddAreaManager = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    console.log("Gym Owner Added:", formData);
     // Add your logic to handle form submission
   };
 
@@ -37,41 +36,22 @@ const AddAreaManager = () => {
 
       {/* Main Content */}
       <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Add Area Manager
-        </h1>
-
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Add Gym Owner</h1>
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md space-y-4"
         >
-          {/* First Name */}
+          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              First Name
+              Name
             </label>
             <input
               type="text"
-              name="firstName"
-              value={formData.firstName}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
-              placeholder="Enter first name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="Enter last name"
+              placeholder="Enter name"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
@@ -93,6 +73,22 @@ const AddAreaManager = () => {
             />
           </div>
 
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone
+            </label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
           {/* DOB */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -106,27 +102,6 @@ const AddAreaManager = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
-          </div>
-
-          {/* Phone No. */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone No.
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-3 rounded-l-lg border border-gray-300 bg-gray-100 text-gray-600">
-                +91
-              </span>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                className="flex-1 block w-full border border-gray-300 rounded-r-lg px-4 py-2"
-                required
-              />
-            </div>
           </div>
 
           {/* Address */}
@@ -145,17 +120,17 @@ const AddAreaManager = () => {
             />
           </div>
 
-          {/* Aadhar or PAN Number */}
+          {/* ID Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Aadhar or PAN Number
+              ID Number
             </label>
             <input
               type="text"
               name="idNumber"
               value={formData.idNumber}
               onChange={handleChange}
-              placeholder="Enter Aadhar or PAN number"
+              placeholder="Enter ID number"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
@@ -175,7 +150,7 @@ const AddAreaManager = () => {
             />
           </div>
 
-          
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
@@ -190,4 +165,4 @@ const AddAreaManager = () => {
   );
 };
 
-export default AddAreaManager;
+export default AddGymOwner;
