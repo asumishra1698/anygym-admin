@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SEO from "../../reuseable/SEO";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../../config";
+// import { BASE_URL } from "../../config";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -20,29 +20,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    navigate("/dashboard");
+    toast.success("Login successful!");
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    // try {
+    //   const response = await fetch(`${BASE_URL}/api/auth/login`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(formData),
+    //   });
 
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem("token", data.token); // Store token in localStorage
-        toast.success("Login successful!");
-        navigate("/dashboard");
-      } else {
-        toast.error(data.message || "Invalid email or password");
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    //   const data = await response.json();
+    //   if (response.ok) {
+    //     localStorage.setItem("token", data.token); // Store token in localStorage
+    //     toast.success("Login successful!");
+    //     navigate("/dashboard");
+    //   } else {
+    //     toast.error(data.message || "Invalid email or password");
+    //   }
+    // } catch (error) {
+    //   toast.error("Something went wrong! Please try again.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

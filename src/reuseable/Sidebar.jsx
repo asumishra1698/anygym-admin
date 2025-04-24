@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   HomeIcon,
   MapIcon,
@@ -12,6 +12,14 @@ import {
 } from "@heroicons/react/outline";
 
 const Sidebar = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleLogout = () => {
+    // Clear any authentication tokens or session data if needed
+    localStorage.removeItem("token"); // Example: Remove token from localStorage
+    navigate("/login"); // Navigate to the login page
+  };
+
   return (
     <aside className="w-64 bg-green-800 text-white flex flex-col h-screen">
       <div className="p-4 text-center border-b border-green-700">
@@ -54,7 +62,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/gym"
+              to="/manage-gym"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <OfficeBuildingIcon className="w-5 h-5 mr-3" />
@@ -63,7 +71,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/members"
+              to="/manage-members"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <UsersIcon className="w-5 h-5 mr-3" />
@@ -72,7 +80,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/subscriptions"
+              to="/manage-subscriptions"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <ClipboardListIcon className="w-5 h-5 mr-3" />
@@ -81,7 +89,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/trainers"
+              to="/manage-trainers"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <UsersIcon className="w-5 h-5 mr-3" />
@@ -102,7 +110,10 @@ const Sidebar = () => {
 
       {/* Logout Button */}
       <div className="p-4 border-t border-green-700">
-        <button className="flex items-center w-full py-2 px-4 bg-red-500 rounded hover:bg-red-600">
+        <button
+          onClick={handleLogout} // Attach the logout handler
+          className="flex items-center w-full py-2 px-4 bg-red-500 rounded hover:bg-red-600"
+        >
           <LogoutIcon className="w-5 h-5 mr-3" />
           Logout
         </button>
