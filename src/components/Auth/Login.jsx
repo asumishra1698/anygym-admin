@@ -32,7 +32,7 @@ const Login = () => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token); // Store token in localStorage
         toast.success("Login successful!");
         navigate("/dashboard");
       } else {
@@ -46,20 +46,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-green-100">
       <SEO
-        title="Login Page | My Website"
-        description="Login to access your account."
+        title="Login Page | AnyGym"
+        description="Login to access your AnyGym account."
       />
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
+        <h2 className="text-2xl font-bold text-green-800 text-center mb-6">
           Login
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-green-700"
             >
               Email
             </label>
@@ -70,14 +70,14 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
             />
           </div>
 
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-green-700"
             >
               Password
             </label>
@@ -88,13 +88,13 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
@@ -105,7 +105,7 @@ const Login = () => {
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="text-blue-600 hover:underline hover:text-blue-700"
+                className="text-green-600 hover:underline hover:text-green-700"
               >
                 Register
               </Link>
@@ -113,7 +113,7 @@ const Login = () => {
             <p className="text-sm text-gray-600 mt-2">
               <Link
                 to="/forgot-password"
-                className="text-blue-600 hover:underline hover:text-blue-700"
+                className="text-green-600 hover:underline hover:text-green-700"
               >
                 Forgot Password?
               </Link>

@@ -5,14 +5,12 @@ import { BASE_URL } from "../../config";
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email || ""; // Get email from previous step
-
+  const email = location.state?.email || ""; 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle password reset submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,7 +49,7 @@ const ResetPassword = () => {
       }
 
       alert("Password reset successfully! You can now log in.");
-      navigate("/login"); // Redirect to Login page
+      navigate("/login"); 
     } catch (error) {
       console.error("Reset Password Error:", error);
       setError(error.message || "Something went wrong. Please try again.");
