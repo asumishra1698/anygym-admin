@@ -14,9 +14,12 @@ import {
 const Sidebar = () => {
   return (
     <aside className="w-64 bg-green-800 text-white flex flex-col h-screen">
-      {/* Sidebar Header */}
-      <div className="p-4 text-center font-bold text-xl border-b border-green-700">
-        Gym Manager
+      <div className="p-4 text-center border-b border-green-700">
+        <img
+          src="/logo.webp"
+          alt="Any Gym Logo"
+          className="mx-auto w-48"
+        />
       </div>
 
       {/* Navigation Links */}

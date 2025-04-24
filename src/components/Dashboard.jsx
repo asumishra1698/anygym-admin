@@ -21,7 +21,7 @@ const Dashboard = () => {
           {/* Card 2 */}
           <div className="bg-green-100 p-6 rounded-lg shadow-md">
             <h2 className="text-lg font-bold text-green-800">
-              Toatl Area Manager
+              Total Area Manager
             </h2>
             <p className="text-3xl font-bold text-green-600 mt-4">1285</p>
           </div>
