@@ -7,16 +7,17 @@ import { BASE_URL, GYM_REQUEST_URL } from "../../config";
 import { getRequest } from "../../utils/apiHelper";
 import * as actionTypes from "../actions/actionTypes";
 
-function* fetchPendingGymsSaga() {
-  console.log("Fetching pending gyms.77777.."); // Debug log
-  try {
-    const response = yield call(getRequest, `${BASE_URL}${GYM_REQUEST_URL}`);    
+function* fetchPendingGymsSaga() { 
+  try {    
+    const response = yield call(getRequest, `${BASE_URL}${GYM_REQUEST_URL}`);
+    console.log("API Response:", response);
     if (response.status === 200) {
       yield put(fetchPendingGymsSuccess(response.data));
     } else {
       yield put(fetchPendingGymsFailure("Failed to fetch pending gyms"));
     }
-  } catch (error) {    
+  } catch (error) {
+    console.error("Error in fetchPendingGymsSaga:", error);
     yield put(fetchPendingGymsFailure(error.message || "Network error"));
   }
 }

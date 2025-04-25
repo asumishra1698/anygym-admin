@@ -5,7 +5,6 @@ import {
 } from "./actionTypes";
 
 export const fetchPendingGymsRequest = () => {
-  console.log("Fetching pending gyms.23.."); // ✅ Works fine
   return {
     type: FETCH_PENDING_GYMS_REQUEST,
   };

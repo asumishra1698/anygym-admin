@@ -6,12 +6,10 @@ import { fetchPendingGymsRequest } from "../../redux/actions/gymActions";
 const ManageGym = () => {
   const dispatch = useDispatch();
   const { gyms, loading, error } = useSelector((state) => state.gym);
-
-  useEffect(() => {  
-    console.log("Fetching pending gyms..."); 
-      
+  useEffect(() => {    
     dispatch(fetchPendingGymsRequest());
-  }, [dispatch]);
+  }, [dispatch]); 
+  
 
   return (
     <div className="flex h-screen">
@@ -27,7 +25,7 @@ const ManageGym = () => {
         </div>
 
         {/* Loading, Error, and Empty States */}
-        {loading && <p className="text-gray-600">Loading...</p>}
+        {loading && <p className="text-gray-600">Loading...</p>} 
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && gyms.length === 0 && (
           <p className="text-gray-600">No pending gyms available.</p>
