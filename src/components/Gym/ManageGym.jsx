@@ -7,7 +7,9 @@ const ManageGym = () => {
   const dispatch = useDispatch();
   const { gyms, loading, error } = useSelector((state) => state.gym);
 
-  useEffect(() => {    
+  useEffect(() => {  
+    console.log("Fetching pending gyms..."); 
+      
     dispatch(fetchPendingGymsRequest());
   }, [dispatch]);
 

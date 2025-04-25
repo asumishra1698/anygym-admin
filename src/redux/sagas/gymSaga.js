@@ -8,6 +8,7 @@ import { getRequest } from "../../utils/apiHelper";
 import * as actionTypes from "../actions/actionTypes";
 
 function* fetchPendingGymsSaga() {
+  console.log("Fetching pending gyms.77777.."); // Debug log
   try {
     const response = yield call(getRequest, `${BASE_URL}${GYM_REQUEST_URL}`);    
     if (response.status === 200) {
