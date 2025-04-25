@@ -12,6 +12,7 @@ import Sidebar from "../../reuseable/Sidebar";
 const ManageGymOwner = () => {
   const navigate = useNavigate();
   const [selectedOwner, setSelectedOwner] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [statuses, setStatuses] = useState({});
   const [actionPopup, setActionPopup] = useState({
@@ -265,11 +266,9 @@ const ManageGymOwner = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">Gym Owners</h2>
           <div className="flex space-x-4">
@@ -290,7 +289,7 @@ const ManageGymOwner = () => {
             </button>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentOwners.map((owner) => (
             <div

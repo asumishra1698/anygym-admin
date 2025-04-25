@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   MapIcon,
@@ -9,28 +9,45 @@ import {
   ClipboardListIcon,
   CogIcon,
   LogoutIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from "@heroicons/react/outline";
 
 const Sidebar = () => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
+  const [isCollapsed, setIsCollapsed] = useState(false); // State to toggle sidebar collapse
 
   const handleLogout = () => {
-    // Clear any authentication tokens or session data if needed
-    localStorage.removeItem("token"); // Example: Remove token from localStorage
-    navigate("/login"); // Navigate to the login page
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
-    <aside className="w-64 bg-green-800 text-white flex flex-col h-screen">
-      <div className="p-4 text-center border-b border-green-700">
-        <img
-          src="/logo.webp"
-          alt="Any Gym Logo"
-          className="mx-auto w-48"
-        />
-      </div>
+    <aside
+      className={`${
+        isCollapsed ? "w-20" : "w-64"
+      } bg-green-800 text-white flex flex-col h-screen transition-all duration-300 relative`}
+    >
+      
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute top-4 right-[-12px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
+      >
+        {isCollapsed ? (
+          <ChevronRightIcon fontSize={200} />
+        ) : (
+          <ChevronLeftIcon className="w-5 h-5" />
+        )}
+      </button>
 
-      {/* Navigation Links */}
+     
+      {!isCollapsed && (
+        <div className="p-4 text-center border-b border-green-700">
+          <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
+        </div>
+      )}
+
+      
       <nav className="flex-1 p-4">
         <ul className="space-y-4">
           <li>
@@ -38,8 +55,8 @@ const Sidebar = () => {
               to="/dashboard"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <HomeIcon className="w-5 h-5 mr-3" />
-              Dashboard
+              <HomeIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Dashboard</span>}
             </Link>
           </li>
           <li>
@@ -47,8 +64,8 @@ const Sidebar = () => {
               to="/manage-area-manager"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <MapIcon className="w-5 h-5 mr-3" />
-              Area Manager
+              <MapIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Area Manager</span>}
             </Link>
           </li>
           <li>
@@ -56,8 +73,8 @@ const Sidebar = () => {
               to="/manage-gym-owner"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <UserGroupIcon className="w-5 h-5 mr-3" />
-              Gym Owner
+              <UserGroupIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Gym Owner</span>}
             </Link>
           </li>
           <li>
@@ -65,8 +82,8 @@ const Sidebar = () => {
               to="/manage-gym"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <OfficeBuildingIcon className="w-5 h-5 mr-3" />
-              Gym
+              <OfficeBuildingIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Gym</span>}
             </Link>
           </li>
           <li>
@@ -74,8 +91,8 @@ const Sidebar = () => {
               to="/manage-members"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <UsersIcon className="w-5 h-5 mr-3" />
-              Members
+              <UsersIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Members</span>}
             </Link>
           </li>
           <li>
@@ -83,8 +100,8 @@ const Sidebar = () => {
               to="/manage-subscriptions"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <ClipboardListIcon className="w-5 h-5 mr-3" />
-              Subscriptions
+              <ClipboardListIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Subscriptions</span>}
             </Link>
           </li>
           <li>
@@ -92,8 +109,8 @@ const Sidebar = () => {
               to="/manage-trainers"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <UsersIcon className="w-5 h-5 mr-3" />
-              Trainers
+              <UsersIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Trainers</span>}
             </Link>
           </li>
           <li>
@@ -101,21 +118,21 @@ const Sidebar = () => {
               to="/settings"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <CogIcon className="w-5 h-5 mr-3" />
-              Settings
+              <CogIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Settings</span>}
             </Link>
           </li>
         </ul>
       </nav>
 
-      {/* Logout Button */}
+     
       <div className="p-4 border-t border-green-700">
         <button
-          onClick={handleLogout} // Attach the logout handler
+          onClick={handleLogout}
           className="flex items-center w-full py-2 px-4 bg-red-500 rounded hover:bg-red-600"
         >
-          <LogoutIcon className="w-5 h-5 mr-3" />
-          Logout
+          <LogoutIcon className="w-5 h-5" />
+          {!isCollapsed && <span className="ml-3">Logout</span>}
         </button>
       </div>
     </aside>

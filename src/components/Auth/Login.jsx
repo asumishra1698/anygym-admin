@@ -1,51 +1,42 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import SEO from "../../reuseable/SEO";
 import { toast } from "react-toastify";
-// import { BASE_URL } from "../../config";
+import { loginRequest } from "../../redux/actions/authActions";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    login_type: "with_password",
+    user_type: "ADMIN",
   });
-  const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error, token, message } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    navigate("/dashboard");
-    toast.success("Login successful!");
-
-    // try {
-    //   const response = await fetch(`${BASE_URL}/api/auth/login`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
-
-    //   const data = await response.json();
-    //   if (response.ok) {
-    //     localStorage.setItem("token", data.token); // Store token in localStorage
-    //     toast.success("Login successful!");
-    //     navigate("/dashboard");
-    //   } else {
-    //     toast.error(data.message || "Invalid email or password");
-    //   }
-    // } catch (error) {
-    //   toast.error("Something went wrong! Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
+    setIsSubmitted(true); 
+    dispatch(loginRequest(formData));
   };
+
+  if (token) {
+    toast.success(message || "Login successful!"); 
+    navigate("/dashboard");
+  }
+
+  if (isSubmitted && error) {
+    toast.error(error); 
+    setIsSubmitted(false); 
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">

@@ -18,21 +18,13 @@ import AddGymOwner from "./components/GymOwner/AddGymOwner";
 import EditGymOwner from "./components/GymOwner/EditGymOwner";
 
 import ManageGym from "./components/Gym/ManageGym";
-// import AddGym from "./components/Gym/AddGym";
-// import EditGym from "./components/Gym/EditGym";
 
 import ManageMembers from "./components/Members/ManageMembers";
-// import AddMember from "./components/Members/AddMember";
-// import EditMember from "./components/Members/EditMember";
 
 import ManageSubscriptions from "./components/Subscriptions/ManageSubscriptions";
-// import AddSubscription from "./components/Subscriptions/AddSubscription";
-// import EditSubscription from "./components/Subscriptions/EditSubscription";
-
 
 import ManageTrainers from "./components/Trainers/ManageTrainers";
-// import AddTrainer from "./components/Trainers/AddTrainer";
-// import EditTrainer from "./components/Trainers/EditTrainer";
+
 
 
 const App = () => {
@@ -56,20 +48,12 @@ const App = () => {
         <Route path="/edit-gym-owner/:id" element={<EditGymOwner />} />
 
         <Route path="/manage-gym" element={<ManageGym />} />
-        {/* <Route path="/add-gym" element={<AddGym />} />
-        <Route path="/edit-gym/:id" element={<EditGym />} /> */}
 
         <Route path="/manage-members" element={<ManageMembers />} />
-        {/* <Route path="/add-member" element={<AddMember />} />
-        <Route path="/edit-member/:id" element={<EditMember />} /> */}
 
         <Route path="/manage-subscriptions" element={<ManageSubscriptions />} />
-        {/* <Route path="/add-subscription" element={<AddSubscription />} />
-        <Route path="/edit-subscription/:id" element={<EditSubscription />} /> */}
 
         <Route path="/manage-trainers" element={<ManageTrainers />} />
-        {/* <Route path="/add-trainer" element={<AddTrainer />} />
-        <Route path="/edit-trainer/:id" element={<EditTrainer />} /> */}
 
 
       </Routes>

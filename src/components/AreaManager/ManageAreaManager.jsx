@@ -11,6 +11,7 @@ import Sidebar from "../../reuseable/Sidebar";
 
 const ManageAreaManager = () => {
   const navigate = useNavigate();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [selectedManager, setSelectedManager] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [statuses, setStatuses] = useState({});
@@ -100,16 +101,11 @@ const ManageAreaManager = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
-
-      {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">Area Manager</h2>
           <div className="flex space-x-4">
-           
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -198,14 +194,12 @@ const ManageAreaManager = () => {
           ))}
         </div>
       </main>
-
+      {/* Owner Details Popup */}
       {isPopupOpen && selectedManager && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">
-                Area Manager Details
-              </h2>
+              <h2 className="text-xl font-bold text-gray-800">Area Manager Details</h2>
               <button
                 onClick={closePopup}
                 className="text-gray-500 hover:text-gray-700"
@@ -219,65 +213,29 @@ const ManageAreaManager = () => {
                 alt={selectedManager.name}
                 className="w-24 h-24 rounded-full mb-4"
               />
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
+              <h3 className="text-lg font-bold text-gray-800">
                 {selectedManager.name}
               </h3>
-              <div className="w-full">
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">Email:</span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.email}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">Phone:</span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.phone}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">
-                    Date of Birth:
-                  </span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.dob}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">Address:</span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.address}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">
-                    ID Number:
-                  </span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.idNumber}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold text-gray-700">
-                    Registration Date:
-                  </span>
-                  <span className="ml-2 text-gray-600">
-                    {selectedManager.registrationDate}
-                  </span>
-                </div>
-              </div>
+              <p className="text-sm text-gray-600">{selectedManager.email}</p>
+              <p className="text-sm text-gray-600">{selectedManager.phone}</p>
+              <p className="text-sm text-gray-600">{selectedManager.dob}</p>
+              <p className="text-sm text-gray-600">{selectedManager.address}</p>
+              <p className="text-sm text-gray-600">
+                ID: {selectedManager.idNumber}
+              </p>
             </div>
           </div>
         </div>
       )}
 
+      {/* Action Popup */}
       {actionPopup.isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               {actionPopup.action === "approve"
-                ? "Approve Manager"
-                : "Reject Manager"}
+                ? "Approve Owner"
+                : "Reject Owner"}
             </h2>
             <textarea
               className="w-full border border-gray-300 rounded-lg p-2 mb-4"
@@ -288,7 +246,7 @@ const ManageAreaManager = () => {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() =>
-                  setActionPopup({ isOpen: false, action: "", manager: null })
+                  setActionPopup({ isOpen: false, action: "", owner: null })
                 }
                 className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
               >
