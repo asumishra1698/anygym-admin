@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SEO from "../../reuseable/SEO";
 import { toast } from "react-toastify";
 import { loginRequest } from "../../redux/actions/authActions";
@@ -9,10 +9,10 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    login_type: "with_password",
     user_type: "ADMIN",
+    login_type: "with_password",
   });
-  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const [isSubmitted, setIsSubmitted] = useState(false); // Track form submission
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, token, message } = useSelector((state) => state.auth);
@@ -24,18 +24,19 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true); 
+    setIsSubmitted(true); // Mark the form as submitted
     dispatch(loginRequest(formData));
   };
 
-  if (token) {
-    toast.success(message || "Login successful!"); 
+  if (isSubmitted && token) {
+    toast.success(message || "Login successful!"); // Show success toast only once
+    setIsSubmitted(false); // Reset submission state to prevent duplicate toasts
     navigate("/dashboard");
   }
 
   if (isSubmitted && error) {
-    toast.error(error); 
-    setIsSubmitted(false); 
+    toast.error(error); // Show error toast if login fails
+    setIsSubmitted(false); // Reset submission state after showing the error
   }
 
   return (
@@ -85,6 +86,27 @@ const Login = () => {
             />
           </div>
 
+          <div className="mb-4">
+            <label
+              htmlFor="user_type"
+              className="block text-sm font-medium text-green-700"
+            >
+              User Type
+            </label>
+            <select
+              name="user_type"
+              id="user_type"
+              value={formData.user_type}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+            >
+              <option value="ADMIN">Admin</option>
+              <option value="AREA_MANAGER">Area Manager</option>
+              <option value="SUB_ADMIN">Sub Admin</option>
+            </select>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
@@ -94,23 +116,7 @@ const Login = () => {
           </button>
 
           <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                className="text-green-600 hover:underline hover:text-green-700"
-              >
-                Register
-              </Link>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              <Link
-                to="/forgot-password"
-                className="text-green-600 hover:underline hover:text-green-700"
-              >
-                Forgot Password?
-              </Link>
-            </p>
+            {/* Additional links can go here */}
           </div>
         </form>
       </div>

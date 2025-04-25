@@ -9,7 +9,7 @@ import { postRequest } from "../../utils/apiHelper";
 
 function* loginSaga(action) {
   try {
-    // Use the reusable getPost method for the API call
+    
     const response = yield call(
       postRequest,
       `${BASE_URL}${LOGIN_URL}`,

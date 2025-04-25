@@ -15,11 +15,11 @@ import {
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to toggle sidebar collapse
+  const [isCollapsed, setIsCollapsed] = useState(false); 
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.clear(); 
+    navigate("/login"); 
   };
 
   return (

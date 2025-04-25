@@ -149,7 +149,7 @@ const ManageAreaManager = () => {
                   className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
                   title="View"
                 >
-                  <EyeIcon className="w-5 h-5" />
+                  <EyeIcon className="w-3 h-3" />
                 </button>
                 {!statuses[manager.id] && (
                   <button
@@ -157,7 +157,7 @@ const ManageAreaManager = () => {
                     className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
                     title="Approve"
                   >
-                    <CheckIcon className="w-5 h-5" />
+                    <CheckIcon className="w-3 h-3" />
                   </button>
                 )}
 
@@ -167,7 +167,7 @@ const ManageAreaManager = () => {
                     className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
                     title="Reject"
                   >
-                    <XIcon className="w-5 h-5" />
+                    <XIcon className="w-3 h-3" />
                   </button>
                 )}
 
@@ -176,7 +176,7 @@ const ManageAreaManager = () => {
                   className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
                   title="Edit"
                 >
-                  <PencilIcon className="w-5 h-5" />
+                  <PencilIcon className="w-3 h-3" />
                 </button>
               </div>
 
