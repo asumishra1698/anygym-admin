@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Sidebar from "../../reuseable/Sidebar";
+import { addAreaManagerRequest } from "../../redux/actions/areaManagerActions";
 
 const AddAreaManager = () => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,18 +28,23 @@ const AddAreaManager = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    // Add your logic to handle form submission
+
+    // Prepare form data for dispatch
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataToSend.append(key, formData[key]);
+    });
+
+    // Dispatch the action to add an area manager
+    dispatch(addAreaManagerRequest(formDataToSend));
   };
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white fixed h-full">
         <Sidebar />
       </div>
 
-      {/* Main Content */}
       <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Add Area Manager
@@ -175,7 +184,6 @@ const AddAreaManager = () => {
             />
           </div>
 
-          
           <div>
             <button
               type="submit"

@@ -9,8 +9,8 @@ import {
 
 const initialState = {
   loading: false,
-  areaManagers: [], // List of area managers
-  error: null, // Error message
+  areaManagers: [], 
+  error: null, 
 };
 
 const areaManagerReducer = (state = initialState, action) => {
