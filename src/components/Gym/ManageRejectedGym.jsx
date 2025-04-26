@@ -2,7 +2,7 @@ import Sidebar from "../../reuseable/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 
-const ManageApprovedGym = () => {
+const ManageRejectedGym = () => {
   const navigate = useNavigate();
 
   return (
@@ -13,9 +13,7 @@ const ManageApprovedGym = () => {
 
       <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">
-            Approved Gym
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-700">Rejected Gym</h2>
           <div className="flex space-x-4">
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
@@ -40,4 +38,4 @@ const ManageApprovedGym = () => {
   );
 };
 
-export default ManageApprovedGym;
+export default ManageRejectedGym;

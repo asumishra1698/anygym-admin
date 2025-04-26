@@ -10,7 +10,6 @@ export const fetchPendingGymsRequest = () => {
   };
 };
 
-
 export const fetchPendingGymsSuccess = (gyms) => ({
   type: FETCH_PENDING_GYMS_SUCCESS,
   payload: gyms,

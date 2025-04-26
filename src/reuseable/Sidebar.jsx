@@ -116,6 +116,14 @@ const Sidebar = () => {
                     <span>Approved Gym</span>
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="/manage-rejected-gym"
+                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  >
+                    <span>Rejected Gym</span>
+                  </Link>
+                </li>
               </ul>
             )}
           </li>
@@ -147,15 +155,7 @@ const Sidebar = () => {
                   >
                     <span>Amenities</span>
                   </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/manage-approved-gym"
-                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-                  >
-                    <span>Other</span>
-                  </Link>
-                </li>
+                </li>                
               </ul>
             )}
           </li>

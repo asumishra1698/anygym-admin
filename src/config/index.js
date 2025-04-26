@@ -5,3 +5,4 @@ export const LOGIN_URL = "/admin/login";
 export const GYM_REQUEST_URL = "/staff/gym-request-pending";
 
 export const AMENTIY_URL = "/admin/amenities";
+export const AREA_MANAGER_URL = "/admin/staff";
