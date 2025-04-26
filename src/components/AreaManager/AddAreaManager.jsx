@@ -10,7 +10,7 @@ const AddAreaManager = () => {
     phone: "",
     address: "",
     idNumber: "",
-    profilePicture: null, // Added field for profile picture
+    profilePicture: null,
   });
 
   const handleChange = (e) => {
