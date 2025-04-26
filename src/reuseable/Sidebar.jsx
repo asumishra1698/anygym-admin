@@ -15,11 +15,12 @@ import {
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState(false); 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isGymSubmenuOpen, setIsGymSubmenuOpen] = useState(false); // State for Gym submenu
 
   const handleLogout = () => {
-    localStorage.clear(); 
-    navigate("/login"); 
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (
@@ -28,7 +29,6 @@ const Sidebar = () => {
         isCollapsed ? "w-20" : "w-64"
       } bg-green-800 text-white flex flex-col h-screen transition-all duration-300 relative`}
     >
-      
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="absolute top-4 right-[-12px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
@@ -40,14 +40,12 @@ const Sidebar = () => {
         )}
       </button>
 
-     
       {!isCollapsed && (
         <div className="p-4 text-center border-b border-green-700">
           <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
         </div>
       )}
 
-      
       <nav className="flex-1 p-4">
         <ul className="space-y-4">
           <li>
@@ -77,15 +75,47 @@ const Sidebar = () => {
               {!isCollapsed && <span className="ml-3">Gym Owner</span>}
             </Link>
           </li>
+
+          {/* Gym Menu with Submenu */}
           <li>
-            <Link
-              to="/manage-gym"
-              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            <div
+              onClick={() => setIsGymSubmenuOpen(!isGymSubmenuOpen)}
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
             >
               <OfficeBuildingIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Gym</span>}
-            </Link>
+              {!isCollapsed && (
+                <>
+                  <span className="ml-3">Gym</span>
+                  <ChevronRightIcon
+                    className={`ml-auto w-4 h-4 transition-transform ${
+                      isGymSubmenuOpen ? "rotate-90" : ""
+                    }`}
+                  />
+                </>
+              )}
+            </div>
+            {!isCollapsed && isGymSubmenuOpen && (
+              <ul className="ml-8 mt-2 space-y-2">
+                <li>
+                  <Link
+                    to="/manage-pending-gym"
+                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  >
+                    <span>Pending Gym</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/manage-approved-gym"
+                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  >
+                    <span>Approved Gym</span>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
+
           <li>
             <Link
               to="/manage-members"
@@ -125,7 +155,6 @@ const Sidebar = () => {
         </ul>
       </nav>
 
-     
       <div className="p-4 border-t border-green-700">
         <button
           onClick={handleLogout}

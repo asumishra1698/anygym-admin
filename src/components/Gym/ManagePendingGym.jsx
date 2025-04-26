@@ -1,31 +1,50 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { SearchIcon } from "@heroicons/react/solid";
 import Sidebar from "../../reuseable/Sidebar";
 import { fetchPendingGymsRequest } from "../../redux/actions/gymActions";
+import { BASE_URL } from "../../config";
 
 const ManageGym = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { gyms, loading, error } = useSelector((state) => state.gym);
-  useEffect(() => {    
+  useEffect(() => {
     dispatch(fetchPendingGymsRequest());
-  }, [dispatch]); 
-  
+  }, [dispatch]);
 
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">Pending Gyms</h2>
+          <h2 className="text-2xl font-semibold text-gray-700">Pending GYM</h2>
+          <div className="flex space-x-4">
+            <div className="relative">
+              <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+              />
+            </div>
+
+            <button
+              onClick={() => navigate("/add-manager")}
+              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              + Add GYM
+            </button>
+          </div>
         </div>
 
         {/* Loading, Error, and Empty States */}
-        {loading && <p className="text-gray-600">Loading...</p>} 
+        {loading && <p className="text-gray-600">Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && gyms.length === 0 && (
           <p className="text-gray-600">No pending gyms available.</p>
@@ -76,7 +95,7 @@ const ManageGym = () => {
                   Gallery:
                 </h4>
                 <img
-                  src={gym.gallery.gym_front_gallery[0]}
+                  src={`${BASE_URL}${gym.gallery.gym_front_gallery[0]}`}
                   alt="Gym Front"
                   className="w-full h-40 object-cover rounded-lg mb-2"
                 />
@@ -89,7 +108,7 @@ const ManageGym = () => {
                     controls
                     className="w-full h-40 object-cover rounded-lg mb-2"
                   >
-                    <source src={video} type="video/mp4" />
+                    <source src={`${BASE_URL}${video}`} type="video/mp4" />
                   </video>
                 ))}
 
@@ -100,7 +119,7 @@ const ManageGym = () => {
                 {gym.gallery.service_gallery.map((image, index) => (
                   <img
                     key={index}
-                    src={image}
+                    src={`${BASE_URL}${image}`}
                     alt={`Service ${index + 1}`}
                     className="w-full h-40 object-cover rounded-lg mb-2"
                   />

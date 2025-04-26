@@ -17,7 +17,7 @@ import ManageGymOwner from "./components/GymOwner/ManageGymOwner";
 import AddGymOwner from "./components/GymOwner/AddGymOwner";
 import EditGymOwner from "./components/GymOwner/EditGymOwner";
 
-import ManageGym from "./components/Gym/ManageGym";
+import ManagePendingGym from "./components/Gym/ManagePendingGym";
 
 import ManageMembers from "./components/Members/ManageMembers";
 
@@ -104,10 +104,10 @@ const App = () => {
           }
         />
         <Route
-          path="/manage-gym"
+          path="/manage-pending-gym"
           element={
             <PrivateRoute>
-              <ManageGym />
+              <ManagePendingGym />
             </PrivateRoute>
           }
         />
