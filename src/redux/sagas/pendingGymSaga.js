@@ -2,7 +2,7 @@ import { call, put, takeLeading } from "redux-saga/effects";
 import {
   fetchPendingGymsSuccess,
   fetchPendingGymsFailure,
-} from "../actions/gymActions";
+} from "../actions/pendingGymActions";
 import { BASE_URL, GYM_REQUEST_URL } from "../../config";
 import { getRequest } from "../../utils/apiHelper";
 import * as actionTypes from "../actions/actionTypes";

@@ -146,7 +146,7 @@ const ManageAreaManager = () => {
                 {/* View Button */}
                 <button
                   onClick={() => handleView(manager)}
-                  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
                   title="View"
                 >
                   <EyeIcon className="w-3 h-3" />

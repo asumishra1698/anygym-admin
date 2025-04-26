@@ -9,6 +9,8 @@ import Login from "./components/Auth/Login";
 // import ResetPassword from "./components/Auth/ResetPassword";
 // import OTPVerification from "./components/Auth/OTPVerification";
 
+import Amenities from "./components/Settings/Amenities/ManageAmenities";
+
 import AreaManager from "./components/AreaManager/ManageAreaManager";
 import EditAreaManager from "./components/AreaManager/EditAreaManager";
 import AddAreaManager from "./components/AreaManager/AddAreaManager";
@@ -18,6 +20,7 @@ import AddGymOwner from "./components/GymOwner/AddGymOwner";
 import EditGymOwner from "./components/GymOwner/EditGymOwner";
 
 import ManagePendingGym from "./components/Gym/ManagePendingGym";
+import ManageApprovedGym from "./components/Gym/ManageApprovedGym";
 
 import ManageMembers from "./components/Members/ManageMembers";
 
@@ -44,6 +47,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/amenities"
+          element={
+            <PrivateRoute>
+              <Amenities />
             </PrivateRoute>
           }
         />
@@ -108,6 +119,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <ManagePendingGym />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-approved-gym"
+          element={
+            <PrivateRoute>
+              <ManageApprovedGym />
             </PrivateRoute>
           }
         />

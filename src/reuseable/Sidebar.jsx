@@ -5,9 +5,6 @@ import {
   MapIcon,
   UserGroupIcon,
   OfficeBuildingIcon,
-  UsersIcon,
-  ClipboardListIcon,
-  CogIcon,
   LogoutIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -16,7 +13,8 @@ import {
 const Sidebar = () => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isGymSubmenuOpen, setIsGymSubmenuOpen] = useState(false); // State for Gym submenu
+  const [isGymSubmenuOpen, setIsGymSubmenuOpen] = useState(false);
+  const [isSettingSubmenuOpen, setIsSettingSubmenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -27,8 +25,12 @@ const Sidebar = () => {
     <aside
       className={`${
         isCollapsed ? "w-20" : "w-64"
-      } bg-green-800 text-white flex flex-col h-screen transition-all duration-300 relative`}
+      } bg-gradient-to-br from-green-700 to-green-800 text-white flex flex-col h-screen transition-all duration-300 relative`}
+      style={{
+        background: "linear-gradient(45deg, #29a643, #1e7d34)",
+      }}
     >
+      {/* Collapse Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="absolute top-4 right-[-12px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
@@ -40,13 +42,15 @@ const Sidebar = () => {
         )}
       </button>
 
+      {/* Logo */}
       {!isCollapsed && (
         <div className="p-4 text-center border-b border-green-700">
           <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
         </div>
       )}
 
-      <nav className="flex-1 p-4">
+      {/* Navigation Menu */}
+      <nav className="flex-1 p-4 overflow-y-auto hide-scrollbar">
         <ul className="space-y-4">
           <li>
             <Link
@@ -116,45 +120,49 @@ const Sidebar = () => {
             )}
           </li>
 
+          {/* Settings Menu with Submenu */}
           <li>
-            <Link
-              to="/manage-members"
-              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            <div
+              onClick={() => setIsSettingSubmenuOpen(!isSettingSubmenuOpen)}
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
             >
-              <UsersIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Members</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/manage-subscriptions"
-              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-            >
-              <ClipboardListIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Subscriptions</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/manage-trainers"
-              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-            >
-              <UsersIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Trainers</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/settings"
-              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-            >
-              <CogIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Settings</span>}
-            </Link>
+              <OfficeBuildingIcon className="w-5 h-5" />
+              {!isCollapsed && (
+                <>
+                  <span className="ml-3">Settings</span>
+                  <ChevronRightIcon
+                    className={`ml-auto w-4 h-4 transition-transform ${
+                      isSettingSubmenuOpen ? "rotate-90" : ""
+                    }`}
+                  />
+                </>
+              )}
+            </div>
+            {!isCollapsed && isSettingSubmenuOpen && (
+              <ul className="ml-8 mt-2 space-y-2">
+                <li>
+                  <Link
+                    to="/amenities"
+                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  >
+                    <span>Amenities</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/manage-approved-gym"
+                    className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  >
+                    <span>Other</span>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
         </ul>
       </nav>
 
+      {/* Logout Button */}
       <div className="p-4 border-t border-green-700">
         <button
           onClick={handleLogout}
