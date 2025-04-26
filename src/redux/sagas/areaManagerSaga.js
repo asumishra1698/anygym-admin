@@ -16,12 +16,8 @@ import { BASE_URL, AREA_MANAGER_URL } from "../../config";
 function* fetchAreaManagersSaga() {
   try {
     const response = yield call(getRequest, `${BASE_URL}${AREA_MANAGER_URL}`);
-    console.log("API Response:", response);
-
     if (response.status === 200) {
       const records = response.data.records;
-      console.log("Extracted Records:", records);
-
       if (Array.isArray(records)) {
         yield put(fetchAreaManagersSuccess(records));
       } else {
@@ -47,18 +43,37 @@ function* fetchAreaManagersSaga() {
 // Add Area Manager Saga
 function* addAreaManagerSaga(action) {
   try {
+    // Construct FormData in the saga
+    const formData = new FormData();
+    Object.keys(action.payload).forEach((key) => {
+      formData.append(key, action.payload[key]);
+    });
+
+    // Log the FormData for debugging
+    console.log("FormData:", [...formData.entries()]);
+
     const response = yield call(
       postRequest,
       `${BASE_URL}${AREA_MANAGER_URL}`,
-      action.payload
+      formData,
+      {
+        "Content-Type": "multipart/form-data", // Ensure correct content type for FormData
+      }
     );
+
     if (response.status === 200) {
       yield put(addAreaManagerSuccess(response.data));
+      alert("Area Manager added successfully!");
     } else {
-      yield put(addAreaManagerFailure("Failed to add area manager"));
+      const errors = response.data.errors || {};
+      console.error("Validation Errors:", errors);
+      yield put(addAreaManagerFailure(errors));
+      alert("Failed to add area manager. Check the form fields.");
     }
   } catch (error) {
+    console.error("Error in addAreaManagerSaga:", error);
     yield put(addAreaManagerFailure(error.message || "Network error"));
+    alert("An error occurred while adding the area manager.");
   }
 }
 

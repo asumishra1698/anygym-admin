@@ -7,13 +7,17 @@ const AddAreaManager = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fname: "",
+    lname: "",
     email: "",
+    mobile: "",
     dob: "",
-    phone: "",
     address: "",
-    idNumber: "",
+    latitude: "",
+    longitude: "",
+    role: "",
+    password: "",
+    cpassword: "",
     profilePicture: null,
   });
 
@@ -28,15 +32,13 @@ const AddAreaManager = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Prepare form data for dispatch
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
-
-    // Dispatch the action to add an area manager
-    dispatch(addAreaManagerRequest(formDataToSend));
+  
+    // Dispatch the action with plain data
+    dispatch(
+      addAreaManagerRequest({
+        ...formData,
+      })
+    );
   };
 
   return (
@@ -61,8 +63,8 @@ const AddAreaManager = () => {
             </label>
             <input
               type="text"
-              name="firstName"
-              value={formData.firstName}
+              name="fname"
+              value={formData.fname}
               onChange={handleChange}
               placeholder="Enter first name"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
@@ -77,8 +79,8 @@ const AddAreaManager = () => {
             </label>
             <input
               type="text"
-              name="lastName"
-              value={formData.lastName}
+              name="lname"
+              value={formData.lname}
               onChange={handleChange}
               placeholder="Enter last name"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
@@ -102,6 +104,22 @@ const AddAreaManager = () => {
             />
           </div>
 
+          {/* Mobile */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Mobile
+            </label>
+            <input
+              type="text"
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              placeholder="Enter mobile number"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
           {/* DOB */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -115,27 +133,6 @@ const AddAreaManager = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
-          </div>
-
-          {/* Phone No. */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone No.
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-3 rounded-l-lg border border-gray-300 bg-gray-100 text-gray-600">
-                +91
-              </span>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                className="flex-1 block w-full border border-gray-300 rounded-r-lg px-4 py-2"
-                required
-              />
-            </div>
           </div>
 
           {/* Address */}
@@ -154,17 +151,81 @@ const AddAreaManager = () => {
             />
           </div>
 
-          {/* Aadhar or PAN Number */}
+          {/* Latitude */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Aadhar or PAN Number
+              Latitude
             </label>
             <input
               type="text"
-              name="idNumber"
-              value={formData.idNumber}
+              name="latitude"
+              value={formData.latitude}
               onChange={handleChange}
-              placeholder="Enter Aadhar or PAN number"
+              placeholder="Enter latitude"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Longitude */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Longitude
+            </label>
+            <input
+              type="text"
+              name="longitude"
+              value={formData.longitude}
+              onChange={handleChange}
+              placeholder="Enter longitude"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Role */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Role
+            </label>
+            <input
+              type="text"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              placeholder="Enter role"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="cpassword"
+              value={formData.cpassword}
+              onChange={handleChange}
+              placeholder="Confirm password"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />

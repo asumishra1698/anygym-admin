@@ -1,25 +1,24 @@
 import axios from "axios";
 
 // POST Request Helper
-export const postRequest = async (url, payload) => {
+export const postRequest = async (url, payload, headers = {}) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(url, {
-      method: "POST",
+
+    // Use axios for better FormData handling
+    const response = await axios.post(url, payload, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        ...headers, // Merge custom headers
       },
-      body: JSON.stringify(payload),
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to process the request.");
-    }
-    return await response.json();
+
+    return response.data;
   } catch (error) {
     console.error("Error in postRequest:", error);
-    throw new Error(error.message || "Network error. Please try again.");
+    throw new Error(
+      error.response?.data?.message || "Network error. Please try again."
+    );
   }
 };
 
