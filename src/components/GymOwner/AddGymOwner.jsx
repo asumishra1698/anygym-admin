@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../../reuseable/Sidebar";
 
 const AddGymOwner = () => {
+   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,12 +31,10 @@ const AddGymOwner = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Add Gym Owner</h1>
         <form
           onSubmit={handleSubmit}

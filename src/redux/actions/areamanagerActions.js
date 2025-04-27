@@ -14,26 +14,26 @@ export const fetchAreaManagersRequest = () => ({
 
 export const fetchAreaManagersSuccess = (managers) => ({
   type: FETCH_AREA_MANAGERS_SUCCESS,
-  payload: managers, // List of area managers
+  payload: managers, 
 });
 
 export const fetchAreaManagersFailure = (error) => ({
   type: FETCH_AREA_MANAGERS_FAILURE,
-  payload: error, // Error message
+  payload: error, 
 });
 
 // Add Area Manager Actions
 export const addAreaManagerRequest = (managerData) => ({
   type: ADD_AREA_MANAGER_REQUEST,
-  payload: managerData, // Data for the new area manager
+  payload: managerData, 
 });
 
 export const addAreaManagerSuccess = (manager) => ({
   type: ADD_AREA_MANAGER_SUCCESS,
-  payload: manager, // Newly added area manager
+  payload: manager, 
 });
 
 export const addAreaManagerFailure = (error) => ({
   type: ADD_AREA_MANAGER_FAILURE,
-  payload: error, // Error message
+  payload: error, 
 });

@@ -16,8 +16,8 @@ const ManageAreaManager = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [selectedManager, setSelectedManager] = useState(null); // State for selected manager
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [selectedManager, setSelectedManager] = useState(null); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   // Fetch area managers from Redux store
   const {
@@ -26,19 +26,18 @@ const ManageAreaManager = () => {
     error,
   } = useSelector((state) => state.areaManager);
 
-  useEffect(() => {
-    // Dispatch action to fetch area managers
+  useEffect(() => {    
     dispatch(fetchAreaManagersRequest());
   }, [dispatch]);
 
   const handleView = (manager) => {
-    setSelectedManager(manager); // Set the selected manager
-    setIsModalOpen(true); // Open the modal
+    setSelectedManager(manager); 
+    setIsModalOpen(true); 
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
-    setSelectedManager(null); // Clear the selected manager
+    setIsModalOpen(false); 
+    setSelectedManager(null); 
   };
 
   const handleEdit = (manager) => {
@@ -174,6 +173,9 @@ const ManageAreaManager = () => {
             </p>
             <p>
               <strong>Mobile:</strong> {selectedManager.mobile}
+            </p>
+            <p>
+              <strong>DOB:</strong> {selectedManager.dob}
             </p>
             <p>
               <strong>Address:</strong>{" "}

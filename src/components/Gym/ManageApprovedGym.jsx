@@ -1,20 +1,20 @@
 import Sidebar from "../../reuseable/Sidebar";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 
 const ManageApprovedGym = () => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">
-            Approved Gym
+            Approved Gyms
           </h2>
           <div className="flex space-x-4">
             <div className="relative">
@@ -28,7 +28,7 @@ const ManageApprovedGym = () => {
 
             <button
               onClick={() => navigate("/add-gym")}
-              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
+              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               + Add Gym
             </button>

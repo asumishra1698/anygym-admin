@@ -3,11 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Dashboard from "./components/Dashboard";
-// import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
-// import ForgotPassword from "./components/Auth/ForgotPassword";
-// import ResetPassword from "./components/Auth/ResetPassword";
-// import OTPVerification from "./components/Auth/OTPVerification";
 
 import Amenities from "./components/Settings/Amenities/ManageAmenities";
 
@@ -29,7 +25,7 @@ import ManageSubscriptions from "./components/Subscriptions/ManageSubscriptions"
 
 import ManageTrainers from "./components/Trainers/ManageTrainers";
 
-import PrivateRoute from "./components/PrivateRoute"; 
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   return (
@@ -37,10 +33,6 @@ const App = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/verify-otp" element={<OTPVerification />} /> */}
 
         {/* Protected Routes */}
         <Route
@@ -51,19 +43,19 @@ const App = () => {
             </PrivateRoute>
           }
         />
-         <Route
-          path="/amenities"
-          element={
-            <PrivateRoute>
-              <Amenities />
-            </PrivateRoute>
-          }
-        />
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/amenities"
+          element={
+            <PrivateRoute>
+              <Amenities />
             </PrivateRoute>
           }
         />
@@ -132,18 +124,18 @@ const App = () => {
           }
         />
         <Route
-          path="/manage-approved-gym"
-          element={
-            <PrivateRoute>
-              <ManageApprovedGym />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/manage-rejected-gym"
           element={
             <PrivateRoute>
               <ManageRejectedGym />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-members"
+          element={
+            <PrivateRoute>
+              <ManageMembers />
             </PrivateRoute>
           }
         />

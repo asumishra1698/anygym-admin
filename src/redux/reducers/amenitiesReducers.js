@@ -5,6 +5,9 @@ import {
   FETCH_AMENITIES_REQUEST,
   FETCH_AMENITIES_SUCCESS,
   FETCH_AMENITIES_FAILURE,
+  UPDATE_AMENITY_REQUEST, // New action type
+  UPDATE_AMENITY_SUCCESS, // New action type
+  UPDATE_AMENITY_FAILURE, // New action type
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -16,6 +19,7 @@ const initialState = {
 
 const amenityReducer = (state = initialState, action) => {
   switch (action.type) {
+    // Add Amenity
     case ADD_AMENITY_REQUEST:
       return { ...state, loading: true, error: null };
     case ADD_AMENITY_SUCCESS:
@@ -23,12 +27,29 @@ const amenityReducer = (state = initialState, action) => {
     case ADD_AMENITY_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
+    // Fetch Amenities
     case FETCH_AMENITIES_REQUEST:
       return { ...state, loading: true, error: null };
     case FETCH_AMENITIES_SUCCESS:
       return { ...state, loading: false, amenities: action.payload };
     case FETCH_AMENITIES_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
+    // Update Amenity
+    case UPDATE_AMENITY_REQUEST:
+      return { ...state, loading: true, error: null };
+    case UPDATE_AMENITY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        amenities: state.amenities.map((amenity) =>
+          amenity._id === action.payload._id ? action.payload : amenity
+        ),
+        error: null,
+      };
+    case UPDATE_AMENITY_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Sidebar from "../../reuseable/Sidebar";
 import { addAreaManagerRequest } from "../../redux/actions/areaManagerActions";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddAreaManager = () => {
   const dispatch = useDispatch();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -12,6 +15,7 @@ const AddAreaManager = () => {
     email: "",
     mobile: "",
     dob: "",
+    idNumber: "",
     address: "",
     latitude: "",
     longitude: "",
@@ -30,31 +34,40 @@ const AddAreaManager = () => {
     setFormData({ ...formData, profilePicture: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Dispatch the action with plain data
-    dispatch(
-      addAreaManagerRequest({
-        ...formData,
-      })
-    );
+    if (formData.password !== formData.cpassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+    try {
+      const response = await dispatch(
+        addAreaManagerRequest({
+          ...formData,
+        })
+      );
+      if (response?.status === 200) {
+        toast.success(response.message || "Area Manager added successfully!");
+      } else {
+        toast.error(response.message || "Failed to add Area Manager!");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding the Area Manager.");
+    }
   };
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
+      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Add Area Manager
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-lg shadow-md space-y-4"
+          className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {/* First Name */}
           <div>
@@ -199,6 +212,22 @@ const AddAreaManager = () => {
             />
           </div>
 
+          {/* Aadhar Card or PAN Number */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Aadhar Card or PAN Number
+            </label>
+            <input
+              type="text"
+              name="idNumber"
+              value={formData.idNumber}
+              onChange={handleChange}
+              placeholder="Enter Aadhar or PAN number"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
           {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -232,7 +261,7 @@ const AddAreaManager = () => {
           </div>
 
           {/* Profile Picture */}
-          <div>
+          <div className="md:col-span-3">
             <label className="block text-sm font-medium text-gray-700">
               Upload Profile Picture
             </label>
@@ -245,7 +274,8 @@ const AddAreaManager = () => {
             />
           </div>
 
-          <div>
+          {/* Submit Button */}
+          <div className="md:col-span-3">
             <button
               type="submit"
               className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition duration-300"
@@ -254,6 +284,8 @@ const AddAreaManager = () => {
             </button>
           </div>
         </form>
+
+        <ToastContainer />
       </main>
     </div>
   );

@@ -5,12 +5,15 @@ import {
   ADD_AREA_MANAGER_REQUEST,
   ADD_AREA_MANAGER_SUCCESS,
   ADD_AREA_MANAGER_FAILURE,
+  UPDATE_AREA_MANAGER_REQUEST, 
+  UPDATE_AREA_MANAGER_SUCCESS, 
+  UPDATE_AREA_MANAGER_FAILURE, 
 } from "../actions/actionTypes";
 
 const initialState = {
   loading: false,
-  areaManagers: [], 
-  error: null, 
+  areaManagers: [],
+  error: null,
 };
 
 const areaManagerReducer = (state = initialState, action) => {
@@ -29,9 +32,24 @@ const areaManagerReducer = (state = initialState, action) => {
     case ADD_AREA_MANAGER_REQUEST:
       return { ...state, loading: true, error: null };
     case ADD_AREA_MANAGER_SUCCESS:
-      return { ...state, loading: false, error: null }; // Optionally update state with the new manager
+      return { ...state, loading: false, error: null };
     case ADD_AREA_MANAGER_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
+    case UPDATE_AREA_MANAGER_REQUEST:
+      return { ...state, loading: true, error: null };
+    case UPDATE_AREA_MANAGER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        areaManagers: state.areaManagers.map((manager) =>
+          manager._id === action.payload._id ? action.payload : manager
+        ),
+        error: null,
+      };
+    case UPDATE_AREA_MANAGER_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

@@ -5,7 +5,7 @@ import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
 import { FaCheck, FaTimes } from "react-icons/fa"; // Import React Icons
 import Sidebar from "../../reuseable/Sidebar";
 import { fetchPendingGymsRequest } from "../../redux/actions/pendingGymActions";
-import { BASE_URL, MEDIA_URL } from "../../config";
+import { MEDIA_URL } from "../../config";
 
 const ManageGym = () => {
   const dispatch = useDispatch();
@@ -16,23 +16,19 @@ const ManageGym = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
 
-  // Fetch pending gyms on component mount
   useEffect(() => {
     dispatch(fetchPendingGymsRequest());
   }, [dispatch]);
 
-  // Handle opening the modal with gym details
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);
     setIsModalOpen(true);
   };
 
-  // Handle approving a gym
   const handleApprove = (gymId) => {
     console.log(`Gym approved: ${gymId}`);
   };
 
-  // Handle rejecting a gym
   const handleReject = (gymId) => {
     console.log(`Gym rejected: ${gymId}`);
   };
@@ -47,7 +43,6 @@ const ManageGym = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">Pending Gyms</h2>
           <div className="flex space-x-4">
-            {/* Search Input */}
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -57,7 +52,6 @@ const ManageGym = () => {
               />
             </div>
 
-            {/* Add Gym Button */}
             <button
               onClick={() => navigate("/add-gym")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"

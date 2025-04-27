@@ -4,12 +4,10 @@ import axios from "axios";
 export const postRequest = async (url, payload, headers = {}) => {
   try {
     const token = localStorage.getItem("token");
-
-    // Use axios for better FormData handling
     const response = await axios.post(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        ...headers, // Merge custom headers
+        ...headers,
       },
     });
 

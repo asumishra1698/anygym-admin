@@ -8,6 +8,9 @@ import {
   LogoutIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ClipboardListIcon,
+  CogIcon,  
+  AcademicCapIcon,
 } from "@heroicons/react/outline";
 
 const Sidebar = () => {
@@ -75,7 +78,7 @@ const Sidebar = () => {
               to="/manage-gym-owner"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
-              <UserGroupIcon className="w-5 h-5" />
+              <OfficeBuildingIcon className="w-5 h-5" />
               {!isCollapsed && <span className="ml-3">Gym Owner</span>}
             </Link>
           </li>
@@ -128,13 +131,43 @@ const Sidebar = () => {
             )}
           </li>
 
+          <li>
+            <Link
+              to="/manage-trainers"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <AcademicCapIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Trainers</span>}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/manage-members"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <UserGroupIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Members</span>}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/manage-subscriptions"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <ClipboardListIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Subscriptions</span>}
+            </Link>
+          </li>
+
           {/* Settings Menu with Submenu */}
           <li>
             <div
               onClick={() => setIsSettingSubmenuOpen(!isSettingSubmenuOpen)}
               className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
             >
-              <OfficeBuildingIcon className="w-5 h-5" />
+              <CogIcon className="w-5 h-5" />
               {!isCollapsed && (
                 <>
                   <span className="ml-3">Settings</span>
@@ -155,7 +188,7 @@ const Sidebar = () => {
                   >
                     <span>Amenities</span>
                   </Link>
-                </li>                
+                </li>
               </ul>
             )}
           </li>
