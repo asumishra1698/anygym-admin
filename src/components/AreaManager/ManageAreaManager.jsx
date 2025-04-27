@@ -16,8 +16,9 @@ const ManageAreaManager = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [selectedManager, setSelectedManager] = useState(null); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedManager, setSelectedManager] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch area managers from Redux store
   const {
@@ -26,23 +27,33 @@ const ManageAreaManager = () => {
     error,
   } = useSelector((state) => state.areaManager);
 
-  useEffect(() => {    
+  useEffect(() => {
     dispatch(fetchAreaManagersRequest());
   }, [dispatch]);
 
   const handleView = (manager) => {
-    setSelectedManager(manager); 
-    setIsModalOpen(true); 
+    setSelectedManager(manager);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); 
-    setSelectedManager(null); 
+    setIsModalOpen(false);
+    setSelectedManager(null);
   };
 
   const handleEdit = (manager) => {
     navigate(`/edit-area-manager/${manager._id}`, { state: { manager } });
   };
+
+  // Filter area managers based on search query
+  const filteredManagers = areaManagers.filter((manager) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      manager.name.toLowerCase().includes(query) ||
+      manager.email.toLowerCase().includes(query) ||
+      (manager.mobile && String(manager.mobile).includes(query)) // Ensure mobile is a string
+    );
+  });
 
   return (
     <div className="flex h-screen">
@@ -59,7 +70,9 @@ const ManageAreaManager = () => {
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search by name, email or mobile..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update search query
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
@@ -77,14 +90,14 @@ const ManageAreaManager = () => {
         {/* Loading, Error, and Empty States */}
         {loading && <p className="text-gray-600">Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && areaManagers.length === 0 && (
-          <p className="text-gray-600">No area managers available.</p>
+        {!loading && !error && filteredManagers.length === 0 && (
+          <p className="text-gray-600">No area managers found.</p>
         )}
 
         {/* Area Manager Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.isArray(areaManagers) &&
-            areaManagers.map((manager) => (
+          {Array.isArray(filteredManagers) &&
+            filteredManagers.map((manager) => (
               <div
                 key={manager._id}
                 className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
