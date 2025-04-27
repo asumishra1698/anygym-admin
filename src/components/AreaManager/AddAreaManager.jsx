@@ -16,13 +16,15 @@ const AddAreaManager = () => {
     mobile: "",
     dob: "",
     idNumber: "",
+    referral_id: "", // Referral ID field
+    status: "Active", // Default status
+    profilePicture: null,
     address: "",
     latitude: "",
     longitude: "",
     role: "",
     password: "",
     cpassword: "",
-    profilePicture: null,
   });
 
   const handleChange = (e) => {
@@ -226,6 +228,38 @@ const AddAreaManager = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
+          </div>
+
+          {/* Referral ID */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Referral ID
+            </label>
+            <input
+              type="text"
+              name="referral_id"
+              value={formData.referral_id}
+              onChange={handleChange}
+              placeholder="Enter referral ID"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+            />
+          </div>
+
+          {/* Status Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Status
+            </label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            >
+              <option value="Active">Active</option>
+              <option value="Pending">Pending</option>
+            </select>
           </div>
 
           {/* Password */}

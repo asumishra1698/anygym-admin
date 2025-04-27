@@ -170,11 +170,7 @@ const ManageAreaManager = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Manager Details</h2>
             <img
-              src={
-                selectedManager.profileImage
-                  ? `${MEDIA_URL}${selectedManager.profileImage}`
-                  : `${MEDIA_URL}/default-profile.png`
-              }
+              src={`${MEDIA_URL}${selectedManager.profileImage}`}
               alt={selectedManager.name}
               className="w-24 h-24 rounded-full mx-auto mb-4"
             />
@@ -196,6 +192,14 @@ const ManageAreaManager = () => {
             </p>
             <p>
               <strong>Status:</strong> {selectedManager.status}
+            </p>
+            <p>
+              <strong>Referral ID:</strong>{" "}
+              {selectedManager.referral_id || "N/A"}
+            </p>
+            <p>
+              <strong>Aadhar Number:</strong>{" "}
+              {selectedManager.idNumber || "N/A"}
             </p>
             <p>
               <strong>Registered On:</strong>{" "}
