@@ -5,9 +5,12 @@ import {
   FETCH_AMENITIES_REQUEST,
   FETCH_AMENITIES_SUCCESS,
   FETCH_AMENITIES_FAILURE,
-  UPDATE_AMENITY_REQUEST, // New action type
-  UPDATE_AMENITY_SUCCESS, // New action type
-  UPDATE_AMENITY_FAILURE, // New action type
+  UPDATE_AMENITY_REQUEST,
+  UPDATE_AMENITY_SUCCESS,
+  UPDATE_AMENITY_FAILURE,
+  DELETE_AMENITY_REQUEST,
+  DELETE_AMENITY_SUCCESS,
+  DELETE_AMENITY_FAILURE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -48,6 +51,21 @@ const amenityReducer = (state = initialState, action) => {
         error: null,
       };
     case UPDATE_AMENITY_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    // Delete Amenity
+    case DELETE_AMENITY_REQUEST:
+      return { ...state, loading: true, error: null };
+    case DELETE_AMENITY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        amenities: state.amenities.filter(
+          (amenity) => amenity._id !== action.payload
+        ),
+        error: null,
+      };
+    case DELETE_AMENITY_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
     default:

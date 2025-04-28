@@ -6,14 +6,17 @@ import {
   fetchAmenitiesFailure,
   updateAmenitySuccess,
   updateAmenityFailure,
+  deleteAmenitySuccess,
+  deleteAmenityFailure,
 } from "../actions/amenityActions";
 import {
   ADD_AMENITY_REQUEST,
   FETCH_AMENITIES_REQUEST,
   UPDATE_AMENITY_REQUEST,
+  DELETE_AMENITY_REQUEST,
 } from "../actions/actionTypes";
 import { getRequest, postRequest } from "../../utils/apiHelper";
-import { BASE_URL, AMENTIY_URL } from "../../config";
+import { BASE_URL, AMENTIY_URL, DELETEAMENTY_URL } from "../../config";
 
 // Add Amenity Saga
 function* addAmenitySaga(action) {
@@ -37,8 +40,8 @@ function* addAmenitySaga(action) {
 function* updateAmenitySaga(action) {
   try {
     const response = yield call(
-      postRequest, 
-      `${BASE_URL}${AMENTIY_URL}/${action.payload.id}`, 
+      postRequest,
+      `${BASE_URL}${AMENTIY_URL}/${action.payload.id}`,
       { name: action.payload.name }
     );
     if (response.status === 200) {
@@ -66,9 +69,27 @@ function* fetchAmenitiesSaga() {
   }
 }
 
+// Delete Amenity Saga
+function* deleteAmenitySaga(action) {
+  try {
+    const response = yield call(
+      postRequest,
+      `${BASE_URL}${DELETEAMENTY_URL}/${action.payload}`
+    );
+    if (response.status === 200) {
+      yield put(deleteAmenitySuccess(action.payload));
+    } else {
+      yield put(deleteAmenityFailure("Failed to delete amenity"));
+    }
+  } catch (error) {
+    yield put(deleteAmenityFailure(error.message || "Network error"));
+  }
+}
+
 // Watcher Saga
 export default function* watchAmenitySaga() {
   yield takeLatest(ADD_AMENITY_REQUEST, addAmenitySaga);
   yield takeLatest(FETCH_AMENITIES_REQUEST, fetchAmenitiesSaga);
-  yield takeLatest(UPDATE_AMENITY_REQUEST, updateAmenitySaga); // Watch for update requests
+  yield takeLatest(UPDATE_AMENITY_REQUEST, updateAmenitySaga);
+  yield takeLatest(DELETE_AMENITY_REQUEST, deleteAmenitySaga); // Watch for delete requests
 }

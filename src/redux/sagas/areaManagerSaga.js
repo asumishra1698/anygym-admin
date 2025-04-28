@@ -1,27 +1,39 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
+  FETCH_AREA_MANAGERS_REQUEST,
+  ADD_AREA_MANAGER_REQUEST,
+} from "../actions/actionTypes";
+import {
   fetchAreaManagersSuccess,
   fetchAreaManagersFailure,
   addAreaManagerSuccess,
   addAreaManagerFailure,
 } from "../actions/areaManagerActions";
-import {
-  FETCH_AREA_MANAGERS_REQUEST,
-  ADD_AREA_MANAGER_REQUEST,
-} from "../actions/actionTypes";
+
 import { getRequest, postRequest } from "../../utils/apiHelper";
 import { BASE_URL, AREA_MANAGER_URL } from "../../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Fetch Area Managers Saga
-function* fetchAreaManagersSaga() {
+// Fetch Area Managers Saga with Pagination
+function* fetchAreaManagersSaga(action) {
+  const { page, perPage, searchQuery } = action.payload;
   try {
-    const response = yield call(getRequest, `${BASE_URL}${AREA_MANAGER_URL}`);
+    const response = yield call(
+      getRequest,
+      `${BASE_URL}${AREA_MANAGER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+    );
     if (response.status === 200) {
-      const records = response.data.records;
-      if (Array.isArray(records)) {
-        yield put(fetchAreaManagersSuccess(records));
+      const data = response.data;
+      if (data && Array.isArray(data.records)) {
+        yield put(
+          fetchAreaManagersSuccess({
+            records: data.records,
+            page: data.page,
+            per_page: data.per_page,
+            total_records: data.total_records,
+          })
+        );
       } else {
         yield put(
           fetchAreaManagersFailure(
@@ -41,6 +53,7 @@ function* fetchAreaManagersSaga() {
 function* addAreaManagerSaga(action) {
   try {
     const formData = new FormData();
+    console.log("Form Data:", action.payload);
     Object.keys(action.payload).forEach((key) => {
       formData.append(key, action.payload[key]);
     });

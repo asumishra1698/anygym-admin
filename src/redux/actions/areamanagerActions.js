@@ -8,8 +8,9 @@ import {
 } from "./actionTypes";
 
 // Fetch Area Managers Actions
-export const fetchAreaManagersRequest = () => ({
+export const fetchAreaManagersRequest = (page = 1, perPage = 10, searchQuery = "") => ({
   type: FETCH_AREA_MANAGERS_REQUEST,
+  payload: { page, perPage, searchQuery },
 });
 
 export const fetchAreaManagersSuccess = (managers) => ({

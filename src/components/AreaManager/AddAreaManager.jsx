@@ -16,9 +16,9 @@ const AddAreaManager = () => {
     mobile: "",
     dob: "",
     idNumber: "",
-    referral_id: "", // Referral ID field
-    status: "Active", // Default status
-    profilePicture: null,
+    referral_id: "",
+    status: "",
+    profilePicture: "",
     address: "",
     latitude: "",
     longitude: "",

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../../reuseable/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import {
   addAmenityRequest,
   fetchAmenitiesRequest,
   updateAmenityRequest,
+  deleteAmenityRequest,
 } from "../../../redux/actions/amenityActions";
 import { SearchIcon } from "@heroicons/react/solid";
 import { toast, ToastContainer } from "react-toastify";
@@ -36,7 +37,7 @@ const ManageAmenities = () => {
         // Dispatch update action
         dispatch(
           updateAmenityRequest({ id: selectedAmenity._id, name: amenityName })
-        );        
+        );
       } else {
         // Dispatch add action
         dispatch(addAmenityRequest({ name: amenityName }));
@@ -56,6 +57,13 @@ const ManageAmenities = () => {
     setSelectedAmenity(amenity);
     setAmenityName(amenity.name);
     setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = (amenityId) => {
+    if (window.confirm("Are you sure you want to delete this amenity?")) {
+      dispatch(deleteAmenityRequest(amenityId));
+      toast.success("Amenity deleted successfully!");
+    }
   };
 
   useEffect(() => {
@@ -111,13 +119,20 @@ const ManageAmenities = () => {
               <p className="text-sm text-gray-600">
                 Created At: {new Date(amenity.createdAt).toLocaleDateString()}
               </p>
-              <div className="flex justify-end space-x-4 mt-4">                
+              <div className="flex justify-end space-x-4 mt-4">
                 <button
                   onClick={() => handleEditClick(amenity)}
                   className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
                   title="Edit"
                 >
                   <PencilIcon className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(amenity._id)}
+                  className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  title="Delete"
+                >
+                  <TrashIcon className="w-3 h-3" />
                 </button>
               </div>
             </div>

@@ -9,7 +9,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ClipboardListIcon,
-  CogIcon,  
+  CogIcon,
   AcademicCapIcon,
 } from "@heroicons/react/outline";
 
@@ -133,33 +133,66 @@ const Sidebar = () => {
 
           <li>
             <Link
-              to="/manage-trainers"
+              to="/manage-products"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <AcademicCapIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Trainers</span>}
+              {!isCollapsed && <span className="ml-3">Products</span>}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/manage-products-category"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <AcademicCapIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Products Category</span>}
             </Link>
           </li>
 
           <li>
             <Link
-              to="/manage-members"
+              to="/manage-customers"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <UserGroupIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Members</span>}
+              {!isCollapsed && <span className="ml-3">Customers</span>}
             </Link>
           </li>
 
           <li>
             <Link
-              to="/manage-subscriptions"
+              to="/manage-booking"
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <ClipboardListIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Subscriptions</span>}
+              {!isCollapsed && (
+                <span className="ml-3">Booking Management </span>
+              )}
             </Link>
           </li>
+
+          <li>
+            <Link
+              to="/manage-payment-wallet"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <ClipboardListIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Payment & Wallet</span>}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/manage-reports"
+              className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+            >
+              <ClipboardListIcon className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Reports & Analytics</span>}
+            </Link>
+          </li>
+
+
 
           {/* Settings Menu with Submenu */}
           <li>

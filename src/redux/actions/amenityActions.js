@@ -5,9 +5,12 @@ import {
   FETCH_AMENITIES_REQUEST,
   FETCH_AMENITIES_SUCCESS,
   FETCH_AMENITIES_FAILURE,
-  UPDATE_AMENITY_REQUEST, 
-  UPDATE_AMENITY_SUCCESS, 
-  UPDATE_AMENITY_FAILURE, 
+  UPDATE_AMENITY_REQUEST,
+  UPDATE_AMENITY_SUCCESS,
+  UPDATE_AMENITY_FAILURE,
+  DELETE_AMENITY_REQUEST,
+  DELETE_AMENITY_SUCCESS,
+  DELETE_AMENITY_FAILURE,
 } from "./actionTypes";
 
 // Add Amenity Actions
@@ -54,5 +57,21 @@ export const updateAmenitySuccess = (data) => ({
 
 export const updateAmenityFailure = (error) => ({
   type: UPDATE_AMENITY_FAILURE,
+  payload: error,
+});
+
+// Delete Amenity Actions
+export const deleteAmenityRequest = (id) => ({
+  type: DELETE_AMENITY_REQUEST,
+  payload: id,
+});
+
+export const deleteAmenitySuccess = (id) => ({
+  type: DELETE_AMENITY_SUCCESS,
+  payload: id,
+});
+
+export const deleteAmenityFailure = (error) => ({
+  type: DELETE_AMENITY_FAILURE,
   payload: error,
 });

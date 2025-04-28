@@ -3,6 +3,7 @@ import watchAuthSaga from "./authSaga";
 import watchpendingGymSaga from "./pendingGymSaga";
 import watchAmenitySaga from "./amenitiesSaga";
 import watchAreamanagerSaga from "./areaManagerSaga";
+import watchgymOwnerSaga from "./gymOwnerSaga";
 
 
 export default function* rootSaga() {
@@ -11,5 +12,6 @@ export default function* rootSaga() {
     watchpendingGymSaga(),
     watchAmenitySaga(),
     watchAreamanagerSaga(),
+    watchgymOwnerSaga(),
   ]);
 }

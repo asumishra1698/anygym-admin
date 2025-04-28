@@ -19,11 +19,9 @@ import ManagePendingGym from "./components/Gym/ManagePendingGym";
 import ManageApprovedGym from "./components/Gym/ManageApprovedGym";
 import ManageRejectedGym from "./components/Gym/ManageRejectedGym";
 
-import ManageMembers from "./components/Members/ManageMembers";
+import ManageCustomers from "./components/Customers/ManageCustomers";
 
 import ManageSubscriptions from "./components/Subscriptions/ManageSubscriptions";
-
-import ManageTrainers from "./components/Trainers/ManageTrainers";
 
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -132,10 +130,10 @@ const App = () => {
           }
         />
         <Route
-          path="/manage-members"
+          path="/manage-customers"
           element={
             <PrivateRoute>
-              <ManageMembers />
+              <ManageCustomers />
             </PrivateRoute>
           }
         />
@@ -146,15 +144,7 @@ const App = () => {
               <ManageSubscriptions />
             </PrivateRoute>
           }
-        />
-        <Route
-          path="/manage-trainers"
-          element={
-            <PrivateRoute>
-              <ManageTrainers />
-            </PrivateRoute>
-          }
-        />
+        />        
       </Routes>
       <ToastContainer />
     </Router>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   CheckIcon,
@@ -8,9 +9,12 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import Sidebar from "../../reuseable/Sidebar";
+import { fetchGymOwnersRequest } from "../../redux/actions/gymOwnerActions";
 
 const ManageGymOwner = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -21,216 +25,23 @@ const ManageGymOwner = () => {
     owner: null,
   });
   const [reason, setReason] = useState("");
-
-  // Pagination state
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const [limit, setLimit] = useState(10);
 
-  const gymOwners = [
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      phone: "+91 9876543210",
-      dob: "1985-05-15",
-      address: "123 Main Street, City, Country",
-      idNumber: "1234-5678-9012",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      email: "bob.smith@example.com",
-      phone: "+91 9876543211",
-      dob: "1990-08-20",
-      address: "456 Elm Street, City, Country",
-      idNumber: "2345-6789-0123",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 3,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 4,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 5,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 6,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 7,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 8,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 9,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 10,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 11,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 12,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 13,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 14,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 15,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 16,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 17,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-    {
-      id: 18,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      phone: "+91 9876543212",
-      dob: "1980-12-25",
-      address: "789 Oak Street, City, Country",
-      idNumber: "3456-7890-1234",
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocJ_BishguTsfWBW98VkCxWPreUwk5xCQYlWsTeO6_VqPfyqgbQ=s288-c-no",
-    },
-  ];
+  const {
+    loading,
+    gymOwners = [],
+    totalRecords = 0,
+    error,
+  } = useSelector((state) => state.gymOwner);
 
-  // Calculate pagination
-  const totalPages = Math.ceil(gymOwners.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentOwners = gymOwners.slice(startIndex, startIndex + itemsPerPage);
+  useEffect(() => {
+    dispatch(fetchGymOwnersRequest(currentPage, limit, searchQuery));
+  }, [dispatch, currentPage, limit, searchQuery]);
+
+  const totalPages = Math.ceil(totalRecords / limit);
+  const itemsPerPageOptions = [5, 10, 20, 50, 100];
 
   const handleApprove = (owner) => {
     setActionPopup({ isOpen: true, action: "approve", owner });
@@ -260,9 +71,9 @@ const ManageGymOwner = () => {
     setSelectedOwner(null);
   };
 
-  const handleEdit = (owner) => {
-    navigate(`/edit-gym-owner/${owner.id}`, { state: { owner } });
-  };
+  // const handleEdit = (owner) => {
+  //   navigate(`/edit-gym-owner/${owner.id}`, { state: { owner } });
+  // };
 
   return (
     <div className="flex h-screen">
@@ -277,6 +88,8 @@ const ManageGymOwner = () => {
               <input
                 type="text"
                 placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
@@ -290,19 +103,29 @@ const ManageGymOwner = () => {
           </div>
         </div>
 
+        {loading && <p className="text-gray-600">Loading...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+        {!loading && !error && gymOwners.length === 0 && (
+          <p className="text-gray-600">No gym owners found.</p>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentOwners.map((owner) => (
+          {gymOwners.map((owner) => (
             <div
               key={owner.id}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
             >
-              <img
-                src={owner.image}
-                alt={owner.name}
-                className="w-16 h-16 rounded-full mb-4"
-              />
-              <h3 className="text-lg font-bold text-gray-800">{owner.name}</h3>
-              <p className="text-sm text-gray-600">{owner.email}</p>
+              <h3 className="text-lg font-bold text-gray-800">
+                Name : {owner.name}
+              </h3>
+              <p className="text-sm text-gray-600">Email : {owner.email}</p>
+              <p className="text-sm text-gray-600">
+                Contact Number: {owner.mobile}
+              </p>
+              <p className="text-sm text-gray-600">Status: {owner.status}</p>
+              <p className="text-sm text-gray-600">
+                Registered on: {new Date(owner.createdAt).toLocaleDateString()}
+              </p>
               <div className="flex space-x-4 mt-4">
                 <button
                   onClick={() => handleView(owner)}
@@ -329,13 +152,13 @@ const ManageGymOwner = () => {
                     <XIcon className="w-3 h-3" />
                   </button>
                 )}
-                <button
+                {/* <button
                   onClick={() => handleEdit(owner)}
                   className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
                   title="Edit"
                 >
                   <PencilIcon className="w-3 h-3" />
-                </button>
+                </button> */}
               </div>
               {statuses[owner.id] === "approved" && (
                 <span className="absolute top-2 right-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
@@ -352,11 +175,30 @@ const ManageGymOwner = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-end items-center mt-6">
+        <div className="flex justify-end items-center mt-6 space-x-4">
+          <div className="flex items-center space-x-2">
+            <label htmlFor="limit" className="text-gray-700">
+              Items per page:
+            </label>
+            <select
+              id="limit"
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+              className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              {itemsPerPageOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Previous Button */}
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`px-4 py-2 mr-2 rounded-lg ${
+            className={`px-4 py-2 rounded-lg ${
               currentPage === 1
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-700"
@@ -364,15 +206,19 @@ const ManageGymOwner = () => {
           >
             Previous
           </button>
+
+          {/* Page Indicator */}
           <span className="text-gray-700">
             Page {currentPage} of {totalPages}
           </span>
+
+          {/* Next Button */}
           <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 ml-2 rounded-lg ${
+            className={`px-4 py-2 rounded-lg ${
               currentPage === totalPages
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-700"
