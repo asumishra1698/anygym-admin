@@ -21,6 +21,13 @@ const ManageAreaManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [statuses, setStatuses] = useState({});
+  const [actionPopup, setActionPopup] = useState({
+    isOpen: false,
+    action: "",
+    manager: null,
+  });
+  const [reason, setReason] = useState("");
   const [limit, setLimit] = useState(10);
 
   const {
@@ -48,11 +55,35 @@ const ManageAreaManager = () => {
   //   navigate(`/edit-area-manager/${manager._id}`, { state: { manager } });
   // };
 
+  const handleSubmitAction = () => {
+    if (actionPopup.action === "approve") {
+      setStatuses((prev) => ({
+        ...prev,
+        [actionPopup.manager.id]: "approved",
+      }));
+    } else if (actionPopup.action === "reject") {
+      setStatuses((prev) => ({
+        ...prev,
+        [actionPopup.manager.id]: "rejected",
+      }));
+    }
+    setActionPopup({ isOpen: false, action: "", manager: null });
+    setReason("");
+  };
+
+  const handleApprove = (manager) => {
+    setActionPopup({ isOpen: true, action: "approve", manager });
+  };
+
+  const handleReject = (manager) => {
+    setActionPopup({ isOpen: true, action: "reject", manager });
+  };
+
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [5, 10, 20, 50, 100];
 
   return (
-    <div className="flex h-screen">     
+    <div className="flex h-screen">
       <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
 
       {/* Main Content */}
@@ -128,21 +159,24 @@ const ManageAreaManager = () => {
                   <EyeIcon className="w-3 h-3" />
                 </button>
 
-                {/* Approve Button */}
-                <button
-                  className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                  title="Approve"
-                >
-                  <CheckIcon className="w-3 h-3" />
-                </button>
-
-                {/* Reject Button */}
-                <button
-                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                  title="Reject"
-                >
-                  <XIcon className="w-3 h-3" />
-                </button>
+                {!statuses[manager.id] && (
+                  <button
+                    onClick={() => handleApprove(manager)}
+                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                    title="Approve"
+                  >
+                    <CheckIcon className="w-3 h-3" />
+                  </button>
+                )}
+                {!statuses[manager.id] && (
+                  <button
+                    onClick={() => handleReject(manager)}
+                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                    title="Reject"
+                  >
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                )}
 
                 {/* Edit Button */}
                 {/* <button
@@ -232,10 +266,10 @@ const ManageAreaManager = () => {
               <strong>Referral ID:</strong>{" "}
               {selectedManager.referral_id || "N/A"}
             </p>
-            <p>
+            {/* <p>
               <strong>Aadhar Number:</strong>{" "}
               {selectedManager.idNumber || "N/A"}
-            </p>
+            </p> */}
             <p>
               <strong>Registered On:</strong>{" "}
               {new Date(selectedManager.createdAt).toLocaleDateString()}
@@ -246,6 +280,41 @@ const ManageAreaManager = () => {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Action Popup */}
+      {actionPopup.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              {actionPopup.action === "approve"
+                ? "Approve Manager"
+                : "Reject Manager"}
+            </h2>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
+              placeholder="Enter reason..."
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() =>
+                  setActionPopup({ isOpen: false, action: "", manager: null })
+                }
+                className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitAction}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       )}

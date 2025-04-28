@@ -10,44 +10,71 @@ const AddAreaManager = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const [formData, setFormData] = useState({
-    fname: "",
-    lname: "",
+    name: "",
     email: "",
     mobile: "",
     dob: "",
-    idNumber: "",
     referral_id: "",
-    status: "",
-    profilePicture: "",
-    address: "",
-    latitude: "",
-    longitude: "",
-    role: "",
+    status: "Pending",
+    profileImage: null,
+    location: {
+      address: "",
+      coordinates: ["", ""], // [longitude, latitude]
+    },
     password: "",
     cpassword: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "address") {
+      setFormData((prev) => ({
+        ...prev,
+        location: { ...prev.location, address: value },
+      }));
+    } else if (name === "longitude" || name === "latitude") {
+      const index = name === "longitude" ? 0 : 1;
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          ...prev.location,
+          coordinates: prev.location.coordinates.map((coord, i) =>
+            i === index ? value : coord
+          ),
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, profilePicture: e.target.files[0] });
+    setFormData((prev) => ({ ...prev, profileImage: e.target.files[0] }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.cpassword) {
       toast.error("Passwords do not match!");
       return;
     }
+
     try {
-      const response = await dispatch(
-        addAreaManagerRequest({
-          ...formData,
-        })
-      );
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        if (key === "location") {
+          formDataToSend.append("address", formData.location.address);
+          formDataToSend.append("longitude", formData.location.coordinates[0]);
+          formDataToSend.append("latitude", formData.location.coordinates[1]);
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      const response = await dispatch(addAreaManagerRequest(formDataToSend));
+
       if (response?.status === 200) {
         toast.success(response.message || "Area Manager added successfully!");
       } else {
@@ -71,181 +98,93 @@ const AddAreaManager = () => {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          {/* First Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              First Name
-            </label>
-            <input
-              type="text"
-              name="fname"
-              value={formData.fname}
-              onChange={handleChange}
-              placeholder="Enter first name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <input
-              type="text"
-              name="lname"
-              value={formData.lname}
-              onChange={handleChange}
-              placeholder="Enter last name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          {/* Name */}
+          <InputField
+            label="Name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Enter full name"
+            required
+          />
 
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter email"
+            required
+          />
 
           {/* Mobile */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Mobile
-            </label>
-            <input
-              type="text"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              placeholder="Enter mobile number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Mobile"
+            type="text"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            placeholder="Enter mobile number"
+            required
+          />
 
           {/* DOB */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              DOB
-            </label>
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="DOB"
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            required
+          />
 
           {/* Address */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              placeholder="Enter address"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Latitude */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Latitude
-            </label>
-            <input
-              type="text"
-              name="latitude"
-              value={formData.latitude}
-              onChange={handleChange}
-              placeholder="Enter latitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Address"
+            type="text"
+            name="address"
+            value={formData.location.address}
+            onChange={handleChange}
+            placeholder="Enter address"
+            required
+          />
 
           {/* Longitude */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Longitude
-            </label>
-            <input
-              type="text"
-              name="longitude"
-              value={formData.longitude}
-              onChange={handleChange}
-              placeholder="Enter longitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Longitude"
+            type="text"
+            name="longitude"
+            value={formData.location.coordinates[0]}
+            onChange={handleChange}
+            placeholder="Enter longitude"
+            required
+          />
 
-          {/* Role */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Role
-            </label>
-            <input
-              type="text"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              placeholder="Enter role"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Aadhar Card or PAN Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Aadhar Card or PAN Number
-            </label>
-            <input
-              type="text"
-              name="idNumber"
-              value={formData.idNumber}
-              onChange={handleChange}
-              placeholder="Enter Aadhar or PAN number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          {/* Latitude */}
+          <InputField
+            label="Latitude"
+            type="text"
+            name="latitude"
+            value={formData.location.coordinates[1]}
+            onChange={handleChange}
+            placeholder="Enter latitude"
+            required
+          />
 
           {/* Referral ID */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Referral ID
-            </label>
-            <input
-              type="text"
-              name="referral_id"
-              value={formData.referral_id}
-              onChange={handleChange}
-              placeholder="Enter referral ID"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-            />
-          </div>
+          <InputField
+            label="Referral ID"
+            type="text"
+            name="referral_id"
+            value={formData.referral_id}
+            onChange={handleChange}
+            placeholder="Enter referral ID"
+          />
 
-          {/* Status Dropdown */}
+          {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Status
@@ -257,42 +196,32 @@ const AddAreaManager = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             >
-              <option value="Active">Active</option>
               <option value="Pending">Pending</option>
+              <option value="Active">Active</option>
             </select>
           </div>
 
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter password"
+            required
+          />
 
           {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              name="cpassword"
-              value={formData.cpassword}
-              onChange={handleChange}
-              placeholder="Confirm password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
+          <InputField
+            label="Confirm Password"
+            type="password"
+            name="cpassword"
+            value={formData.cpassword}
+            onChange={handleChange}
+            placeholder="Confirm password"
+            required
+          />
 
           {/* Profile Picture */}
           <div className="md:col-span-3">
@@ -301,7 +230,7 @@ const AddAreaManager = () => {
             </label>
             <input
               type="file"
-              name="profilePicture"
+              name="profileImage"
               onChange={handleFileChange}
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               accept="image/*"
@@ -324,5 +253,28 @@ const AddAreaManager = () => {
     </div>
   );
 };
+
+const InputField = ({
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  placeholder,
+  required,
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+      required={required}
+    />
+  </div>
+);
 
 export default AddAreaManager;
