@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
-import { FaCheck, FaTimes } from "react-icons/fa"; // Import React Icons
+import { FaCheck, FaTimes } from "react-icons/fa";
 import Sidebar from "../../reuseable/Sidebar";
-import { fetchPendingGymsRequest } from "../../redux/actions/pendingGymActions";
+import {
+  fetchPendingGymsRequest,
+  updateGymStatusRequest,
+} from "../../redux/actions/pendingGymActions";
 import { MEDIA_URL } from "../../config";
 
-const ManageGym = () => {
+const ManagePendingGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const { gyms, loading, error } = useSelector((state) => state.gym);
+
+  const {
+    gyms: pendingGyms,
+    loading,
+    error,
+  } = useSelector((state) => state.pendingGyms);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
@@ -26,17 +33,17 @@ const ManageGym = () => {
   };
 
   const handleApprove = (gymId) => {
-    console.log(`Gym approved: ${gymId}`);
+    dispatch(updateGymStatusRequest(gymId, "Approved"));
   };
 
   const handleReject = (gymId) => {
-    console.log(`Gym rejected: ${gymId}`);
+    dispatch(updateGymStatusRequest(gymId, "Reject"));
   };
 
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
+      <Sidebar />
 
       {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
@@ -64,17 +71,30 @@ const ManageGym = () => {
         {/* Loading, Error, and Empty States */}
         {loading && <p className="text-gray-600">Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && gyms.length === 0 && (
+        {!loading && !error && pendingGyms.length === 0 && (
           <p className="text-gray-600">No pending gyms available.</p>
         )}
 
         {/* Gym List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gyms.map((gym) => (
+          {pendingGyms.map((gym) => (
             <div
               key={gym._id}
               className="bg-white p-4 rounded-lg shadow relative"
             >
+              {/* Status Badge */}
+              <span
+                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                  gym.status === "Approved"
+                    ? "bg-green-100 text-green-800"
+                    : gym.status === "Rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {gym.status}
+              </span>
+
               {/* Gym Image */}
               <img
                 src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
@@ -182,7 +202,7 @@ const ManageGym = () => {
                 </p>
               </div>
 
-              {/* GYM Front Image*/}
+              {/* GYM Front Image */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   GYM Front
@@ -241,4 +261,4 @@ const ManageGym = () => {
   );
 };
 
-export default ManageGym;
+export default ManagePendingGym;

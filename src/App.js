@@ -1,29 +1,26 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Auth/Login";
-
 import Amenities from "./components/Settings/Amenities/ManageAmenities";
-
 import AreaManager from "./components/AreaManager/ManageAreaManager";
 import EditAreaManager from "./components/AreaManager/EditAreaManager";
 import AddAreaManager from "./components/AreaManager/AddAreaManager";
-
 import ManageGymOwner from "./components/GymOwner/ManageGymOwner";
 import AddGymOwner from "./components/GymOwner/AddGymOwner";
 import EditGymOwner from "./components/GymOwner/EditGymOwner";
-
 import ManagePendingGym from "./components/Gym/ManagePendingGym";
 import ManageApprovedGym from "./components/Gym/ManageApprovedGym";
 import ManageRejectedGym from "./components/Gym/ManageRejectedGym";
-
 import ManageCustomers from "./components/Customers/ManageCustomers";
-
 import ManageSubscriptions from "./components/Subscriptions/ManageSubscriptions";
-
 import PrivateRoute from "./components/PrivateRoute";
+import ManageBooking from "./components/BookingManagement/ManageBooking";
+import ManageProducts from "./components/Products/ManageProducts";
+import MangePaymentWallet from "./components/PaymentWallet/MangePaymentWallet";
+import ManageProductsCategory from "./components/ProductsCategory/ManageProductsCategory";
+import ManageReports from "./components/ReportsAnalytics/ManageReports";
 
 const App = () => {
   return (
@@ -138,13 +135,61 @@ const App = () => {
           }
         />
         <Route
+          path="/manage-products"
+          element={
+            <PrivateRoute>
+              <ManageProducts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-booking"
+          element={
+            <PrivateRoute>
+              <ManageBooking />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-paymentwallet"
+          element={
+            <PrivateRoute>
+              <MangePaymentWallet />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-payment-wallet"
+          element={
+            <PrivateRoute>
+              <MangePaymentWallet />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-products-category"
+          element={
+            <PrivateRoute>
+              <ManageProductsCategory />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/manage-subscriptions"
           element={
             <PrivateRoute>
               <ManageSubscriptions />
             </PrivateRoute>
           }
-        />        
+        />
+        <Route
+          path="/manage-reports"
+          element={
+            <PrivateRoute>
+              <ManageReports />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <ToastContainer />
     </Router>

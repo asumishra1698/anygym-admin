@@ -2,6 +2,12 @@ import {
   FETCH_PENDING_GYMS_REQUEST,
   FETCH_PENDING_GYMS_SUCCESS,
   FETCH_PENDING_GYMS_FAILURE,
+  APPROVE_GYM_REQUEST,
+  APPROVE_GYM_SUCCESS,
+  APPROVE_GYM_FAILURE,
+  REJECT_GYM_REQUEST,
+  REJECT_GYM_SUCCESS,
+  REJECT_GYM_FAILURE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -10,15 +16,31 @@ const initialState = {
   error: null,
 };
 
-const gymReducer = (state = initialState, action) => { 
+const pendingGymReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_PENDING_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
 
-    case FETCH_PENDING_GYMS_SUCCESS:      
+    case FETCH_PENDING_GYMS_SUCCESS:
       return { ...state, loading: false, gyms: action.payload };
 
-    case FETCH_PENDING_GYMS_FAILURE:      
+    case FETCH_PENDING_GYMS_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    case APPROVE_GYM_REQUEST:
+    case REJECT_GYM_REQUEST:
+      return { ...state, loading: true };
+
+    case APPROVE_GYM_SUCCESS:
+    case REJECT_GYM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        gyms: state.gyms.filter((gym) => gym._id !== action.payload.gymId),
+      };
+
+    case APPROVE_GYM_FAILURE:
+    case REJECT_GYM_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
     default:
@@ -26,5 +48,4 @@ const gymReducer = (state = initialState, action) => {
   }
 };
 
-
-export default gymReducer;
+export default pendingGymReducer;

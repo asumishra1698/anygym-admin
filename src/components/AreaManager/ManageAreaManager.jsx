@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  CheckIcon,
-  XIcon,
-  EyeIcon,
-  PencilIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
+import { CheckIcon, XIcon, EyeIcon, SearchIcon } from "@heroicons/react/solid";
 import Sidebar from "../../reuseable/Sidebar";
 import { MEDIA_URL } from "../../config";
 import { fetchAreaManagersRequest } from "../../redux/actions/areaManagerActions";
@@ -16,19 +10,17 @@ const ManageAreaManager = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [selectedManager, setSelectedManager] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [statuses, setStatuses] = useState({});
   const [actionPopup, setActionPopup] = useState({
     isOpen: false,
     action: "",
     manager: null,
   });
   const [reason, setReason] = useState("");
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
 
   const {
     loading,
@@ -51,22 +43,8 @@ const ManageAreaManager = () => {
     setSelectedManager(null);
   };
 
-  // const handleEdit = (manager) => {
-  //   navigate(`/edit-area-manager/${manager._id}`, { state: { manager } });
-  // };
-
   const handleSubmitAction = () => {
-    if (actionPopup.action === "approve") {
-      setStatuses((prev) => ({
-        ...prev,
-        [actionPopup.manager.id]: "approved",
-      }));
-    } else if (actionPopup.action === "reject") {
-      setStatuses((prev) => ({
-        ...prev,
-        [actionPopup.manager.id]: "rejected",
-      }));
-    }
+    // Handle approve/reject actions here
     setActionPopup({ isOpen: false, action: "", manager: null });
     setReason("");
   };
@@ -80,11 +58,11 @@ const ManageAreaManager = () => {
   };
 
   const totalPages = Math.ceil(totalRecords / limit);
-  const itemsPerPageOptions = [5, 10, 20, 50, 100];
+  const itemsPerPageOptions = [5, 10, 20, 50, 100, 200, 500, 1000];
 
   return (
     <div className="flex h-screen">
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
+      <Sidebar />
 
       {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
@@ -127,6 +105,19 @@ const ManageAreaManager = () => {
               key={manager._id}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
             >
+              {/* Status Badge */}
+              <span
+                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                  manager.status === "Approved"
+                    ? "bg-green-100 text-green-800"
+                    : manager.status === "Rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {manager.status}
+              </span>
+
               {/* Profile Image */}
               <img
                 src={
@@ -159,33 +150,24 @@ const ManageAreaManager = () => {
                   <EyeIcon className="w-3 h-3" />
                 </button>
 
-                {!statuses[manager.id] && (
-                  <button
-                    onClick={() => handleApprove(manager)}
-                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                    title="Approve"
-                  >
-                    <CheckIcon className="w-3 h-3" />
-                  </button>
+                {manager.status === "Pending" && (
+                  <>
+                    <button
+                      onClick={() => handleApprove(manager)}
+                      className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                      title="Approve"
+                    >
+                      <CheckIcon className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => handleReject(manager)}
+                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                      title="Reject"
+                    >
+                      <XIcon className="w-3 h-3" />
+                    </button>
+                  </>
                 )}
-                {!statuses[manager.id] && (
-                  <button
-                    onClick={() => handleReject(manager)}
-                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                    title="Reject"
-                  >
-                    <XIcon className="w-3 h-3" />
-                  </button>
-                )}
-
-                {/* Edit Button */}
-                {/* <button
-                  onClick={() => handleEdit(manager)}
-                  className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
-                  title="Edit"
-                >
-                  <PencilIcon className="w-3 h-3" />
-                </button> */}
               </div>
             </div>
           ))}
@@ -212,24 +194,38 @@ const ManageAreaManager = () => {
             </select>
           </div>
 
-          {/* Page Number Dropdown */}
-          <div className="flex items-center space-x-2">
-            <label htmlFor="pageNumber" className="text-gray-700">
-              Page:
-            </label>
-            <select
-              id="pageNumber"
-              value={currentPage}
-              onChange={(e) => setCurrentPage(Number(e.target.value))}
-              className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              {Array.from({ length: totalPages }, (_, index) => (
-                <option key={index + 1} value={index + 1}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Previous Button */}
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            Previous
+          </button>
+
+          {/* Page Indicator */}
+          <span className="text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {/* Next Button */}
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            Next
+          </button>
         </div>
       </main>
 
@@ -266,10 +262,6 @@ const ManageAreaManager = () => {
               <strong>Referral ID:</strong>{" "}
               {selectedManager.referral_id || "N/A"}
             </p>
-            {/* <p>
-              <strong>Aadhar Number:</strong>{" "}
-              {selectedManager.idNumber || "N/A"}
-            </p> */}
             <p>
               <strong>Registered On:</strong>{" "}
               {new Date(selectedManager.createdAt).toLocaleDateString()}

@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  CheckIcon,
-  XIcon,
-  EyeIcon,
-  PencilIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
+import { CheckIcon, XIcon, EyeIcon, SearchIcon } from "@heroicons/react/solid";
 import Sidebar from "../../reuseable/Sidebar";
 import { fetchGymOwnersRequest } from "../../redux/actions/gymOwnerActions";
 
@@ -16,9 +10,7 @@ const ManageGymOwner = () => {
   const navigate = useNavigate();
 
   const [selectedOwner, setSelectedOwner] = useState(null);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [statuses, setStatuses] = useState({});
   const [actionPopup, setActionPopup] = useState({
     isOpen: false,
     action: "",
@@ -27,7 +19,7 @@ const ManageGymOwner = () => {
   const [reason, setReason] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
 
   const {
     loading,
@@ -52,11 +44,6 @@ const ManageGymOwner = () => {
   };
 
   const handleSubmitAction = () => {
-    if (actionPopup.action === "approve") {
-      setStatuses((prev) => ({ ...prev, [actionPopup.owner.id]: "approved" }));
-    } else if (actionPopup.action === "reject") {
-      setStatuses((prev) => ({ ...prev, [actionPopup.owner.id]: "rejected" }));
-    }
     setActionPopup({ isOpen: false, action: "", owner: null });
     setReason("");
   };
@@ -71,13 +58,9 @@ const ManageGymOwner = () => {
     setSelectedOwner(null);
   };
 
-  // const handleEdit = (owner) => {
-  //   navigate(`/edit-gym-owner/${owner.id}`, { state: { owner } });
-  // };
-
   return (
     <div className="flex h-screen">
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
+      <Sidebar />
 
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
@@ -112,17 +95,29 @@ const ManageGymOwner = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {gymOwners.map((owner) => (
             <div
-              key={owner.id}
+              key={owner._id}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
             >
+              {/* Badge for Status */}
+              <span
+                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                  owner.status === "Approved"
+                    ? "bg-green-100 text-green-800"
+                    : owner.status === "Rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {owner.status}
+              </span>
+
               <h3 className="text-lg font-bold text-gray-800">
-                Name : {owner.name}
+                Name: {owner.name}
               </h3>
-              <p className="text-sm text-gray-600">Email : {owner.email}</p>
+              <p className="text-sm text-gray-600">Email: {owner.email}</p>
               <p className="text-sm text-gray-600">
                 Contact Number: {owner.mobile}
               </p>
-              <p className="text-sm text-gray-600">Status: {owner.status}</p>
               <p className="text-sm text-gray-600">
                 Registered on: {new Date(owner.createdAt).toLocaleDateString()}
               </p>
@@ -134,42 +129,25 @@ const ManageGymOwner = () => {
                 >
                   <EyeIcon className="w-3 h-3" />
                 </button>
-                {!statuses[owner.id] && (
-                  <button
-                    onClick={() => handleApprove(owner)}
-                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                    title="Approve"
-                  >
-                    <CheckIcon className="w-3 h-3" />
-                  </button>
+                {owner.status === "Pending" && (
+                  <>
+                    <button
+                      onClick={() => handleApprove(owner)}
+                      className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                      title="Approve"
+                    >
+                      <CheckIcon className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => handleReject(owner)}
+                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                      title="Reject"
+                    >
+                      <XIcon className="w-3 h-3" />
+                    </button>
+                  </>
                 )}
-                {!statuses[owner.id] && (
-                  <button
-                    onClick={() => handleReject(owner)}
-                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                    title="Reject"
-                  >
-                    <XIcon className="w-3 h-3" />
-                  </button>
-                )}
-                {/* <button
-                  onClick={() => handleEdit(owner)}
-                  className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
-                  title="Edit"
-                >
-                  <PencilIcon className="w-3 h-3" />
-                </button> */}
               </div>
-              {statuses[owner.id] === "approved" && (
-                <span className="absolute top-2 right-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                  Approved
-                </span>
-              )}
-              {statuses[owner.id] === "rejected" && (
-                <span className="absolute top-2 right-2 bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                  Rejected
-                </span>
-              )}
             </div>
           ))}
         </div>
@@ -243,20 +221,17 @@ const ManageGymOwner = () => {
               </button>
             </div>
             <div className="flex flex-col items-center">
-              <img
-                src={selectedOwner.image}
-                alt={selectedOwner.name}
-                className="w-24 h-24 rounded-full mb-4"
-              />
               <h3 className="text-lg font-bold text-gray-800">
                 {selectedOwner.name}
               </h3>
               <p className="text-sm text-gray-600">{selectedOwner.email}</p>
-              <p className="text-sm text-gray-600">{selectedOwner.phone}</p>
-              <p className="text-sm text-gray-600">{selectedOwner.dob}</p>
-              <p className="text-sm text-gray-600">{selectedOwner.address}</p>
+              <p className="text-sm text-gray-600">{selectedOwner.mobile}</p>
               <p className="text-sm text-gray-600">
-                ID: {selectedOwner.idNumber}
+                Registered on:{" "}
+                {new Date(selectedOwner.createdAt).toLocaleDateString()}
+              </p>
+              <p className="text-sm text-gray-600">
+                Status: {selectedOwner.status}
               </p>
             </div>
           </div>

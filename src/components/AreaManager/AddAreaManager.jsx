@@ -4,10 +4,11 @@ import Sidebar from "../../reuseable/Sidebar";
 import { addAreaManagerRequest } from "../../redux/actions/areaManagerActions";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const AddAreaManager = () => {
   const dispatch = useDispatch();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,7 +20,7 @@ const AddAreaManager = () => {
     profileImage: null,
     location: {
       address: "",
-      coordinates: ["", ""], // [longitude, latitude]
+      coordinates: ["", ""],
     },
     password: "",
     cpassword: "",
@@ -27,7 +28,6 @@ const AddAreaManager = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "address") {
       setFormData((prev) => ({
         ...prev,
@@ -55,7 +55,6 @@ const AddAreaManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.cpassword) {
       toast.error("Passwords do not match!");
       return;
@@ -72,23 +71,18 @@ const AddAreaManager = () => {
           formDataToSend.append(key, formData[key]);
         }
       });
-
-      const response = await dispatch(addAreaManagerRequest(formDataToSend));
-
+      const response = dispatch(addAreaManagerRequest(formDataToSend));
       if (response?.status === 200) {
-        toast.success(response.message || "Area Manager added successfully!");
+        navigate("/pending-gym-owners");
       } else {
-        toast.error(response.message || "Failed to add Area Manager!");
+        toast.error("Failed to add area manager. Please try again.");
       }
-    } catch (error) {
-      toast.error("An error occurred while adding the Area Manager.");
-    }
+    } catch (error) {}
   };
 
   return (
     <div className="flex h-screen">
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
-
+      <Sidebar />
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Add Area Manager

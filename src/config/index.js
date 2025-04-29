@@ -8,7 +8,10 @@ export const BASE_URL = "http://localhost:65273/api";
 // export const MEDIA_URL = "https://anygym-api.iqsetters.com";
 
 export const LOGIN_URL = "/admin/login";
-export const GYM_REQUEST_URL = "/staff/gym-request-pending";
+
+export const PENDING_GYM_REQUEST_URL = "/staff/gym-request-pending";
+export const APPROVE_AND_REJECT_GYM_REQUEST_URL = "/staff/approve-gym/";
+export const APPROVED_GYM_REQUEST_URL = "/staff/gym-request-approved";
 
 export const AMENTIY_URL = "/admin/amenities";
 export const DELETEAMENTY_URL = "/admin/deleteAmenities";

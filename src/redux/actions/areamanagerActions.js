@@ -8,33 +8,37 @@ import {
 } from "./actionTypes";
 
 // Fetch Area Managers Actions
-export const fetchAreaManagersRequest = (page = 1, perPage = 10, searchQuery = "") => ({
+export const fetchAreaManagersRequest = (
+  page = 1,
+  perPage = 10,
+  searchQuery = ""
+) => ({
   type: FETCH_AREA_MANAGERS_REQUEST,
   payload: { page, perPage, searchQuery },
 });
 
 export const fetchAreaManagersSuccess = (managers) => ({
   type: FETCH_AREA_MANAGERS_SUCCESS,
-  payload: managers, 
+  payload: managers,
 });
 
 export const fetchAreaManagersFailure = (error) => ({
   type: FETCH_AREA_MANAGERS_FAILURE,
-  payload: error, 
+  payload: error,
 });
 
 // Add Area Manager Actions
 export const addAreaManagerRequest = (managerData) => ({
   type: ADD_AREA_MANAGER_REQUEST,
-  payload: managerData, 
+  payload: managerData,
 });
 
 export const addAreaManagerSuccess = (manager) => ({
   type: ADD_AREA_MANAGER_SUCCESS,
-  payload: manager, 
+  payload: manager,
 });
 
 export const addAreaManagerFailure = (error) => ({
   type: ADD_AREA_MANAGER_FAILURE,
-  payload: error, 
+  payload: error,
 });

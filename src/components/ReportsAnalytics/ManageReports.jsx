@@ -2,7 +2,7 @@ import Sidebar from "../../reuseable/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 
-const ManageSubscriptions = () => {
+const ManageReports = () => {
   const navigate = useNavigate();
 
   return (
@@ -11,9 +11,7 @@ const ManageSubscriptions = () => {
 
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">
-            All Subscriptions
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-700">All Reports</h2>
           <div className="flex space-x-4">
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
@@ -28,7 +26,7 @@ const ManageSubscriptions = () => {
               onClick={() => navigate("/manage-subscriptions")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
             >
-              + Add Subscriptions
+              + Add Reports
             </button>
           </div>
         </div>
@@ -38,4 +36,4 @@ const ManageSubscriptions = () => {
   );
 };
 
-export default ManageSubscriptions;
+export default ManageReports;
