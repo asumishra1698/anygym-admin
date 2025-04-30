@@ -8,7 +8,6 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const username = useSelector((state) => state.auth.user?.name);
-
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
