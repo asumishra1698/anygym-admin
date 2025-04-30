@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../reuseable/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
+import Layout from "../../reuseable/Layout";
 import { fetchRejectedGymsRequest } from "../../redux/actions/rejectedGymActions";
 import { MEDIA_URL } from "../../config";
 
@@ -11,7 +11,11 @@ const ManageRejectedGym = () => {
   const dispatch = useDispatch();
 
   // Fetch rejected gyms from Redux state
-  const { gyms: rejectedGyms, loading, error } = useSelector((state) => state.rejectedGyms);
+  const {
+    gyms: rejectedGyms,
+    loading,
+    error,
+  } = useSelector((state) => state.rejectedGyms);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
@@ -26,17 +30,14 @@ const ManageRejectedGym = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white fixed h-full">
-        <Sidebar />
-      </div>
-
-      {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 bg-gray-100 overflow-y-auto">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">Rejected Gyms</h2>
+          <h2 className="text-2xl font-semibold text-gray-700">
+            Rejected Gyms
+          </h2>
           <div className="flex space-x-4">
+            {/* Search Input */}
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -46,6 +47,7 @@ const ManageRejectedGym = () => {
               />
             </div>
 
+            {/* Add Gym Button */}
             <button
               onClick={() => navigate("/add-gym")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
@@ -184,7 +186,7 @@ const ManageRejectedGym = () => {
           </div>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

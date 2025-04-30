@@ -10,7 +10,7 @@ import {
   addAreaManagerFailure,
 } from "../actions/areaManagerActions";
 
-import { getRequest, postRequest } from "../../utils/apiHelper";
+import { postRequest } from "../../utils/apiHelper";
 import { BASE_URL, AREA_MANAGER_URL, ADD_AREA_MANAGER_URL } from "../../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,7 +20,7 @@ function* fetchAreaManagersSaga(action) {
   const { page, perPage, searchQuery } = action.payload;
   try {
     const response = yield call(
-      getRequest,
+      postRequest,
       `${BASE_URL}${AREA_MANAGER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
     );
 

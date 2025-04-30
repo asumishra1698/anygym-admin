@@ -1,11 +1,10 @@
 //Local
-export const MEDIA_URL = "http://localhost:65273";
-export const BASE_URL = "http://localhost:65273/api";
+// export const MEDIA_URL = "http://localhost:65273";
+// export const BASE_URL = "http://localhost:65273/api";
 
 //Live
-
-// export const BASE_URL = "https://anygym-api.iqsetters.com/api";
-// export const MEDIA_URL = "https://anygym-api.iqsetters.com";
+export const BASE_URL = "https://anygym-api.iqsetters.com/api";
+export const MEDIA_URL = "https://anygym-api.iqsetters.com";
 
 export const LOGIN_URL = "/admin/login";
 

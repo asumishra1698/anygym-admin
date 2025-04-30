@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../reuseable/Sidebar";
+import Layout from "../../../reuseable/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
+import { PencilIcon, TrashIcon, SearchIcon } from "@heroicons/react/solid";
 import {
   addAmenityRequest,
   fetchAmenitiesRequest,
   updateAmenityRequest,
   deleteAmenityRequest,
 } from "../../../redux/actions/amenityActions";
-import { SearchIcon } from "@heroicons/react/solid";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,7 +23,6 @@ const ManageAmenities = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedAmenity, setSelectedAmenity] = useState(null);
   const [amenityName, setAmenityName] = useState("");
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAmenitiesRequest());
@@ -34,12 +32,10 @@ const ManageAmenities = () => {
     e.preventDefault();
     if (amenityName.trim()) {
       if (isEditMode) {
-        // Dispatch update action
         dispatch(
           updateAmenityRequest({ id: selectedAmenity._id, name: amenityName })
         );
       } else {
-        // Dispatch add action
         dispatch(addAmenityRequest({ name: amenityName }));
         toast.success("Amenity added successfully!");
       }
@@ -73,9 +69,8 @@ const ManageAmenities = () => {
   }, [error]);
 
   return (
-    <div className="flex h-screen">
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">
             All Amenities
@@ -190,7 +185,7 @@ const ManageAmenities = () => {
         </div>
       )}
       <ToastContainer />
-    </div>
+    </Layout>
   );
 };
 

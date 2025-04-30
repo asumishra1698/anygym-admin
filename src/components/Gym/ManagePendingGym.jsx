@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
 import { FaCheck, FaTimes } from "react-icons/fa";
-import Sidebar from "../../reuseable/Sidebar";
+import Layout from "../../reuseable/Layout";
 import {
   fetchPendingGymsRequest,
   updateGymStatusRequest,
@@ -37,19 +37,16 @@ const ManagePendingGym = () => {
   };
 
   const handleReject = (gymId) => {
-    dispatch(updateGymStatusRequest(gymId, "Reject"));
+    dispatch(updateGymStatusRequest(gymId, "Rejected"));
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">Pending Gyms</h2>
           <div className="flex space-x-4">
+            {/* Search Input */}
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -59,6 +56,7 @@ const ManagePendingGym = () => {
               />
             </div>
 
+            {/* Add Gym Button */}
             <button
               onClick={() => navigate("/add-gym")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -257,7 +255,7 @@ const ManagePendingGym = () => {
           </div>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CheckIcon, XIcon, EyeIcon, SearchIcon } from "@heroicons/react/solid";
-import Sidebar from "../../reuseable/Sidebar";
+import Layout from "../../reuseable/Layout";
 import { fetchGymOwnersRequest } from "../../redux/actions/gymOwnerActions";
 
 const ManageGymOwner = () => {
@@ -59,10 +59,8 @@ const ManageGymOwner = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">Gym Owners</h2>
           <div className="flex space-x-4">
@@ -272,7 +270,7 @@ const ManageGymOwner = () => {
           </div>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

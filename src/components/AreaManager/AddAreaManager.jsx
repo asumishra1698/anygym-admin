@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import Sidebar from "../../reuseable/Sidebar";
 import { addAreaManagerRequest } from "../../redux/actions/areaManagerActions";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../reuseable/Layout";
 
 const AddAreaManager = () => {
   const dispatch = useDispatch();
@@ -71,19 +71,21 @@ const AddAreaManager = () => {
           formDataToSend.append(key, formData[key]);
         }
       });
-      const response = dispatch(addAreaManagerRequest(formDataToSend));
+      const response = await dispatch(addAreaManagerRequest(formDataToSend));
       if (response?.status === 200) {
-        navigate("/pending-gym-owners");
+        toast.success("Area Manager added successfully!");
+        navigate("/manage-area-manager");
       } else {
         toast.error("Failed to add area manager. Please try again.");
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Add Area Manager
         </h1>
@@ -244,7 +246,7 @@ const AddAreaManager = () => {
 
         <ToastContainer />
       </main>
-    </div>
+    </Layout>
   );
 };
 

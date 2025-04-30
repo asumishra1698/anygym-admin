@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
-import Sidebar from "../../reuseable/Sidebar";
+import Layout from "../../reuseable/Layout";
 import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 
@@ -28,17 +28,14 @@ const ManageApprovedGym = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-700">
             Approved Gyms
           </h2>
           <div className="flex space-x-4">
+            {/* Search Input */}
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -48,6 +45,7 @@ const ManageApprovedGym = () => {
               />
             </div>
 
+            {/* Add Gym Button */}
             <button
               onClick={() => navigate("/add-gym")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -64,7 +62,6 @@ const ManageApprovedGym = () => {
           <p className="text-gray-600">No approved gyms available.</p>
         )}
 
-        {/* Gym List */}
         {/* Gym List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {approvedGyms.map((gym) => (
@@ -230,7 +227,7 @@ const ManageApprovedGym = () => {
           </div>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

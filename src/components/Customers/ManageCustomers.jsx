@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import Sidebar from "../../reuseable/Sidebar";
+import React from "react";
+import Layout from "../../reuseable/Layout";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 
-const ManageMembers = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+const ManageCustomers = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-screen">
-      <Sidebar onToggle={(collapsed) => setIsSidebarCollapsed(collapsed)} />
-
-      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
+    <Layout>
+      <main className="bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">All Customers</h2>
+          <h2 className="text-2xl font-semibold text-gray-700">
+            All Customers
+          </h2>
           <div className="flex space-x-4">
+            {/* Search Input */}
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
@@ -24,6 +24,7 @@ const ManageMembers = () => {
               />
             </div>
 
+            {/* Add Customers Button */}
             <button
               onClick={() => navigate("/manage-customers")}
               className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
@@ -34,8 +35,8 @@ const ManageMembers = () => {
         </div>
         <p>Coming Soon</p>
       </main>
-    </div>
+    </Layout>
   );
 };
 
-export default ManageMembers;
+export default ManageCustomers;

@@ -188,11 +188,11 @@ const Sidebar = () => {
               className="flex items-center py-2 px-4 rounded hover:bg-green-700"
             >
               <ClipboardListIcon className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Reports & Analytics</span>}
+              {!isCollapsed && (
+                <span className="ml-3">Reports & Analytics</span>
+              )}
             </Link>
           </li>
-
-
 
           {/* Settings Menu with Submenu */}
           <li>
@@ -232,7 +232,7 @@ const Sidebar = () => {
       <div className="p-4 border-t border-green-700">
         <button
           onClick={handleLogout}
-          className="flex items-center w-full py-2 px-4 bg-red-500 rounded hover:bg-red-600"
+          className="flex items-center w-full py-2 px-4 bg-black rounded hover:bg-red-600"
         >
           <LogoutIcon className="w-5 h-5" />
           {!isCollapsed && <span className="ml-3">Logout</span>}
