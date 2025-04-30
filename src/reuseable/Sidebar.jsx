@@ -13,9 +13,8 @@ import {
   AcademicCapIcon,
 } from "@heroicons/react/outline";
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed = false, setIsCollapsed = () => {} }) => {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isGymSubmenuOpen, setIsGymSubmenuOpen] = useState(false);
   const [isSettingSubmenuOpen, setIsSettingSubmenuOpen] = useState(false);
 
@@ -28,7 +27,7 @@ const Sidebar = () => {
     <aside
       className={`${
         isCollapsed ? "w-20" : "w-64"
-      } bg-gradient-to-br from-green-700 to-green-800 text-white flex flex-col h-screen transition-all duration-300 relative`}
+      } bg-gradient-to-br from-green-700 to-green-800 text-white flex flex-col h-screen transition-all duration-300 relative z-50`}
       style={{
         background: "linear-gradient(45deg, #29a643, #1e7d34)",
       }}

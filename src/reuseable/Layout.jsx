@@ -9,6 +9,8 @@ const Layout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const username = useSelector((state) => state.auth.user?.name);
 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   useEffect(() => {
     if (username) {
       localStorage.setItem("username", username);
@@ -26,9 +28,13 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className="flex-1 flex flex-col">
-        <header className="p-4 flex justify-between items-center bg-white shadow fixed top-0 left-64 right-0 z-10">
+        <header
+          className={`p-4 flex justify-between items-center bg-white shadow fixed top-0 ${
+            isCollapsed ? "left-20" : "left-64"
+          } right-0 z-10`}
+        >
           <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
           <div
             className="relative"
