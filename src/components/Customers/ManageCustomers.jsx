@@ -27,7 +27,7 @@ const ManageCustomers = () => {
             {/* Add Customers Button */}
             <button
               onClick={() => navigate("/manage-customers")}
-              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
             >
               + Add Customers
             </button>

@@ -32,80 +32,78 @@ const ManageRejectedGym = () => {
   return (
     <Layout>
       {/* <main className="bg-gray-100 overflow-y-auto p-6"> */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
-            Rejected Gyms
-          </h2>
-          <div className="flex items-center space-x-4 w-full md:w-auto">
-            {/* Search Input */}
-            <div className="relative w-full md:w-auto">
-              <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-              />
-            </div>
-
-            {/* Add Gym Button */}
-            <button
-              onClick={() => navigate("/add-gym")}
-              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
-            >
-              + Add Gym
-            </button>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
+          Rejected Gyms
+        </h2>
+        <div className="flex items-center space-x-4 w-full md:w-auto">
+          {/* Search Input */}
+          <div className="relative w-full md:w-auto">
+            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
           </div>
+
+          {/* Add Gym Button */}
+          <button
+            onClick={() => navigate("/add-gym")}
+            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
+          >
+            + Add Gym
+          </button>
         </div>
+      </div>
 
-        {/* Loading, Error, and Empty States */}
-        {loading && <p className="text-gray-600">Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && rejectedGyms.length === 0 && (
-          <p className="text-gray-600">No rejected gyms available.</p>
-        )}
+      {/* Loading, Error, and Empty States */}
+      {loading && <p className="text-gray-600">Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && rejectedGyms.length === 0 && (
+        <p className="text-gray-600">No rejected gyms available.</p>
+      )}
 
-        {/* Gym List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rejectedGyms.map((gym) => (
-            <div
-              key={gym._id}
-              className="bg-white p-4 rounded-lg shadow relative"
-            >
-              {/* Status Badge */}
-              <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
-                Rejected
-              </span>
+      {/* Gym List */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {rejectedGyms.map((gym) => (
+          <div
+            key={gym._id}
+            className="bg-white p-4 rounded-lg shadow relative"
+          >
+            {/* Status Badge */}
+            <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
+              Rejected
+            </span>
 
-              {/* Gym Image */}
-              <img
-                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-                alt="Gym Front"
-                className="w-full h-40 object-cover rounded-lg mb-2"
-              />
+            {/* Gym Image */}
+            <img
+              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+              alt="Gym Front"
+              className="w-full h-40 object-cover rounded-lg mb-2"
+            />
 
-              {/* Gym Details */}
-              <h3 className="text-lg font-semibold text-gray-800">
-                {gym.name}
-              </h3>
-              <p className="text-sm text-gray-600">
-                Address: {gym.location.address}
-              </p>
-              <p className="text-sm text-gray-600">Status: {gym.status}</p>
+            {/* Gym Details */}
+            <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
+            <p className="text-sm text-gray-600">
+              Address: {gym.location.address}
+            </p>
+            <p className="text-sm text-gray-600">Status: {gym.status}</p>
 
-              {/* Action Icons */}
-              <div className="absolute bottom-4 right-4 flex space-x-2">
-                {/* View Icon */}
-                <button
-                  onClick={() => handleViewDetails(gym)}
-                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
-                  title="View"
-                >
-                  <EyeIcon className="w-4 h-4" />
-                </button>
-              </div>
+            {/* Action Icons */}
+            <div className="absolute bottom-4 right-4 flex space-x-2">
+              {/* View Icon */}
+              <button
+                onClick={() => handleViewDetails(gym)}
+                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                title="View"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
       {/* </main> */}
 
       {/* Gym Details Modal */}

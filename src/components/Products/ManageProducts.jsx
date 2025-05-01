@@ -26,7 +26,7 @@ const ManageProducts = () => {
             {/* Add Products Button */}
             <button
               onClick={() => navigate("/manage-subscriptions")}
-              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
             >
               + Add Products
             </button>

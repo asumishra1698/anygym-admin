@@ -29,7 +29,7 @@ const EditGymOwner = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Gym Owner Updated:", formData);
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1); 
   };
 
   return (
