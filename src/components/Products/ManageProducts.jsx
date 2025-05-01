@@ -1,4 +1,4 @@
-import Sidebar from "../../reuseable/Sidebar";
+import Layout from "../../reuseable/Layout";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 
@@ -6,14 +6,10 @@ const ManageProducts = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-
+    <Layout>
       <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">
-            All Products
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-700">All Products</h2>
           <div className="flex space-x-4">
             <div className="relative">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
@@ -34,7 +30,7 @@ const ManageProducts = () => {
         </div>
         <p>Coming Soon</p>
       </main>
-    </div>
+    </Layout>
   );
 };
 

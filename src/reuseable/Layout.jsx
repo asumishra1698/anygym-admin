@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import { UserCircleIcon, LogoutIcon } from "@heroicons/react/solid";
 
 const Layout = ({ children }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const username = useSelector((state) => state.auth.user?.name);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -30,11 +30,11 @@ const Layout = ({ children }) => {
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className="flex-1 flex flex-col">
         <header
-          className={`p-4 flex justify-between items-center bg-white shadow fixed top-0 ${
-            isCollapsed ? "left-20" : "left-64"
-          } right-0 z-10`}
+          className={`p-4 flex justify-between items-center bg-white shadow fixed left-0 right-0 z-10 top-0 ${
+            isCollapsed ? "md:left-20" : "md:left-64"
+          }`}
         >
-          <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
+          <h1 className="text-xl font-bold text-gray-800 pl-5">Dashboard</h1>
           <div
             className="relative"
             onMouseEnter={() => setIsDropdownOpen(true)}

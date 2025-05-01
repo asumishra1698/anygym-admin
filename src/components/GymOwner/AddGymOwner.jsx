@@ -24,7 +24,6 @@ const AddGymOwner = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Gym Owner Added:", formData);
-    // Add your logic to handle form submission
   };
 
   return (
@@ -35,113 +34,120 @@ const AddGymOwner = () => {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md space-y-4"
         >
-          {/* Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
+          {/* Three Inputs in One Line */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter name"
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter email"
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Enter phone number"
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* DOB */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                DOB
+              </label>
+              <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Address
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Enter address"
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
+
+            {/* ID Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                ID Number
+              </label>
+              <input
+                type="text"
+                name="idNumber"
+                value={formData.idNumber}
+                onChange={handleChange}
+                placeholder="Enter ID number"
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                required
+              />
+            </div>
           </div>
 
-          {/* Phone */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Enter phone number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* DOB */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              DOB
-            </label>
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Address */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              placeholder="Enter address"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* ID Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              ID Number
-            </label>
-            <input
-              type="text"
-              name="idNumber"
-              value={formData.idNumber}
-              onChange={handleChange}
-              placeholder="Enter ID number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-
-          {/* Profile Picture */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Upload Profile Picture
-            </label>
-            <input
-              type="file"
-              name="profilePicture"
-              onChange={handleFileChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              accept="image/*"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Profile Picture */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Profile Picture
+              </label>
+              <input
+                type="file"
+                name="profilePicture"
+                onChange={handleFileChange}
+                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                accept="image/*"
+              />
+            </div>
           </div>
 
           {/* Submit Button */}
