@@ -60,7 +60,7 @@ const ManagePendingGym = () => {
           {/* Add Gym Button */}
           <button
             onClick={() => navigate("/add-gym")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
           >
             + Add Gym
           </button>

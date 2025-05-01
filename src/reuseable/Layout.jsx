@@ -3,12 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { UserCircleIcon, LogoutIcon } from "@heroicons/react/solid";
+import Loader from "./Loader";
 
 const Layout = ({ children }) => {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const username = useSelector((state) => state.auth.user?.name);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  // Combine loading states from multiple reducers
+  const { loading: areaManagerLoading } = useSelector(
+    (state) => state.areaManager
+  );
+  const { loading: gymOwnerLoading } = useSelector((state) => state.gymOwner);
+  const { loading: pendingGymsLoading } = useSelector(
+    (state) => state.pendingGyms
+  );
+  const { loading: approvedGymsLoading } = useSelector(
+    (state) => state.approvedGyms
+  );
+  const { loading: rejectedGymsLoading } = useSelector(
+    (state) => state.rejectedGyms
+  );
+  const { loading: amenityLoading } = useSelector(
+    (state) => state.amenity
+  );
+
+  // Determine if any loading state is active
+  const isLoading =
+    areaManagerLoading ||
+    gymOwnerLoading ||
+    pendingGymsLoading ||
+    approvedGymsLoading ||
+    rejectedGymsLoading ||
+    amenityLoading;
 
   useEffect(() => {
     if (username) {
@@ -27,6 +54,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen">
+      <Loader loading={isLoading} />
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className="flex-1 flex flex-col">
         <header
@@ -34,7 +62,7 @@ const Layout = ({ children }) => {
             isCollapsed ? "md:left-20" : "md:left-64"
           }`}
         >
-          <h1 className="text-xl font-bold text-gray-800 pl-5">Dashboard</h1>
+          <h1 className="text-xl font-bold text-gray-800 pl-8">Dashboard</h1>
           <div
             className="relative"
             onMouseEnter={() => setIsDropdownOpen(true)}

@@ -12,11 +12,11 @@ import {
 
 const initialState = {
   loading: false,
-  areaManagers: [], // List of area managers (records)
-  currentPage: 1, // Current page number
-  perPage: 10, // Number of records per page
-  totalRecords: 0, // Total number of records
-  error: null, // Error message
+  areaManagers: [], 
+  currentPage: 1, 
+  perPage: 10, 
+  totalRecords: 0,
+  error: null,
 };
 
 const areaManagerReducer = (state = initialState, action) => {

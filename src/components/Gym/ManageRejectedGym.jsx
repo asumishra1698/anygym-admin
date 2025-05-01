@@ -50,7 +50,7 @@ const ManageRejectedGym = () => {
           {/* Add Gym Button */}
           <button
             onClick={() => navigate("/add-gym")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
+            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
           >
             + Add Gym
           </button>
