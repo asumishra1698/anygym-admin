@@ -13,8 +13,8 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
     longitude: manager.longitude || "",
     role: manager.role || "",
     idNumber: manager.idNumber || "",
-    referral_id: manager.referral_id || "", // Referral ID field
-    status: manager.status || "Active", // Default status
+    referral_id: manager.referral_id || "",
+    status: manager.status || "Active",
     profilePicture: manager.profilePicture || null,
   });
 
@@ -34,14 +34,14 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
+      <div className="bg-gray-100 p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Edit Area Manager
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {/* First Name */}
           <div>
@@ -240,7 +240,7 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
           </div>
 
           {/* Profile Picture */}
-          <div className="md:col-span-3">
+          <div className="lg:col-span-3">
             <label className="block text-sm font-medium text-gray-700">
               Upload Profile Picture
             </label>
@@ -254,7 +254,7 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
           </div>
 
           {/* Buttons */}
-          <div className="md:col-span-3 flex justify-end space-x-4">
+          <div className="lg:col-span-3 flex justify-end space-x-4">
             <button
               type="button"
               onClick={onCancel}
@@ -270,7 +270,7 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
             </button>
           </div>
         </form>
-      </main>
+      </div>
     </Layout>
   );
 };

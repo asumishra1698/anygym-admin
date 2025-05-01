@@ -70,18 +70,18 @@ const ManageAmenities = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">
+      <div className="p-0 bg-gray-100">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
             All Amenities
           </h2>
-          <div className="flex space-x-4">
-            <div className="relative">
+          <div className="flex items-center space-x-4 w-full md:w-auto">
+            <div className="relative w-full md:w-auto">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
                 type="text"
                 placeholder="Search..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
             <button
@@ -102,7 +102,7 @@ const ManageAmenities = () => {
           <p className="text-gray-600">No amenities available.</p>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {amenities.map((amenity) => (
             <div key={amenity._id} className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-semibold text-gray-800">
@@ -133,7 +133,7 @@ const ManageAmenities = () => {
             </div>
           ))}
         </div>
-      </main>
+      </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

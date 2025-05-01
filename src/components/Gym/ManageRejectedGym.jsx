@@ -31,19 +31,19 @@ const ManageRejectedGym = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">
+      {/* <main className="bg-gray-100 overflow-y-auto p-6"> */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
             Rejected Gyms
           </h2>
-          <div className="flex space-x-4">
+          <div className="flex items-center space-x-4 w-full md:w-auto">
             {/* Search Input */}
-            <div className="relative">
+            <div className="relative w-full md:w-auto">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
               <input
                 type="text"
                 placeholder="Search..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
 
@@ -65,7 +65,7 @@ const ManageRejectedGym = () => {
         )}
 
         {/* Gym List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {rejectedGyms.map((gym) => (
             <div
               key={gym._id}
@@ -106,11 +106,11 @@ const ManageRejectedGym = () => {
             </div>
           ))}
         </div>
-      </main>
+      {/* </main> */}
 
       {/* Gym Details Modal */}
       {isModalOpen && selectedGym && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-y-auto max-h-screen">
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-4">

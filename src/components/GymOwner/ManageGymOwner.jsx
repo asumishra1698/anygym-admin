@@ -60,116 +60,116 @@ const ManageGymOwner = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-700">Gym Owners</h2>
-          <div className="flex space-x-4">
-            <div className="relative">
-              <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-              />
-            </div>
-
-            <button
-              onClick={() => navigate("/add-gym-owner")}
-              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800"
-            >
-              + Add Gym Owner
-            </button>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+      <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">Gym Owners</h2>
+        <div className="flex items-center space-x-4 w-full md:w-auto">
+          <div className="relative w-full md:w-auto">
+            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
           </div>
+
+          <button
+            onClick={() => navigate("/add-gym-owner")}
+            className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            + Add Gym Owner
+          </button>
         </div>
+      </div>
 
-        {loading && <p className="text-gray-600">Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && gymOwners.length === 0 && (
-          <p className="text-gray-600">No gym owners found.</p>
-        )}
+      {loading && <p className="text-gray-600">Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && gymOwners.length === 0 && (
+        <p className="text-gray-600">No gym owners found.</p>
+      )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gymOwners.map((owner) => (
-            <div
-              key={owner._id}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gymOwners.map((owner) => (
+          <div
+            key={owner._id}
+            className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
+          >
+            {/* Badge for Status */}
+            <span
+              className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                owner.status === "Approved"
+                  ? "bg-green-100 text-green-800"
+                  : owner.status === "Rejected"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
             >
-              {/* Badge for Status */}
-              <span
-                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                  owner.status === "Approved"
-                    ? "bg-green-100 text-green-800"
-                    : owner.status === "Rejected"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+              {owner.status}
+            </span>
+
+            <h3 className="text-lg font-bold text-gray-800">
+              Name: {owner.name}
+            </h3>
+            <p className="text-sm text-gray-600">Email: {owner.email}</p>
+            <p className="text-sm text-gray-600">
+              Contact Number: {owner.mobile}
+            </p>
+            <p className="text-sm text-gray-600">
+              Registered on: {new Date(owner.createdAt).toLocaleDateString()}
+            </p>
+            <div className="flex space-x-4 mt-4">
+              <button
+                onClick={() => handleView(owner)}
+                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                title="View"
               >
-                {owner.status}
-              </span>
-
-              <h3 className="text-lg font-bold text-gray-800">
-                Name: {owner.name}
-              </h3>
-              <p className="text-sm text-gray-600">Email: {owner.email}</p>
-              <p className="text-sm text-gray-600">
-                Contact Number: {owner.mobile}
-              </p>
-              <p className="text-sm text-gray-600">
-                Registered on: {new Date(owner.createdAt).toLocaleDateString()}
-              </p>
-              <div className="flex space-x-4 mt-4">
-                <button
-                  onClick={() => handleView(owner)}
-                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
-                  title="View"
-                >
-                  <EyeIcon className="w-3 h-3" />
-                </button>
-                {owner.status === "Pending" && (
-                  <>
-                    <button
-                      onClick={() => handleApprove(owner)}
-                      className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                      title="Approve"
-                    >
-                      <CheckIcon className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => handleReject(owner)}
-                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                      title="Reject"
-                    >
-                      <XIcon className="w-3 h-3" />
-                    </button>
-                  </>
-                )}
-              </div>
+                <EyeIcon className="w-3 h-3" />
+              </button>
+              {owner.status === "Pending" && (
+                <>
+                  <button
+                    onClick={() => handleApprove(owner)}
+                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                    title="Approve"
+                  >
+                    <CheckIcon className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => handleReject(owner)}
+                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                    title="Reject"
+                  >
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                </>
+              )}
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="flex items-center space-x-2">
+          <label htmlFor="limit" className="text-gray-700">
+            Items per page:
+          </label>
+          <select
+            id="limit"
+            value={limit}
+            onChange={(e) => setLimit(Number(e.target.value))}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            {itemsPerPageOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Pagination Controls */}
-        <div className="flex justify-end items-center mt-6 space-x-4">
-          <div className="flex items-center space-x-2">
-            <label htmlFor="limit" className="text-gray-700">
-              Items per page:
-            </label>
-            <select
-              id="limit"
-              value={limit}
-              onChange={(e) => setLimit(Number(e.target.value))}
-              className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              {itemsPerPageOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
+        <div className="flex items-center space-x-4">
           {/* Previous Button */}
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -203,12 +203,12 @@ const ManageGymOwner = () => {
             Next
           </button>
         </div>
-      </main>
+      </div>
 
       {/* Owner Details Popup */}
       {isPopupOpen && selectedOwner && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-gray-800">Owner Details</h2>
               <button
@@ -238,8 +238,8 @@ const ManageGymOwner = () => {
 
       {/* Action Popup */}
       {actionPopup.isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               {actionPopup.action === "approve"
                 ? "Approve Owner"
