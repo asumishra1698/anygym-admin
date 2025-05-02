@@ -24,20 +24,27 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true); // Mark the form as submitted
+    setIsSubmitted(true);
     dispatch(loginRequest(formData));
   };
 
-  if (isSubmitted && token) {
-    toast.success(message || "Login successful!"); // Show success toast only once
-    setIsSubmitted(false); // Reset submission state to prevent duplicate toasts
-    navigate("/dashboard");
-  }
+  React.useEffect(() => {
+    if (isSubmitted && token) {
+      // Store user details in local storage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userType", formData.user_type); // Store user type
+      localStorage.setItem("email", formData.email); // Store email or other details if needed
 
-  if (isSubmitted && error) {
-    toast.error(error); // Show error toast if login fails
-    setIsSubmitted(false); // Reset submission state after showing the error
-  }
+      toast.success(message || "Login successful!");
+      setIsSubmitted(false);
+      navigate("/dashboard"); // Redirect to dashboard
+    }
+
+    if (isSubmitted && error) {
+      toast.error(error); // Show error toast if login fails
+      setIsSubmitted(false); // Reset submission state after showing the error
+    }
+  }, [isSubmitted, token, error, message, formData, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">
