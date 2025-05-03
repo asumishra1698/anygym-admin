@@ -12,7 +12,7 @@ const Login = () => {
     user_type: "ADMIN",
     login_type: "with_password",
   });
-  const [isSubmitted, setIsSubmitted] = useState(false); // Track form submission
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, token, message } = useSelector((state) => state.auth);
@@ -30,19 +30,16 @@ const Login = () => {
 
   React.useEffect(() => {
     if (isSubmitted && token) {
-      // Store user details in local storage
       localStorage.setItem("token", token);
-      localStorage.setItem("userType", formData.user_type); // Store user type
-      localStorage.setItem("email", formData.email); // Store email or other details if needed
-
-      toast.success(message || "Login successful!");
+      localStorage.setItem("userType", formData.user_type);
+      localStorage.setItem("email", formData.email);
       setIsSubmitted(false);
-      navigate("/dashboard"); // Redirect to dashboard
+      navigate("/dashboard");
     }
 
     if (isSubmitted && error) {
-      toast.error(error); // Show error toast if login fails
-      setIsSubmitted(false); // Reset submission state after showing the error
+      toast.error(error);
+      setIsSubmitted(false);
     }
   }, [isSubmitted, token, error, message, formData, navigate]);
 
@@ -113,7 +110,6 @@ const Login = () => {
               <option value="SUB_ADMIN">Sub Admin</option>
             </select>
           </div>
-
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
@@ -121,14 +117,9 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
-          <div className="mt-4 text-center">
-            {/* Additional links can go here */}
-          </div>
         </form>
       </div>
     </div>
   );
 };
-
 export default Login;

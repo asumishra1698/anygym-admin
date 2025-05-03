@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  BsHouseDoor, // Home Icon
-  BsMap, // Map Icon
-  BsPeople, // User Group Icon
-  BsBuilding, // Office Building Icon
-  BsBoxArrowRight, // Logout Icon
-  BsChevronLeft, // Chevron Left Icon
-  BsChevronRight, // Chevron Right Icon
-  BsClipboard, // Clipboard List Icon
-  BsGear, // Cog Icon
-  BsBarChart, // Analytics Icon
-  BsWallet, // Wallet Icon
-  BsCreditCard, // Payment Icon
-  BsCardChecklist, // Subscriptions Icon
+  BsHouseDoor,
+  BsMap,
+  BsPeople,
+  BsBuilding,
+  BsBoxArrowRight,
+  BsChevronLeft,
+  BsChevronRight,
+  BsClipboard,
+  BsGear,
+  BsBarChart,
+  BsWallet,
+  BsCreditCard,
+  BsCardChecklist,
 } from "react-icons/bs";
 
 const Sidebar = ({
@@ -27,7 +27,6 @@ const Sidebar = ({
   const [userType, setUserType] = useState(null);
 
   useEffect(() => {
-    // Get user type from local storage
     const storedUserType = localStorage.getItem("userType");
     setUserType(storedUserType);
 
@@ -47,6 +46,7 @@ const Sidebar = ({
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
+    window.location.reload();
   };
 
   return (
@@ -58,7 +58,6 @@ const Sidebar = ({
         onClick={() => setIsSidebarOpen(false)}
       ></div>
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full bg-gradient-to-br from-green-700 to-green-800 text-white flex flex-col transition-transform duration-300 z-50 ${
           isSidebarOpen || !initialIsCollapsed
@@ -71,7 +70,6 @@ const Sidebar = ({
           background: "linear-gradient(45deg, #29a643, #1e7d34)",
         }}
       >
-        {/* Collapse/Expand Button */}
         <button
           onClick={() => setIsCollapsed(!initialIsCollapsed)}
           className="absolute top-4 right-[-35px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
@@ -83,14 +81,12 @@ const Sidebar = ({
           )}
         </button>
 
-        {/* Logo */}
         {!initialIsCollapsed && (
           <div className="p-4 text-center border-b border-green-700">
             <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
           </div>
         )}
 
-        {/* Navigation Menu */}
         <nav className="flex-1 p-4 overflow-y-auto hide-scrollbar">
           <ul className="space-y-4">
             <li>
@@ -103,7 +99,6 @@ const Sidebar = ({
               </Link>
             </li>
 
-            {/* Show Area Manager menu for Admin only */}
             {userType === "ADMIN" && (
               <li>
                 <Link
@@ -118,7 +113,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Show Gym Owner menu for Admin and Area Manager */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
@@ -133,7 +127,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Gym Menu with Submenu */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <div
@@ -183,7 +176,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Show Customers menu for Admin and Area Manager */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
@@ -198,7 +190,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Show Products menu for Admin only */}
             {userType === "ADMIN" && (
               <li>
                 <Link
@@ -213,7 +204,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Show Analytics and Reports menu for Admin only */}
             {userType === "ADMIN" && (
               <li>
                 <Link
@@ -228,7 +218,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Booking/Payment Menu */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
@@ -243,7 +232,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Wallet Menu */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
@@ -258,7 +246,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Subscriptions Menu */}
             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
@@ -273,7 +260,6 @@ const Sidebar = ({
               </li>
             )}
 
-            {/* Show Settings menu for Admin only */}
             {userType === "ADMIN" && (
               <li>
                 <div
@@ -309,7 +295,6 @@ const Sidebar = ({
           </ul>
         </nav>
 
-        {/* Logout Button */}
         <div className="p-4 border-t border-green-700">
           <button
             onClick={handleLogout}

@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { UserCircleIcon, LogoutIcon } from "@heroicons/react/solid";
+import { BsBell } from "react-icons/bs"; // Import Notification Bell Icon
 import Loader from "./Loader";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null); // Timeout for delayed close
   const username = useSelector((state) => state.auth.user?.name);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   // Combine loading states from multiple reducers
   const { loading: areaManagerLoading } = useSelector(
     (state) => state.areaManager
@@ -24,11 +27,8 @@ const Layout = ({ children }) => {
   const { loading: rejectedGymsLoading } = useSelector(
     (state) => state.rejectedGyms
   );
-  const { loading: amenityLoading } = useSelector(
-    (state) => state.amenity
-  );
+  const { loading: amenityLoading } = useSelector((state) => state.amenity);
 
-  // Determine if any loading state is active
   const isLoading =
     areaManagerLoading ||
     gymOwnerLoading ||
@@ -52,6 +52,23 @@ const Layout = ({ children }) => {
     navigate("/my-account");
   };
 
+  const handleMouseEnter = () => {
+    // Clear any existing timeout to prevent premature close
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Set a timeout to delay closing the dropdown
+    const timeout = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 300); // Delay of 300ms
+    setDropdownTimeout(timeout);
+  };
+
   return (
     <div className="flex h-screen">
       <Loader loading={isLoading} />
@@ -63,19 +80,35 @@ const Layout = ({ children }) => {
           }`}
         >
           <h1 className="text-xl font-bold text-gray-800 pl-8">Dashboard</h1>
-          <div
-            className="relative"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <UserCircleIcon className="w-8 h-8 text-gray-600" />
-              <span className="text-gray-800 font-medium">
-                {username || localStorage.getItem("username")}
+          <div className="flex items-center space-x-6">
+            {/* Notification Bell Icon */}
+            <div className="relative cursor-pointer">
+              <BsBell className="w-6 h-6 text-gray-600 hover:text-gray-800" />
+              {/* Optional Notification Badge */}
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                3
               </span>
             </div>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+
+            {/* Profile Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="flex items-center space-x-2 cursor-pointer">
+                <UserCircleIcon className="w-8 h-8 text-gray-600" />
+                <span className="text-gray-800 font-medium">
+                  {username || localStorage.getItem("username")}
+                </span>
+              </div>
+              <div
+                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out transform ${
+                  isDropdownOpen
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95 pointer-events-none"
+                }`}
+              >
                 <button
                   onClick={handleMyAccount}
                   className="flex items-center w-full py-2 px-4 text-gray-700 hover:bg-gray-100"
@@ -92,7 +125,7 @@ const Layout = ({ children }) => {
                   <span className="ml-3">Logout</span>
                 </button>
               </div>
-            )}
+            </div>
           </div>
         </header>
 
