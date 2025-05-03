@@ -6,13 +6,11 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   const userType = localStorage.getItem("userType");
 
   if (!token) {
-    // Redirect to login if no token is found
     return <Navigate to="/login" />;
   }
 
   if (allowedRoles && !allowedRoles.includes(userType)) {
-    // Redirect to "Not Authorized" page if the user role is not allowed
-    return <Navigate to="/not-authorized" />;
+    return <Navigate to="/login" />;
   }
 
   return children;

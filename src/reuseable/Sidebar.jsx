@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  HomeIcon,
-  MapIcon,
-  UserGroupIcon,
-  OfficeBuildingIcon,
-  LogoutIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClipboardListIcon,
-  CogIcon,
-  AcademicCapIcon,
-} from "@heroicons/react/outline";
+  BsHouseDoor, // Home Icon
+  BsMap, // Map Icon
+  BsPeople, // User Group Icon
+  BsBuilding, // Office Building Icon
+  BsBoxArrowRight, // Logout Icon
+  BsChevronLeft, // Chevron Left Icon
+  BsChevronRight, // Chevron Right Icon
+  BsClipboard, // Clipboard List Icon
+  BsGear, // Cog Icon
+  BsBarChart, // Analytics Icon
+  BsWallet, // Wallet Icon
+  BsCreditCard, // Payment Icon
+  BsCardChecklist, // Subscriptions Icon
+} from "react-icons/bs";
 
 const Sidebar = ({
   isCollapsed: initialIsCollapsed = false,
@@ -74,9 +77,9 @@ const Sidebar = ({
           className="absolute top-4 right-[-35px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
         >
           {initialIsCollapsed ? (
-            <ChevronRightIcon className="w-5 h-5" />
+            <BsChevronRight className="w-5 h-5" />
           ) : (
-            <ChevronLeftIcon className="w-5 h-5" />
+            <BsChevronLeft className="w-5 h-5" />
           )}
         </button>
 
@@ -95,7 +98,7 @@ const Sidebar = ({
                 to="/dashboard"
                 className="flex items-center py-2 px-4 rounded hover:bg-green-700"
               >
-                <HomeIcon className="w-5 h-5" />
+                <BsHouseDoor className="w-5 h-5" />
                 {!initialIsCollapsed && <span className="ml-3">Dashboard</span>}
               </Link>
             </li>
@@ -107,7 +110,7 @@ const Sidebar = ({
                   to="/manage-area-manager"
                   className="flex items-center py-2 px-4 rounded hover:bg-green-700"
                 >
-                  <MapIcon className="w-5 h-5" />
+                  <BsMap className="w-5 h-5" />
                   {!initialIsCollapsed && (
                     <span className="ml-3">Area Manager</span>
                   )}
@@ -122,7 +125,7 @@ const Sidebar = ({
                   to="/manage-gym-owner"
                   className="flex items-center py-2 px-4 rounded hover:bg-green-700"
                 >
-                  <OfficeBuildingIcon className="w-5 h-5" />
+                  <BsBuilding className="w-5 h-5" />
                   {!initialIsCollapsed && (
                     <span className="ml-3">Gym Owner</span>
                   )}
@@ -137,11 +140,11 @@ const Sidebar = ({
                   onClick={() => setIsGymSubmenuOpen(!isGymSubmenuOpen)}
                   className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
                 >
-                  <OfficeBuildingIcon className="w-5 h-5" />
+                  <BsBuilding className="w-5 h-5" />
                   {!initialIsCollapsed && (
                     <>
                       <span className="ml-3">Gym</span>
-                      <ChevronRightIcon
+                      <BsChevronRight
                         className={`ml-auto w-4 h-4 transition-transform ${
                           isGymSubmenuOpen ? "rotate-90" : ""
                         }`}
@@ -187,9 +190,84 @@ const Sidebar = ({
                   to="/manage-customers"
                   className="flex items-center py-2 px-4 rounded hover:bg-green-700"
                 >
-                  <UserGroupIcon className="w-5 h-5" />
+                  <BsPeople className="w-5 h-5" />
                   {!initialIsCollapsed && (
                     <span className="ml-3">Customers</span>
+                  )}
+                </Link>
+              </li>
+            )}
+
+            {/* Show Products menu for Admin only */}
+            {userType === "ADMIN" && (
+              <li>
+                <Link
+                  to="/manage-products"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                >
+                  <BsClipboard className="w-5 h-5" />
+                  {!initialIsCollapsed && (
+                    <span className="ml-3">Products</span>
+                  )}
+                </Link>
+              </li>
+            )}
+
+            {/* Show Analytics and Reports menu for Admin only */}
+            {userType === "ADMIN" && (
+              <li>
+                <Link
+                  to="/manage-reports"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                >
+                  <BsBarChart className="w-5 h-5" />
+                  {!initialIsCollapsed && (
+                    <span className="ml-3">Analytics and Reports</span>
+                  )}
+                </Link>
+              </li>
+            )}
+
+            {/* Booking/Payment Menu */}
+            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+              <li>
+                <Link
+                  to="/manage-bookings"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                >
+                  <BsCreditCard className="w-5 h-5" />
+                  {!initialIsCollapsed && (
+                    <span className="ml-3">Bookings</span>
+                  )}
+                </Link>
+              </li>
+            )}
+
+            {/* Wallet Menu */}
+            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+              <li>
+                <Link
+                  to="/manage-paymentwallet"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                >
+                  <BsWallet className="w-5 h-5" />
+                  {!initialIsCollapsed && (
+                    <span className="ml-3">Payments & Wallet</span>
+                  )}
+                </Link>
+              </li>
+            )}
+
+            {/* Subscriptions Menu */}
+            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+              <li>
+                <Link
+                  to="/manage-subscriptions"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                >
+                  <BsCardChecklist className="w-5 h-5" />
+                  {!initialIsCollapsed && (
+                    <span className="ml-3">Subscriptions</span>
                   )}
                 </Link>
               </li>
@@ -202,11 +280,11 @@ const Sidebar = ({
                   onClick={() => setIsSettingSubmenuOpen(!isSettingSubmenuOpen)}
                   className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
                 >
-                  <CogIcon className="w-5 h-5" />
+                  <BsGear className="w-5 h-5" />
                   {!initialIsCollapsed && (
                     <>
                       <span className="ml-3">Settings</span>
-                      <ChevronRightIcon
+                      <BsChevronRight
                         className={`ml-auto w-4 h-4 transition-transform ${
                           isSettingSubmenuOpen ? "rotate-90" : ""
                         }`}
@@ -237,7 +315,7 @@ const Sidebar = ({
             onClick={handleLogout}
             className="flex items-center w-full py-2 px-4 bg-black rounded hover:bg-red-600"
           >
-            <LogoutIcon className="w-5 h-5" />
+            <BsBoxArrowRight className="w-5 h-5" />
             {!initialIsCollapsed && <span className="ml-3">Logout</span>}
           </button>
         </div>

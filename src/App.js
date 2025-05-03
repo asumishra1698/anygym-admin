@@ -31,18 +31,10 @@ const App = () => {
 
         {/* Protected Routes */}
         <Route
-          path="/"
+          path="/manage-area-manager"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
-              <Dashboard />
+            <PrivateRoute allowedRoles={["ADMIN"]}>
+              <AreaManager />
             </PrivateRoute>
           }
         />
@@ -51,14 +43,6 @@ const App = () => {
           element={
             <PrivateRoute allowedRoles={["ADMIN"]}>
               <Amenities />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/manage-area-manager"
-          element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
-              <AreaManager />
             </PrivateRoute>
           }
         />
@@ -78,6 +62,31 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/manage-products"
+          element={
+            <PrivateRoute allowedRoles={["ADMIN"]}>
+              <ManageProducts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-products-category"
+          element={
+            <PrivateRoute allowedRoles={["ADMIN"]}>
+              <ManageProductsCategory />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-reports"
+          element={
+            <PrivateRoute allowedRoles={["ADMIN"]}>
+              <ManageReports />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/manage-gym-owner"
           element={
@@ -134,16 +143,9 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
         <Route
-          path="/manage-products"
-          element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
-              <ManageProducts />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/manage-booking"
+          path="/manage-bookings"
           element={
             <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
               <ManageBooking />
@@ -153,19 +155,12 @@ const App = () => {
         <Route
           path="/manage-paymentwallet"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
               <MangePaymentWallet />
             </PrivateRoute>
           }
         />
-        <Route
-          path="/manage-products-category"
-          element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
-              <ManageProductsCategory />
-            </PrivateRoute>
-          }
-        />
+
         <Route
           path="/manage-subscriptions"
           element={
@@ -175,10 +170,18 @@ const App = () => {
           }
         />
         <Route
-          path="/manage-reports"
+          path="/dashboard"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
-              <ManageReports />
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
+              <Dashboard />
             </PrivateRoute>
           }
         />
