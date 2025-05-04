@@ -34,7 +34,7 @@ const EditAreaManager = ({ manager = {}, onSave, onCancel }) => {
 
   return (
     <Layout>
-      <div className="bg-gray-100 p-6">
+      <div className="bg-gray-100">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Edit Area Manager
         </h1>

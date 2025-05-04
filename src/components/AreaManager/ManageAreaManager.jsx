@@ -39,7 +39,7 @@ const ManageAreaManager = () => {
   };
 
   const handleEdit = (manager) => {
-    navigate(`/edit-manager/${manager._id}`); // Navigate to the edit page with the manager's ID
+    navigate(`/edit-area-manager/${manager._id}`); 
   };
 
   const handleCloseModal = () => {
@@ -89,8 +89,7 @@ const ManageAreaManager = () => {
           </button>
         </div>
       </div>
-
-      {loading && <p className="text-gray-600">Loading...</p>}
+    
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && areaManagers.length === 0 && (
         <p className="text-gray-600">No area managers found.</p>
