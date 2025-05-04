@@ -5,10 +5,12 @@ import watchapprovedGymSaga from "./approvedGymSaga";
 import watchAmenitySaga from "./amenitiesSaga";
 import watchAreamanagerSaga from "./areaManagerSaga";
 import watchgymOwnerSaga from "./gymOwnerSaga";
+import watchallGymSaga from "./allGymSaga";
 
 export default function* rootSaga() {
   yield all([
     watchAuthSaga(),
+    watchallGymSaga(),
     watchpendingGymSaga(),
     watchapprovedGymSaga(),
     watchAmenitySaga(),

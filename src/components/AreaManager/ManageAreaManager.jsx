@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CheckIcon, XIcon, EyeIcon, SearchIcon } from "@heroicons/react/solid";
+import { CheckIcon, XIcon, EyeIcon, SearchIcon, PencilIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { MEDIA_URL } from "../../config";
 import { fetchAreaManagersRequest } from "../../redux/actions/areaManagerActions";
@@ -38,6 +38,10 @@ const ManageAreaManager = () => {
     setIsModalOpen(true);
   };
 
+  const handleEdit = (manager) => {
+    navigate(`/edit-manager/${manager._id}`); // Navigate to the edit page with the manager's ID
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedManager(null);
@@ -65,7 +69,7 @@ const ManageAreaManager = () => {
         <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
           Area Manager
         </h2>
-        <div className="flex items-center space-x-4 w-full md:w-auto">          
+        <div className="flex items-center space-x-4 w-full md:w-auto">
           <div className="relative w-full md:w-auto">
             <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
             <input
@@ -77,7 +81,6 @@ const ManageAreaManager = () => {
             />
           </div>
 
-          
           <button
             onClick={() => navigate("/add-manager")}
             className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
@@ -87,7 +90,6 @@ const ManageAreaManager = () => {
         </div>
       </div>
 
-      
       {loading && <p className="text-gray-600">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && areaManagers.length === 0 && (
@@ -161,6 +163,16 @@ const ManageAreaManager = () => {
                   >
                     <XIcon className="w-3 h-3" />
                   </button>
+
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => handleEdit(manager)}
+                    className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
+                    title="Edit"
+                  >
+                    <PencilIcon className="w-3 h-3" />
+                  </button>
+
                 </>
               )}
             </div>
@@ -225,6 +237,7 @@ const ManageAreaManager = () => {
           </button>
         </div>
       </div>
+
       {/* Modal for Viewing Manager Details */}
       {isModalOpen && selectedManager && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

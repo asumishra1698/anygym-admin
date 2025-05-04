@@ -50,6 +50,14 @@ const Login = () => {
         description="Login to access your AnyGym account."
       />
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        {/* Logo Section */}
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://anygym.in/wp-content/uploads/2025/02/ANYGYM-LOGO-FILE-color-code-29A744-1.png"
+            alt="AnyGym Logo"
+            className="w-64 h-auto"
+          />
+        </div>
         <h2 className="text-2xl font-bold text-green-800 text-center mb-6">
           Login
         </h2>
@@ -117,6 +125,7 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          <div class="mt-4 text-center"></div>
         </form>
       </div>
     </div>

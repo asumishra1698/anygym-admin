@@ -147,6 +147,16 @@ const Sidebar = ({
                 </div>
                 {!initialIsCollapsed && isGymSubmenuOpen && (
                   <ul className="ml-8 mt-2 space-y-2">
+                    {userType === "ADMIN" && (
+                      <li>
+                        <Link
+                          to="/manage-all-gym"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                        >
+                          <span>All Gym</span>
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <Link
                         to="/manage-pending-gym"

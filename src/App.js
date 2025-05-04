@@ -13,6 +13,7 @@ import EditGymOwner from "./components/GymOwner/EditGymOwner";
 import ManagePendingGym from "./components/Gym/ManagePendingGym";
 import ManageApprovedGym from "./components/Gym/ManageApprovedGym";
 import ManageRejectedGym from "./components/Gym/ManageRejectedGym";
+import ManageAllGym from "./components/Gym/ManageAllGym";
 import ManageCustomers from "./components/Customers/ManageCustomers";
 import ManageSubscriptions from "./components/Subscriptions/ManageSubscriptions";
 import PrivateRoute from "./components/PrivateRoute";
@@ -132,6 +133,14 @@ const App = () => {
           element={
             <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
               <ManageRejectedGym />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manage-all-gym"
+          element={
+            <PrivateRoute allowedRoles={["ADMIN"]}>
+              <ManageAllGym />
             </PrivateRoute>
           }
         />
