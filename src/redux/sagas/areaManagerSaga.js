@@ -2,12 +2,18 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_AREA_MANAGERS_REQUEST,
   ADD_AREA_MANAGER_REQUEST,
+  UPDATE_AREA_MANAGER_STATUS_REQUEST,
+  UPDATE_AREA_MANAGER_REQUEST,
 } from "../actions/actionTypes";
 import {
   fetchAreaManagersSuccess,
   fetchAreaManagersFailure,
   addAreaManagerSuccess,
   addAreaManagerFailure,
+  updateAreaManagerStatusSuccess,
+  updateAreaManagerStatusFailure,
+  updateAreaManagerSuccess,
+  updateAreaManagerFailure,
 } from "../actions/areaManagerActions";
 
 import { postRequest } from "../../utils/apiHelper";
@@ -88,8 +94,81 @@ function* addAreaManagerSaga(action) {
   }
 }
 
+// Update Area Manager Status Saga
+function* updateAreaManagerStatusSaga(action) {
+  const { managerId, status } = action.payload;
+  try {
+    const response = yield call(
+      postRequest,
+      `${BASE_URL}${AREA_MANAGER_URL}/${managerId}/status`,
+      { status }
+    );
+
+    if (response.status === 200) {
+      yield put(updateAreaManagerStatusSuccess(managerId, status));
+      toast.success(response.data.message || "Status updated successfully!");
+    } else {
+      yield put(
+        updateAreaManagerStatusFailure(
+          response.message || "Failed to update status"
+        )
+      );
+      toast.error(response.message || "Failed to update status");
+    }
+  } catch (error) {
+    yield put(
+      updateAreaManagerStatusFailure(
+        error.message || "An error occurred while updating the status."
+      )
+    );
+    toast.error(
+      error.message || "An error occurred while updating the status."
+    );
+  }
+}
+
+// Update Area Manager Content Saga
+function* updateAreaManagerSaga(action) {
+  const { managerId, updatedData } = action.payload;
+  try {
+    const response = yield call(
+      postRequest,
+      `${BASE_URL}${AREA_MANAGER_URL}/${managerId}`,
+      updatedData
+    );
+
+    if (response.status === 200) {
+      yield put(updateAreaManagerSuccess(managerId, response.data));
+      toast.success(
+        response.data.message || "Area Manager updated successfully!"
+      );
+    } else {
+      yield put(
+        updateAreaManagerFailure(
+          response.message || "Failed to update Area Manager"
+        )
+      );
+      toast.error(response.message || "Failed to update Area Manager");
+    }
+  } catch (error) {
+    yield put(
+      updateAreaManagerFailure(
+        error.message || "An error occurred while updating the Area Manager."
+      )
+    );
+    toast.error(
+      error.message || "An error occurred while updating the Area Manager."
+    );
+  }
+}
+
 // Watcher Saga
 export default function* watchAreaManagerSaga() {
   yield takeLatest(FETCH_AREA_MANAGERS_REQUEST, fetchAreaManagersSaga);
   yield takeLatest(ADD_AREA_MANAGER_REQUEST, addAreaManagerSaga);
+  yield takeLatest(
+    UPDATE_AREA_MANAGER_STATUS_REQUEST,
+    updateAreaManagerStatusSaga
+  );
+  yield takeLatest(UPDATE_AREA_MANAGER_REQUEST, updateAreaManagerSaga);
 }

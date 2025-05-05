@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CheckIcon, XIcon, EyeIcon, SearchIcon, PencilIcon } from "@heroicons/react/solid";
+import {
+  CheckIcon,
+  XIcon,
+  EyeIcon,
+  SearchIcon,
+  PencilIcon,
+} from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { MEDIA_URL } from "../../config";
-import { fetchAreaManagersRequest } from "../../redux/actions/areaManagerActions";
+import {
+  fetchAreaManagersRequest,
+  updateAreaManagerStatusRequest,
+} from "../../redux/actions/areaManagerActions";
 
 const ManageAreaManager = () => {
   const dispatch = useDispatch();
@@ -14,13 +23,8 @@ const ManageAreaManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [actionPopup, setActionPopup] = useState({
-    isOpen: false,
-    action: "",
-    manager: null,
-  });
-  const [reason, setReason] = useState("");
   const [limit, setLimit] = useState(12);
+  const [toolkitOpen, setToolkitOpen] = useState(null);
 
   const {
     loading,
@@ -39,7 +43,16 @@ const ManageAreaManager = () => {
   };
 
   const handleEdit = (manager) => {
-    navigate(`/edit-area-manager/${manager._id}`); 
+    navigate(`/edit-area-manager/${manager._id}`);
+  };
+
+  const toggleToolkit = (managerId) => {
+    setToolkitOpen((prev) => (prev === managerId ? null : managerId));
+  };
+
+  const handleStatusChange = (manager, newStatus) => {
+    dispatch(updateAreaManagerStatusRequest(manager._id, newStatus));
+    setToolkitOpen(null); // Close the toolkit after selecting an option
   };
 
   const handleCloseModal = () => {
@@ -47,50 +60,40 @@ const ManageAreaManager = () => {
     setSelectedManager(null);
   };
 
-  const handleSubmitAction = () => {
-    setActionPopup({ isOpen: false, action: "", manager: null });
-    setReason("");
-  };
-
-  const handleApprove = (manager) => {
-    setActionPopup({ isOpen: true, action: "approve", manager });
-  };
-
-  const handleReject = (manager) => {
-    setActionPopup({ isOpen: true, action: "reject", manager });
-  };
-
   const totalPages = Math.ceil(totalRecords / limit);
-  const itemsPerPageOptions = [5, 10, 20, 50, 100, 200, 500, 1000];
+  const itemsPerPageOptions = [5, 10, 20, 50, 100];
 
   return (
     <Layout>
+      {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
-          Area Manager
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Manage Area Managers
         </h2>
-        <div className="flex items-center space-x-4 w-full md:w-auto">
-          <div className="relative w-full md:w-auto">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
             <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
             <input
               type="text"
-              placeholder="Search By Name..."
+              placeholder="Search by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
-
           <button
             onClick={() => navigate("/add-manager")}
-            className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
-            + Add Area Manager
+            + Add Manager
           </button>
         </div>
       </div>
-    
+
+      {/* Error Message */}
       {error && <p className="text-red-500">{error}</p>}
+
+      {/* No Data Message */}
       {!loading && !error && areaManagers.length === 0 && (
         <p className="text-gray-600">No area managers found.</p>
       )}
@@ -105,10 +108,12 @@ const ManageAreaManager = () => {
             {/* Status Badge */}
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                manager.status === "Approved"
+                manager.status === "Active"
                   ? "bg-green-100 text-green-800"
                   : manager.status === "Rejected"
                   ? "bg-red-100 text-red-800"
+                  : manager.status === "Inactive"
+                  ? "bg-gray-100 text-gray-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}
             >
@@ -127,16 +132,15 @@ const ManageAreaManager = () => {
             />
 
             {/* Manager Details */}
-            <h3 className="text-lg font-bold text-gray-800 text-center">
-              {manager.name}
-            </h3>
-            <p className="text-sm text-gray-600 text-center">{manager.email}</p>
-            <p className="text-sm text-gray-600 text-center">
+            <h3 className="text-lg font-bold text-gray-800">{manager.name}</h3>
+            <p className="text-sm text-gray-600">{manager.email}</p>
+            <p className="text-sm text-gray-600">Total Gym : 10</p>
+            <p className="text-sm text-gray-600">
               Registered on: {new Date(manager.createdAt).toLocaleDateString()}
             </p>
 
             {/* Action Buttons */}
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-4 mt-4 items-center">
               {/* View Button */}
               <button
                 onClick={() => handleView(manager)}
@@ -146,34 +150,58 @@ const ManageAreaManager = () => {
                 <EyeIcon className="w-3 h-3" />
               </button>
 
-              {manager.status === "Pending" && (
-                <>
-                  <button
-                    onClick={() => handleApprove(manager)}
-                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                    title="Approve"
-                  >
-                    <CheckIcon className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => handleReject(manager)}
-                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                    title="Reject"
-                  >
-                    <XIcon className="w-3 h-3" />
-                  </button>
-
-                  {/* Edit Button */}
-                  <button
-                    onClick={() => handleEdit(manager)}
-                    className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
-                    title="Edit"
-                  >
-                    <PencilIcon className="w-3 h-3" />
-                  </button>
-
-                </>
+              {/* Edit Button */}
+              {manager.status === "Inactive" && (
+                <button
+                  onClick={() => handleEdit(manager)}
+                  className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
+                  title="Edit"
+                >
+                  <PencilIcon className="w-3 h-3" />
+                </button>
               )}
+
+              {/* Three-Dot Menu */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleToolkit(manager._id)}
+                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  title="More Actions"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v.01M12 12v.01M12 18v.01"
+                    />
+                  </svg>
+                </button>
+
+                {/* Toolkit Dropdown */}
+                {toolkitOpen === manager._id && (
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                    <button
+                      onClick={() => handleStatusChange(manager, "Active")}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Activate
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(manager, "Inactive")}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Inactive
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -241,7 +269,7 @@ const ManageAreaManager = () => {
       {isModalOpen && selectedManager && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Manager Details</h2>
+            <h2 className="text-xl font-bold mb-4">Area Manager Details</h2>
             <img
               src={`${MEDIA_URL}${selectedManager.profileImage}`}
               alt={selectedManager.name}
@@ -257,18 +285,10 @@ const ManageAreaManager = () => {
               <strong>Mobile:</strong> {selectedManager.mobile}
             </p>
             <p>
-              <strong>DOB:</strong> {selectedManager.dob}
-            </p>
-            <p>
-              <strong>Address:</strong>{" "}
-              {selectedManager.location?.address || "N/A"}
+              <strong>Referral Id:</strong> {selectedManager.referral_id}
             </p>
             <p>
               <strong>Status:</strong> {selectedManager.status}
-            </p>
-            <p>
-              <strong>Referral ID:</strong>{" "}
-              {selectedManager.referral_id || "N/A"}
             </p>
             <p>
               <strong>Registered On:</strong>{" "}
@@ -280,41 +300,6 @@ const ManageAreaManager = () => {
             >
               Close
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Action Popup */}
-      {actionPopup.isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              {actionPopup.action === "approve"
-                ? "Approve Manager"
-                : "Reject Manager"}
-            </h2>
-            <textarea
-              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
-              placeholder="Enter reason..."
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            />
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() =>
-                  setActionPopup({ isOpen: false, action: "", manager: null })
-                }
-                className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmitAction}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Submit
-              </button>
-            </div>
           </div>
         </div>
       )}

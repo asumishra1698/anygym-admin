@@ -5,6 +5,12 @@ import {
   ADD_AREA_MANAGER_REQUEST,
   ADD_AREA_MANAGER_SUCCESS,
   ADD_AREA_MANAGER_FAILURE,
+  UPDATE_AREA_MANAGER_STATUS_REQUEST,
+  UPDATE_AREA_MANAGER_STATUS_SUCCESS,
+  UPDATE_AREA_MANAGER_STATUS_FAILURE,
+  UPDATE_AREA_MANAGER_REQUEST,
+  UPDATE_AREA_MANAGER_SUCCESS,
+  UPDATE_AREA_MANAGER_FAILURE,
 } from "./actionTypes";
 
 // Fetch Area Managers Actions
@@ -40,5 +46,37 @@ export const addAreaManagerSuccess = (manager) => ({
 
 export const addAreaManagerFailure = (error) => ({
   type: ADD_AREA_MANAGER_FAILURE,
+  payload: error,
+});
+
+// Update Area Manager Status Actions
+export const updateAreaManagerStatusRequest = (managerId, status) => ({
+  type: UPDATE_AREA_MANAGER_STATUS_REQUEST,
+  payload: { managerId, status },
+});
+
+export const updateAreaManagerStatusSuccess = (managerId, status) => ({
+  type: UPDATE_AREA_MANAGER_STATUS_SUCCESS,
+  payload: { managerId, status },
+});
+
+export const updateAreaManagerStatusFailure = (error) => ({
+  type: UPDATE_AREA_MANAGER_STATUS_FAILURE,
+  payload: error,
+});
+
+// Update Area Manager Content Actions
+export const updateAreaManagerRequest = (managerId, updatedData) => ({
+  type: UPDATE_AREA_MANAGER_REQUEST,
+  payload: { managerId, updatedData },
+});
+
+export const updateAreaManagerSuccess = (managerId, updatedManager) => ({
+  type: UPDATE_AREA_MANAGER_SUCCESS,
+  payload: { managerId, updatedManager },
+});
+
+export const updateAreaManagerFailure = (error) => ({
+  type: UPDATE_AREA_MANAGER_FAILURE,
   payload: error,
 });

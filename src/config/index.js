@@ -19,4 +19,6 @@ export const DELETEAMENTY_URL = "/admin/deleteAmenities";
 export const AREA_MANAGER_URL = "/admin/staff";
 export const ADD_AREA_MANAGER_URL = "/staff/register";
 
+
 export const GYM_OWNER_URL = "/owner/getAllOwners";
+export const ADD_GYM_OWNER_URL = "/owner/register";
