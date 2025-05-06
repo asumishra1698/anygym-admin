@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions";
+import {
+  fetchApprovedGymsRequest,
+  updateGymStatusRequest,
+} from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 
 const ManageApprovedGym = () => {
@@ -15,6 +18,7 @@ const ManageApprovedGym = () => {
     error,
   } = useSelector((state) => state.approvedGyms);
 
+  const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
 
@@ -25,6 +29,16 @@ const ManageApprovedGym = () => {
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);
     setIsModalOpen(true);
+  };
+
+  const handleToggleStatus = (gym) => {
+    const newStatus = gym.status === "Active" ? "Inactive" : "Active";
+    dispatch(updateGymStatusRequest(gym._id, newStatus));
+    setToolkitOpen(null);
+  };
+
+  const toggleToolkit = (gymId) => {
+    setToolkitOpen((prev) => (prev === gymId ? null : gymId)); // Toggle toolkit visibility
   };
 
   return (
@@ -92,6 +106,40 @@ const ManageApprovedGym = () => {
               >
                 <EyeIcon className="w-4 h-4" />
               </button>
+              {/* Three-Dot Menu */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleToolkit(gym._id)}
+                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  title="More Actions"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v.01M12 12v.01M12 18v.01"
+                    />
+                  </svg>
+                </button>
+
+                {toolkitOpen === gym._id && (
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                    <button
+                      onClick={() => handleToggleStatus(gym)}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {gym.status === "Active" ? "Deactivate" : "Activate"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}

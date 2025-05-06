@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addGymOwnerRequest } from "../../redux/actions/gymOwnerActions";
 import Layout from "../../reuseable/Layout";
 
 const AddGymOwner = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
-    dob: "",
-    address: "",
-    idNumber: "",
-    profilePicture: null,
+    mobile: "",
+    user_type: "OWNER",
+    password: "",
+    cpassword: "",
   });
 
   const handleChange = (e) => {
@@ -17,13 +22,17 @@ const AddGymOwner = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, profilePicture: e.target.files[0] });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Gym Owner Added:", formData);
+    dispatch(
+      addGymOwnerRequest(formData, (success, message) => {
+        if (success) {
+          navigate("/manage-gym-owner");
+        } else {
+          console.error(message);
+        }
+      })
+    );
   };
 
   return (
@@ -34,8 +43,7 @@ const AddGymOwner = () => {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md space-y-4"
         >
-          {/* Three Inputs in One Line */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -68,84 +76,51 @@ const AddGymOwner = () => {
               />
             </div>
 
-            {/* Phone */}
+            {/* Mobile */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Phone
+                Mobile
               </label>
               <input
                 type="text"
-                name="phone"
-                value={formData.phone}
+                name="mobile"
+                value={formData.mobile}
                 onChange={handleChange}
-                placeholder="Enter phone number"
-                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* DOB */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                DOB
-              </label>
-              <input
-                type="date"
-                name="dob"
-                value={formData.dob}
-                onChange={handleChange}
+                placeholder="Enter mobile number"
                 className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
                 required
               />
             </div>
 
-            {/* Address */}
+            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Address
+                Password
               </label>
               <input
-                type="text"
-                name="address"
-                value={formData.address}
+                type="password"
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter address"
+                placeholder="Enter password"
                 className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
                 required
               />
             </div>
 
-            {/* ID Number */}
+            {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                ID Number
+                Confirm Password
               </label>
               <input
-                type="text"
-                name="idNumber"
-                value={formData.idNumber}
+                type="password"
+                name="cpassword"
+                value={formData.cpassword}
                 onChange={handleChange}
-                placeholder="Enter ID number"
+                placeholder="Confirm password"
                 className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
                 required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Profile Picture */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Upload Profile Picture
-              </label>
-              <input
-                type="file"
-                name="profilePicture"
-                onChange={handleFileChange}
-                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-                accept="image/*"
               />
             </div>
           </div>

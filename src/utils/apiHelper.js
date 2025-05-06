@@ -41,3 +41,12 @@ export const getRequest = async (url, params = null) => {
     );
   }
 };
+
+export const putRequest = async (url, data, config = {}) => {
+  try {
+    const response = await axios.put(url, data, config);
+    return response;
+  } catch (error) {
+    throw error.response || error;
+  }
+};
