@@ -127,8 +127,7 @@ const ManageAreaManager = () => {
 
             {/* Manager Details */}
             <h3 className="text-lg font-bold text-gray-800">{manager.name}</h3>
-            <p className="text-sm text-gray-600">{manager.email}</p>
-            <p className="text-sm text-gray-600">Total Gym : 10</p>
+            <p className="text-sm text-gray-600">{manager.mobile}</p>            
             <p className="text-sm text-gray-600">
               Registered on: {new Date(manager.createdAt).toLocaleDateString()}
             </p>
@@ -278,6 +277,7 @@ const ManageAreaManager = () => {
             <p>
               <strong>Mobile:</strong> {selectedManager.mobile}
             </p>
+            <p> <strong>Area Pincode :</strong> {selectedManager.areaPincode}</p>
             <p>
               <strong>Referral Id:</strong> {selectedManager.referral_id}
             </p>

@@ -22,8 +22,10 @@ const AddAreaManager = () => {
       address: "",
       coordinates: ["", ""],
     },
+    areaPincode: "",
     password: "",
     cpassword: "",
+
   });
 
   const handleChange = (e) => {
@@ -167,6 +169,17 @@ const AddAreaManager = () => {
             value={formData.location.coordinates[1]}
             onChange={handleChange}
             placeholder="Enter latitude"
+            required
+          />
+
+           {/* areaPincode */}
+           <InputField
+            label="Area Pin Code"
+            type="number"
+            name="areaPincode"
+            value={formData.areaPincode}
+            onChange={handleChange}
+            placeholder="Enter Area Pincode"
             required
           />
 
