@@ -5,12 +5,9 @@ import {
   ADD_GYM_OWNER_REQUEST,
   ADD_GYM_OWNER_SUCCESS,
   ADD_GYM_OWNER_FAILURE,
-  // UPDATE_GYM_OWNER_REQUEST,
-  // UPDATE_GYM_OWNER_SUCCESS,
-  // UPDATE_GYM_OWNER_FAILURE,
-  // DELETE_GYM_OWNER_REQUEST,
-  // DELETE_GYM_OWNER_SUCCESS,
-  // DELETE_GYM_OWNER_FAILURE,
+  UPDATE_GYM_OWNER_STATUS_REQUEST,
+  UPDATE_GYM_OWNER_STATUS_SUCCESS,
+  UPDATE_GYM_OWNER_STATUS_FAILURE,
 } from "./actionTypes";
 
 // Fetch Gym Owners Actions
@@ -49,34 +46,18 @@ export const addGymOwnerFailure = (error) => ({
   payload: error,
 });
 
-// Update Gym Owner Actions
-// export const updateGymOwnerRequest = (id, updatedData) => ({
-//   type: UPDATE_GYM_OWNER_REQUEST,
-//   payload: { id, updatedData },
-// });
+// Update Gym Owner Status Actions
+export const updateGymOwnerStatusRequest = (gymOwnerId, status) => ({
+  type: UPDATE_GYM_OWNER_STATUS_REQUEST,
+  payload: { gymOwnerId, status },
+});
 
-// export const updateGymOwnerSuccess = (updatedOwner) => ({
-//   type: UPDATE_GYM_OWNER_SUCCESS,
-//   payload: updatedOwner,
-// });
+export const updateGymOwnerStatusSuccess = (gymOwnerId, status) => ({
+  type: UPDATE_GYM_OWNER_STATUS_SUCCESS,
+  payload: { gymOwnerId, status },
+});
 
-// export const updateGymOwnerFailure = (error) => ({
-//   type: UPDATE_GYM_OWNER_FAILURE,
-//   payload: error,
-// });
-
-// Delete Gym Owner Actions
-// export const deleteGymOwnerRequest = (id) => ({
-//   type: DELETE_GYM_OWNER_REQUEST,
-//   payload: id,
-// });
-
-// export const deleteGymOwnerSuccess = (id) => ({
-//   type: DELETE_GYM_OWNER_SUCCESS,
-//   payload: id,
-// });
-
-// export const deleteGymOwnerFailure = (error) => ({
-//   type: DELETE_GYM_OWNER_FAILURE,
-//   payload: error,
-// });
+export const updateGymOwnerStatusFailure = (error) => ({
+  type: UPDATE_GYM_OWNER_STATUS_FAILURE,
+  payload: error,
+});

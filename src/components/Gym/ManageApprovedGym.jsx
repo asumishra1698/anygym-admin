@@ -65,7 +65,7 @@ const ManageApprovedGym = () => {
         </div>
       </div>
 
-      {loading && <p className="text-gray-600">Loading...</p>}
+      
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && approvedGyms.length === 0 && (
         <p className="text-gray-600">No approved gyms available.</p>

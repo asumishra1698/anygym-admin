@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CheckIcon, XIcon, EyeIcon, SearchIcon } from "@heroicons/react/solid";
+import { EyeIcon, SearchIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchGymOwnersRequest } from "../../redux/actions/gymOwnerActions";
+import { fetchGymOwnersRequest, updateGymOwnerStatusRequest } from "../../redux/actions/gymOwnerActions";
 
 const ManageGymOwner = () => {
   const dispatch = useDispatch();
@@ -11,12 +11,7 @@ const ManageGymOwner = () => {
 
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [actionPopup, setActionPopup] = useState({
-    isOpen: false,
-    action: "",
-    owner: null,
-  });
-  const [reason, setReason] = useState("");
+  const [toolkitOpen, setToolkitOpen] = useState(null); // Track which owner's toolkit is open
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(12);
@@ -35,19 +30,6 @@ const ManageGymOwner = () => {
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [5, 10, 20, 50, 100];
 
-  const handleApprove = (owner) => {
-    setActionPopup({ isOpen: true, action: "approve", owner });
-  };
-
-  const handleReject = (owner) => {
-    setActionPopup({ isOpen: true, action: "reject", owner });
-  };
-
-  const handleSubmitAction = () => {
-    setActionPopup({ isOpen: false, action: "", owner: null });
-    setReason("");
-  };
-
   const handleView = (owner) => {
     setSelectedOwner(owner);
     setIsPopupOpen(true);
@@ -56,6 +38,16 @@ const ManageGymOwner = () => {
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedOwner(null);
+  };
+
+  const handleToggleStatus = (owner) => {
+    const newStatus = owner.status === "Active" ? "Inactive" : "Active";
+    dispatch(updateGymOwnerStatusRequest(owner._id, newStatus));
+    setToolkitOpen(null); 
+  };
+
+  const toggleToolkit = (ownerId) => {
+    setToolkitOpen((prev) => (prev === ownerId ? null : ownerId)); // Toggle toolkit visibility
   };
 
   return (
@@ -85,7 +77,6 @@ const ManageGymOwner = () => {
         </div>
       </div>
 
-      {/* {loading && <p className="text-gray-600">Loading...</p>} */}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && gymOwners.length === 0 && (
         <p className="text-gray-600">No gym owners found.</p>
@@ -100,11 +91,9 @@ const ManageGymOwner = () => {
             {/* Badge for Status */}
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                owner.status === "Approved"
+                owner.status === "Active"
                   ? "bg-green-100 text-green-800"
-                  : owner.status === "Rejected"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
+                  : "bg-red-100 text-red-800"
               }`}
             >
               {owner.status}
@@ -120,7 +109,7 @@ const ManageGymOwner = () => {
             <p className="text-sm text-gray-600">
               Registered on: {new Date(owner.createdAt).toLocaleDateString()}
             </p>
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-4 mt-4 items-center">
               <button
                 onClick={() => handleView(owner)}
                 className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
@@ -128,24 +117,41 @@ const ManageGymOwner = () => {
               >
                 <EyeIcon className="w-3 h-3" />
               </button>
-              {owner.status === "Pending" && (
-                <>
-                  <button
-                    onClick={() => handleApprove(owner)}
-                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                    title="Approve"
+
+              {/* Toolkit Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleToolkit(owner._id)}
+                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  title="More Actions"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <CheckIcon className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => handleReject(owner)}
-                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                    title="Reject"
-                  >
-                    <XIcon className="w-3 h-3" />
-                  </button>
-                </>
-              )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v.01M12 12v.01M12 18v.01"
+                    />
+                  </svg>
+                </button>
+
+                {toolkitOpen === owner._id && (
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                    <button
+                      onClick={() => handleToggleStatus(owner)}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {owner.status === "Active" ? "Deactivate" : "Activate"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -233,41 +239,6 @@ const ManageGymOwner = () => {
               <p className="text-sm text-gray-600">
                 Status: {selectedOwner.status}
               </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Action Popup */}
-      {actionPopup.isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              {actionPopup.action === "approve"
-                ? "Approve Owner"
-                : "Reject Owner"}
-            </h2>
-            <textarea
-              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
-              placeholder="Enter reason..."
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            />
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() =>
-                  setActionPopup({ isOpen: false, action: "", owner: null })
-                }
-                className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmitAction}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Submit
-              </button>
             </div>
           </div>
         </div>

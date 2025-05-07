@@ -15,27 +15,30 @@ const initialState = {
 
 const approvedGymReducer = (state = initialState, action) => {
   switch (action.type) {
+    // Fetch Approved Gyms
     case FETCH_APPROVED_GYMS_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
 
     case FETCH_APPROVED_GYMS_SUCCESS:
-      return { ...state, loading: false, gyms: action.payload };
+      return { ...state, loading: false, gyms: action.payload, error: null };
 
     case FETCH_APPROVED_GYMS_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
+    // Update Gym Status
     case UPDATE_GYM_STATUS_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
 
     case UPDATE_GYM_STATUS_SUCCESS:
       return {
         ...state,
         loading: false,
         gyms: state.gyms.map((gym) =>
-          gym.id === action.payload.gymId
-            ? { ...gym, status: action.payload.updatedStatus }
+          gym._id === action.payload.gymId
+            ? { ...gym, status: action.payload.status }
             : gym
         ),
+        error: null,
       };
 
     case UPDATE_GYM_STATUS_FAILURE:

@@ -69,7 +69,7 @@ function* addAreaManagerSaga(action) {
     const response = yield call(
       postRequest,
       `${BASE_URL}${ADD_AREA_MANAGER_URL}`,
-      action.payload, // FormData passed as payload
+      action.payload,
       {
         "Content-Type": "multipart/form-data",
       }

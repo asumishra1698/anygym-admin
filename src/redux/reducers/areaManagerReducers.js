@@ -23,8 +23,7 @@ const initialState = {
 };
 
 const areaManagerReducer = (state = initialState, action) => {
-  switch (action.type) {
-    // Fetch Area Managers
+  switch (action.type) {   
     case FETCH_AREA_MANAGERS_REQUEST:
       return { ...state, loading: true, error: null };
 

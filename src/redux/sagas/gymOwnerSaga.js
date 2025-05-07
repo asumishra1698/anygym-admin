@@ -2,27 +2,42 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_GYM_OWNERS_REQUEST,
   ADD_GYM_OWNER_REQUEST,
-  // UPDATE_GYM_OWNER_REQUEST,
+  UPDATE_GYM_OWNER_STATUS_REQUEST,
 } from "../actions/actionTypes";
 import {
   fetchGymOwnersSuccess,
   fetchGymOwnersFailure,
   addGymOwnerSuccess,
   addGymOwnerFailure,
-  // updateGymOwnerSuccess,
-  // updateGymOwnerFailure,
+  updateGymOwnerStatusSuccess,
+  updateGymOwnerStatusFailure,
 } from "../actions/gymOwnerActions";
 import { getRequest, postRequest } from "../../utils/apiHelper";
-import { BASE_URL, GYM_OWNER_URL, ADD_GYM_OWNER_URL } from "../../config";
+import {
+  BASE_URL,
+  GYM_OWNER_URL,
+  GYM_OWNER_BY_AREA_MANAGER_URL,
+  ADD_GYM_OWNER_URL,
+} from "../../config";
 import { toast } from "react-toastify";
 
 function* fetchGymOwnersSaga(action) {
-  const { page, perPage, searchQuery } = action.payload;
+  const { page, perPage, searchQuery } = action.payload; // Extract other payload properties
+  const userType = localStorage.getItem("userType"); 
   try {
-    const response = yield call(
-      getRequest,
-      `${BASE_URL}${GYM_OWNER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
-    );
+    // Determine the API endpoint based on the user_type
+    const endpoint =
+      userType === "ADMIN"
+        ? `${BASE_URL}${GYM_OWNER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+        : userType === "AREA_MANAGER"
+        ? `${BASE_URL}${GYM_OWNER_BY_AREA_MANAGER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+        : null;
+
+    if (!endpoint) {
+      throw new Error("Invalid user_type specified");
+    }
+
+    const response = yield call(getRequest, endpoint);
 
     if (response.status === 200) {
       const { data } = response;
@@ -55,7 +70,6 @@ function* fetchGymOwnersSaga(action) {
   }
 }
 
-// Add Gym Owner Saga
 function* addGymOwnerSaga(action) {
   try {
     const response = yield call(
@@ -81,32 +95,41 @@ function* addGymOwnerSaga(action) {
   }
 }
 
-// Update Gym Owner Saga
-// function* updateGymOwnerSaga(action) {
-//   const { id, updatedData } = action.payload;
-//   try {
-//     const response = yield call(
-//       postRequest,
-//       `${BASE_URL}${GYM_OWNER_URL}/${id}`,
-//       updatedData
-//     );
+function* updateGymOwnerStatusSaga(action) {
+  const { gymOwnerId, status } = action.payload;
+  try {
+    const response = yield call(
+      postRequest,
+      `${BASE_URL}${GYM_OWNER_URL}/${gymOwnerId}/status`,
+      { status }
+    );
 
-//     if (response.status === 200) {
-//       yield put(updateGymOwnerSuccess(response.data));
-//     } else {
-//       yield put(
-//         updateGymOwnerFailure(response.message || "Failed to update gym owner")
-//       );
-//     }
-//   } catch (error) {
-//     yield put(updateGymOwnerFailure(error.message || "Network error occurred"));
-//   }
-// }
+    if (response.status === 200) {
+      yield put(updateGymOwnerStatusSuccess(gymOwnerId, status));
+      toast.success(
+        response.data.message || "Gym owner status updated successfully!"
+      );
+    } else {
+      yield put(
+        updateGymOwnerStatusFailure(
+          response.message || "Failed to update gym owner status"
+        )
+      );
+      toast.error(response.message || "Failed to update gym owner status");
+    }
+  } catch (error) {
+    yield put(
+      updateGymOwnerStatusFailure(error.message || "Network error occurred")
+    );
+    toast.error(
+      error.message || "An error occurred while updating the gym owner status."
+    );
+  }
+}
 
 // Watcher Saga
 export default function* gymOwnerSaga() {
   yield takeLatest(FETCH_GYM_OWNERS_REQUEST, fetchGymOwnersSaga);
   yield takeLatest(ADD_GYM_OWNER_REQUEST, addGymOwnerSaga);
-  // yield takeLatest(UPDATE_GYM_OWNER_REQUEST, updateGymOwnerSaga);
-  // yield takeLatest(DELETE_GYM_OWNER_REQUEST, deleteGymOwnerSaga);
+  yield takeLatest(UPDATE_GYM_OWNER_STATUS_REQUEST, updateGymOwnerStatusSaga);
 }

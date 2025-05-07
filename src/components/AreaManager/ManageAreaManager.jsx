@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  CheckIcon,
-  XIcon,
-  EyeIcon,
-  SearchIcon,
-  PencilIcon,
-} from "@heroicons/react/solid";
+import { EyeIcon, SearchIcon, PencilIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { MEDIA_URL } from "../../config";
 import {
@@ -52,7 +46,7 @@ const ManageAreaManager = () => {
 
   const handleStatusChange = (manager, newStatus) => {
     dispatch(updateAreaManagerStatusRequest(manager._id, newStatus));
-    setToolkitOpen(null); // Close the toolkit after selecting an option
+    setToolkitOpen(null);
   };
 
   const handleCloseModal = () => {
