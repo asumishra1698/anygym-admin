@@ -99,12 +99,12 @@ const ManageGymOwner = () => {
               {owner.status}
             </span>
 
-            <h3 className="text-lg font-bold text-gray-800">
-              Name: {owner.name}
-            </h3>
+            <h4 className="text-sm font-bold text-gray-800">
+              Gym Owner : {owner.name}
+            </h4>
             <p className="text-sm text-gray-600">Email: {owner.email}</p>
             <p className="text-sm text-gray-600">
-              Contact Number: {owner.mobile}
+              Number: {owner.mobile}
             </p>
             <p className="text-sm text-gray-600">
               Registered on: {new Date(owner.createdAt).toLocaleDateString()}

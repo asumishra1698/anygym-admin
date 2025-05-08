@@ -8,6 +8,7 @@ import {
   updateGymStatusRequest,
 } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
+const userType = localStorage.getItem("userType");
 
 const ManageApprovedGym = () => {
   const dispatch = useDispatch();
@@ -56,16 +57,17 @@ const ManageApprovedGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
-          <button
-            onClick={() => navigate("/add-gym")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
-          >
-            + Add Gym
-          </button>
+          {userType === "AREA_MANAGER" && (
+            <button
+              onClick={() => navigate("/add-gym-by-area-manager")}
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            >
+              + Add Gym by Area Manager
+            </button>
+          )}
         </div>
       </div>
 
-      
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && approvedGyms.length === 0 && (
         <p className="text-gray-600">No approved gyms available.</p>

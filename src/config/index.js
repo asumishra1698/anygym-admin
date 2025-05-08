@@ -16,6 +16,8 @@ export const APPROVED_GYM_REQUEST_URL = "/staff/gym-request-approved";
 export const AMENTIY_URL = "/admin/amenities";
 export const DELETEAMENTY_URL = "/admin/deleteAmenities";
 
+export const ADD_GYM_URL = "/admin/gym/store";
+
 export const AREA_MANAGER_URL = "/admin/staff";
 export const ADD_AREA_MANAGER_URL = "/staff/register";
 

@@ -4,6 +4,9 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 
 // Gym Actions
+export const ADD_GYM_REQUEST = "ADD_GYM_REQUEST";
+export const ADD_GYM_SUCCESS = "ADD_GYM_SUCCESS";
+export const ADD_GYM_FAILURE = "ADD_GYM_FAILURE";
 
 export const APPROVE_GYM_REQUEST = "APPROVE_GYM_REQUEST";
 export const APPROVE_GYM_SUCCESS = "APPROVE_GYM_SUCCESS";

@@ -8,6 +8,7 @@ import AreaManager from "./components/AreaManager/ManageAreaManager";
 import EditAreaManager from "./components/AreaManager/EditAreaManager";
 import AddAreaManager from "./components/AreaManager/AddAreaManager";
 import ManageGymOwner from "./components/GymOwner/ManageGymOwner";
+import AddGymByAreaManager from "./components/Gym/AddGymByAreaManager";
 import AddGymOwner from "./components/GymOwner/AddGymOwner";
 import EditGymOwner from "./components/GymOwner/EditGymOwner";
 import ManagePendingGym from "./components/Gym/ManagePendingGym";
@@ -93,6 +94,14 @@ const App = () => {
           element={
             <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
               <ManageGymOwner />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-gym-by-area-manager"
+          element={
+            <PrivateRoute allowedRoles={["AREA_MANAGER"]}>
+              <AddGymByAreaManager />
             </PrivateRoute>
           }
         />

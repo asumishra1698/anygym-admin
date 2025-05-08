@@ -19,6 +19,7 @@ const ManageAllGym = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
   const [toolkitOpen, setToolkitOpen] = useState(null);
+  const userType = localStorage.getItem("userType");
 
   useEffect(() => {
     dispatch(fetchGymsRequest(1, 10));
@@ -54,12 +55,15 @@ const ManageAllGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
-          <button
-            onClick={() => navigate("/add-gym")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
-          >
-            + Add Gym
-          </button>
+
+          {userType === "AREA_MANAGER" && (
+            <button
+              onClick={() => navigate("/add-gym-by-area-manager")}
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            >
+              + Add Gym bu Area Manager
+            </button>
+          )}
         </div>
       </div>
 
@@ -76,9 +80,9 @@ const ManageAllGym = () => {
           >
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Approved"
+                gym.status === "Active"
                   ? "bg-green-100 text-green-800"
-                  : gym.status === "Rejected"
+                  : gym.status === "Inactive"
                   ? "bg-red-100 text-red-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}

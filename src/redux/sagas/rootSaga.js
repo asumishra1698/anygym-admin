@@ -6,6 +6,7 @@ import watchAmenitySaga from "./amenitiesSaga";
 import watchAreamanagerSaga from "./areaManagerSaga";
 import watchgymOwnerSaga from "./gymOwnerSaga";
 import watchallGymSaga from "./allGymSaga";
+import watchaddGymSaga from "./addGymSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -16,5 +17,6 @@ export default function* rootSaga() {
     watchAmenitySaga(),
     watchAreamanagerSaga(),
     watchgymOwnerSaga(),
+    watchaddGymSaga(),
   ]);
 }

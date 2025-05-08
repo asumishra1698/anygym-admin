@@ -9,6 +9,7 @@ import { MEDIA_URL } from "../../config";
 const ManageRejectedGym = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userType = localStorage.getItem("userType");
 
   // Fetch rejected gyms from Redux state
   const {
@@ -48,12 +49,14 @@ const ManageRejectedGym = () => {
           </div>
 
           {/* Add Gym Button */}
-          <button
-            onClick={() => navigate("/add-gym")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
-          >
-            + Add Gym
-          </button>
+          {userType === "AREA_MANAGER" && (
+            <button
+              onClick={() => navigate("/add-gym-by-area-manager")}
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            >
+              + Add Gym by Area Manager
+            </button>
+          )}
         </div>
       </div>
 

@@ -7,6 +7,8 @@ import rejectedGymReducer from "./rejectedGymReducers";
 import amenityReducer from "./amenitiesReducers";
 import areaManagerReducer from "./areaManagerReducers";
 import gymOwnerReducer from "./gymOwnerReducers";
+import addGymReducer from "./addGymReducers"; 
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,6 +19,7 @@ const rootReducer = combineReducers({
   amenity: amenityReducer,
   areaManager: areaManagerReducer,
   gymOwner: gymOwnerReducer,
+  addGym: addGymReducer, 
 });
 
 export default rootReducer;
