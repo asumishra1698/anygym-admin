@@ -25,7 +25,6 @@ const AddAreaManager = () => {
     areaPincode: "",
     password: "",
     cpassword: "",
-
   });
 
   const handleChange = (e) => {
@@ -172,8 +171,8 @@ const AddAreaManager = () => {
             required
           />
 
-           {/* areaPincode */}
-           <InputField
+          {/* areaPincode */}
+          <InputField
             label="Area Pin Code"
             type="number"
             name="areaPincode"
@@ -247,10 +246,11 @@ const AddAreaManager = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="md:col-span-3">
+          {/* Submit Button */}
+          <div className="md:col-span-3 flex justify-end">
             <button
               type="submit"
-              className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition duration-300"
+              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition duration-300"
             >
               Submit
             </button>
