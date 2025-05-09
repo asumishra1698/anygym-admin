@@ -18,12 +18,13 @@ import {
   GYM_OWNER_URL,
   GYM_OWNER_BY_AREA_MANAGER_URL,
   ADD_GYM_OWNER_URL,
+  UPDATE_STATAUS_OWNER_URL,
 } from "../../config";
 import { toast } from "react-toastify";
 
 function* fetchGymOwnersSaga(action) {
   const { page, perPage, searchQuery } = action.payload; // Extract other payload properties
-  const userType = localStorage.getItem("userType"); 
+  const userType = localStorage.getItem("userType");
   try {
     // Determine the API endpoint based on the user_type
     const endpoint =
@@ -96,16 +97,19 @@ function* addGymOwnerSaga(action) {
 }
 
 function* updateGymOwnerStatusSaga(action) {
-  const { gymOwnerId, status } = action.payload;
+  const { ownerId, status } = action.payload; // Extract ownerId and status from the payload
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}${GYM_OWNER_URL}/${gymOwnerId}/status`,
-      { status }
+      `${BASE_URL}${UPDATE_STATAUS_OWNER_URL}`,
+      {
+        ownerId, 
+        status, 
+      }
     );
 
     if (response.status === 200) {
-      yield put(updateGymOwnerStatusSuccess(gymOwnerId, status));
+      yield put(updateGymOwnerStatusSuccess(response.data)); // Pass the updated owner data
       toast.success(
         response.data.message || "Gym owner status updated successfully!"
       );

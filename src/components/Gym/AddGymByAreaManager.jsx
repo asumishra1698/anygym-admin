@@ -101,7 +101,7 @@ const AddGymByAreaManager = () => {
   useEffect(() => {
     if (gymData) {
       toast.success("Gym added successfully!");
-      navigate("/manage-gyms");
+      navigate("/manage-pending-gym");
     }
     if (error) {
       toast.error(error);

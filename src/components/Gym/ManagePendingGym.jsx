@@ -35,10 +35,12 @@ const ManagePendingGym = () => {
 
   const handleApprove = (gymId) => {
     dispatch(updateGymStatusRequest(gymId, "Approved"));
+    navigate("/manage-approved-gym");
   };
 
   const handleReject = (gymId) => {
-    dispatch(updateGymStatusRequest(gymId, "Rejected"));
+    dispatch(updateGymStatusRequest(gymId, "Reject"));
+    navigate("/manage-rejected-gym");
   };
 
   return (

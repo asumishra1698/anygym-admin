@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, SearchIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchGymOwnersRequest, updateGymOwnerStatusRequest } from "../../redux/actions/gymOwnerActions";
+import {
+  fetchGymOwnersRequest,
+  updateGymOwnerStatusRequest,
+} from "../../redux/actions/gymOwnerActions";
 
 const ManageGymOwner = () => {
   const dispatch = useDispatch();
@@ -11,7 +14,7 @@ const ManageGymOwner = () => {
 
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [toolkitOpen, setToolkitOpen] = useState(null); 
+  const [toolkitOpen, setToolkitOpen] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(12);
@@ -40,14 +43,19 @@ const ManageGymOwner = () => {
     setSelectedOwner(null);
   };
 
-  const handleToggleStatus = (owner) => {
+  const handleToggleStatus = (owner) => {    
     const newStatus = owner.status === "Active" ? "Inactive" : "Active";
-    dispatch(updateGymOwnerStatusRequest(owner._id, newStatus));
-    setToolkitOpen(null); 
+    const payload = {
+      ownerId: owner._id,
+      status: newStatus,
+    };
+    console.log("Payload:", payload);
+    dispatch(updateGymOwnerStatusRequest(payload));
+    setToolkitOpen(null);
   };
 
   const toggleToolkit = (ownerId) => {
-    setToolkitOpen((prev) => (prev === ownerId ? null : ownerId)); // Toggle toolkit visibility
+    setToolkitOpen((prev) => (prev === ownerId ? null : ownerId));
   };
 
   return (
@@ -103,12 +111,11 @@ const ManageGymOwner = () => {
               Gym Owner : {owner.name}
             </h4>
             <p className="text-sm text-gray-600">Email: {owner.email}</p>
-            <p className="text-sm text-gray-600">
-              Number: {owner.mobile}
-            </p>
+            <p className="text-sm text-gray-600">Number: {owner.mobile}</p>
             <p className="text-sm text-gray-600">
               Registered on: {new Date(owner.createdAt).toLocaleDateString()}
             </p>
+            <p className="text-sm text-gray-600">Id on: {owner._id}</p>
             <div className="flex space-x-4 mt-4 items-center">
               <button
                 onClick={() => handleView(owner)}
@@ -147,7 +154,7 @@ const ManageGymOwner = () => {
                       onClick={() => handleToggleStatus(owner)}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      {owner.status === "Active" ? "Deactivate" : "Activate"}
+                      {owner.status === "Active" ? "Inactive" : "Activate"}
                     </button>
                   </div>
                 )}

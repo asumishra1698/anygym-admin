@@ -64,8 +64,8 @@ const gymOwnerReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         gymOwners: state.gymOwners.map((owner) =>
-          owner._id === action.payload.gymOwnerId
-            ? { ...owner, status: action.payload.status }
+          owner._id === action.payload._id // Match the updated owner by ID
+            ? action.payload // Replace the entire owner object with the updated one
             : owner
         ),
         error: null,

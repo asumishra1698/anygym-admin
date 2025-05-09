@@ -32,11 +32,11 @@ const Login = () => {
 
   React.useEffect(() => {
     if (isSubmitted && token) {      
-      localStorage.setItem("user", user); // Store user (e.g., "Huma RIzvi")
-      localStorage.setItem("_id", _id); // Store _id
-      localStorage.setItem("token", token); // Store token
-      localStorage.setItem("userType", formData.user_type); // Store user type
-      localStorage.setItem("email", formData.email); // Store email   
+      localStorage.setItem("user", user); 
+      localStorage.setItem("_id", _id); 
+      localStorage.setItem("token", token); 
+      localStorage.setItem("userType", formData.user_type); 
+      localStorage.setItem("email", formData.email);   
       setIsSubmitted(false);
       navigate("/dashboard");
     }

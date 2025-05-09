@@ -47,14 +47,14 @@ export const addGymOwnerFailure = (error) => ({
 });
 
 // Update Gym Owner Status Actions
-export const updateGymOwnerStatusRequest = (gymOwnerId, status) => ({
-  type: UPDATE_GYM_OWNER_STATUS_REQUEST,
-  payload: { gymOwnerId, status },
+export const updateGymOwnerStatusRequest = (payload) => ({
+  type: UPDATE_GYM_OWNER_STATUS_REQUEST, // Corrected to use the constant
+  payload,
 });
 
-export const updateGymOwnerStatusSuccess = (gymOwnerId, status) => ({
+export const updateGymOwnerStatusSuccess = (updatedOwner) => ({
   type: UPDATE_GYM_OWNER_STATUS_SUCCESS,
-  payload: { gymOwnerId, status },
+  payload: updatedOwner, // Pass the updated owner object
 });
 
 export const updateGymOwnerStatusFailure = (error) => ({
