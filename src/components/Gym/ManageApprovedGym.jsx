@@ -81,9 +81,9 @@ const ManageApprovedGym = () => {
           >
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Approved"
+                gym.status === "Active"
                   ? "bg-green-100 text-green-800"
-                  : gym.status === "Rejected"
+                  : gym.status === "Inactive"
                   ? "bg-red-100 text-red-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}
