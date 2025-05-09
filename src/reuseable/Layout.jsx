@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { UserCircleIcon, LogoutIcon } from "@heroicons/react/solid";
-import { BsBell } from "react-icons/bs"; // Import Notification Bell Icon
+import { BsBell } from "react-icons/bs";
 import Loader from "./Loader";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownTimeout, setDropdownTimeout] = useState(null);
-  const user = useSelector((state) => state.auth.user); // Use `user` instead of `username`
+  const user = useSelector((state) => state.auth.user);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Combine loading states from multiple reducers
   const { loading: areaManagerLoading } = useSelector(
     (state) => state.areaManager
   );
@@ -39,7 +38,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("user", user); // Store `user` in localStorage
+      localStorage.setItem("user", user);
     }
   }, [user]);
 
@@ -79,16 +78,13 @@ const Layout = ({ children }) => {
         >
           <h1 className="text-xl font-bold text-gray-800 pl-8">Dashboard</h1>
           <div className="flex items-center space-x-6">
-            {/* Notification Bell Icon */}
             <div className="relative cursor-pointer">
               <BsBell className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-              {/* Optional Notification Badge */}
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 3
               </span>
             </div>
 
-            {/* Profile Dropdown */}
             <div
               className="relative"
               onMouseEnter={handleMouseEnter}
