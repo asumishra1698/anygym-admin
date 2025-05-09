@@ -29,7 +29,7 @@ const AddGymByAreaManager = () => {
     yearly: "",
     about_gym: "",
     gymPincode: "",
-    area_manager: "",
+    area_manager: localStorage.getItem("_id") || "",
   });
 
   useEffect(() => {
@@ -315,7 +315,7 @@ const AddGymByAreaManager = () => {
           ))}
 
           {/* Area Manager */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">
               Area Manager
             </label>
@@ -329,7 +329,7 @@ const AddGymByAreaManager = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
-          </div>
+          </div> */}
 
           {/* Gym Pincode */}
           <div>

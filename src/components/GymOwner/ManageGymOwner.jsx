@@ -11,7 +11,7 @@ const ManageGymOwner = () => {
 
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [toolkitOpen, setToolkitOpen] = useState(null); // Track which owner's toolkit is open
+  const [toolkitOpen, setToolkitOpen] = useState(null); 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(12);
