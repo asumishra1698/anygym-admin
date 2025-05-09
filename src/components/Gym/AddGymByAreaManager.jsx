@@ -322,7 +322,8 @@ const AddGymByAreaManager = () => {
             <input
               type="text"
               name="area_manager"
-              value={formData.area_manager}
+              value={localStorage.getItem("_id") || formData.area_manager}
+              readOnly
               onChange={handleChange}
               placeholder="Enter area manager ID"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
