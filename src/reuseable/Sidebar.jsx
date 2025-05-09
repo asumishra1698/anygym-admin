@@ -186,7 +186,7 @@ const Sidebar = ({
               </li>
             )}
 
-            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+            {/* {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
                   to="/manage-customers"
@@ -268,7 +268,7 @@ const Sidebar = ({
                   )}
                 </Link>
               </li>
-            )}
+            )} */}
 
             {userType === "ADMIN" && (
               <li>

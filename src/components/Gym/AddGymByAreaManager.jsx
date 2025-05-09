@@ -15,6 +15,7 @@ const AddGymByAreaManager = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    gymOwnerName: "",
     mobile: "",
     email: "",
     address: "",
@@ -73,6 +74,7 @@ const AddGymByAreaManager = () => {
 
     const gymData = {
       name: formData.name,
+      gymOwnerName: formData.gymOwnerName,
       mobile: formData.mobile,
       email: formData.email,
       address: formData.address,
@@ -128,6 +130,22 @@ const AddGymByAreaManager = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter gym name"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Gym Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Gym Owner Name
+            </label>
+            <input
+              type="text"
+              name="gymOwnerName"
+              value={formData.gymOwnerName}
+              onChange={handleChange}
+              placeholder="Enter Gym Owner Name"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
@@ -208,6 +226,22 @@ const AddGymByAreaManager = () => {
               value={formData.coordinates.latitude}
               onChange={handleChange}
               placeholder="Enter latitude"
+              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+
+          {/* Gym Pincode */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Gym Pincode
+            </label>
+            <input
+              type="text"
+              name="gymPincode"
+              value={formData.gymPincode}
+              onChange={handleChange}
+              placeholder="Enter gym pincode"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
               required
             />
@@ -330,22 +364,6 @@ const AddGymByAreaManager = () => {
               required
             />
           </div> */}
-
-          {/* Gym Pincode */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Gym Pincode
-            </label>
-            <input
-              type="text"
-              name="gymPincode"
-              value={formData.gymPincode}
-              onChange={handleChange}
-              placeholder="Enter gym pincode"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
 
           {/* About Gym */}
           <div className="md:col-span-3">
