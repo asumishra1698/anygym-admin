@@ -31,10 +31,10 @@ function* loginSaga(action) {
       );
 
       // Store all data in localStorage
-      localStorage.setItem("user", user); // Store user (e.g., "Huma RIzvi")
-      localStorage.setItem("_id", _id); // Store _id
-      localStorage.setItem("token", authorization.token); // Store token
-      localStorage.setItem("authorizationType", authorization.type); // Store token type
+      localStorage.setItem("user", user);
+      localStorage.setItem("_id", _id);
+      localStorage.setItem("token", authorization.token);
+      localStorage.setItem("authorizationType", authorization.type);
 
       // Additional logic for AREA_MANAGER
       if (action.payload.user_type === "AREA_MANAGER") {
