@@ -39,7 +39,7 @@ const ManageApprovedGym = () => {
   };
 
   const toggleToolkit = (gymId) => {
-    setToolkitOpen((prev) => (prev === gymId ? null : gymId)); // Toggle toolkit visibility
+    setToolkitOpen((prev) => (prev === gymId ? null : gymId)); 
   };
 
   return (

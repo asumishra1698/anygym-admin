@@ -8,11 +8,10 @@ import {
   UPDATE_GYM_STATUS_FAILURE,
 } from "../actions/actionTypes";
 
-import { getRequest, putRequest } from "../../utils/apiHelper"; // Use putRequest here
+import { getRequest, putRequest } from "../../utils/apiHelper";
 import { BASE_URL, APPROVED_GYM_REQUEST_URL } from "../../config";
 import { toast } from "react-toastify";
 
-// Worker Saga: Handles the API call to fetch approved gyms
 function* fetchApprovedGymsSaga() {
   try {
     const response = yield call(

@@ -104,8 +104,6 @@ const ManageAreaManager = () => {
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
                 manager.status === "Active"
                   ? "bg-green-100 text-green-800"
-                  : manager.status === "Rejected"
-                  ? "bg-red-100 text-red-800"
                   : manager.status === "Inactive"
                   ? "bg-gray-100 text-gray-800"
                   : "bg-yellow-100 text-yellow-800"
@@ -126,8 +124,10 @@ const ManageAreaManager = () => {
             />
 
             {/* Manager Details */}
-            <h4 className="text-sm font-bold text-gray-800">Area Manager : {manager.name}</h4>
-            <p className="text-sm text-gray-600">{manager.mobile}</p>            
+            <h4 className="text-sm font-bold text-gray-800">
+              Area Manager : {manager.name}
+            </h4>
+            <p className="text-sm text-gray-600">{manager.mobile}</p>
             <p className="text-sm text-gray-600">
               Registered on: {new Date(manager.createdAt).toLocaleDateString()}
             </p>
@@ -277,7 +277,10 @@ const ManageAreaManager = () => {
             <p>
               <strong>Mobile:</strong> {selectedManager.mobile}
             </p>
-            <p> <strong>Area Pincode :</strong> {selectedManager.areaPincode}</p>
+            <p>
+              {" "}
+              <strong>Area Pincode :</strong> {selectedManager.areaPincode}
+            </p>
             <p>
               <strong>Referral Id:</strong> {selectedManager.referral_id}
             </p>
