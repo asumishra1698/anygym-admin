@@ -15,7 +15,9 @@ const Login = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, token, message } = useSelector((state) => state.auth);
+  const { loading, error, token, _id, user, message } = useSelector(
+    (state) => state.auth
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,10 +31,12 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (isSubmitted && token) {
-      localStorage.setItem("token", token);
-      localStorage.setItem("userType", formData.user_type);
-      localStorage.setItem("email", formData.email);
+    if (isSubmitted && token) {      
+      localStorage.setItem("user", user); // Store user (e.g., "Huma RIzvi")
+      localStorage.setItem("_id", _id); // Store _id
+      localStorage.setItem("token", token); // Store token
+      localStorage.setItem("userType", formData.user_type); // Store user type
+      localStorage.setItem("email", formData.email); // Store email   
       setIsSubmitted(false);
       navigate("/dashboard");
     }
@@ -41,7 +45,7 @@ const Login = () => {
       toast.error(error);
       setIsSubmitted(false);
     }
-  }, [isSubmitted, token, error, message, formData, navigate]);
+  }, [isSubmitted, token, error, message, user, formData, _id, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">
@@ -125,7 +129,7 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-          <div class="mt-4 text-center"></div>
+          <div className="mt-4 text-center"></div>
         </form>
       </div>
     </div>

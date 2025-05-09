@@ -9,8 +9,8 @@ import Loader from "./Loader";
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownTimeout, setDropdownTimeout] = useState(null); // Timeout for delayed close
-  const username = useSelector((state) => state.auth.user?.name);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
+  const user = useSelector((state) => state.auth.user); // Use `user` instead of `username`
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Combine loading states from multiple reducers
@@ -38,10 +38,10 @@ const Layout = ({ children }) => {
     amenityLoading;
 
   useEffect(() => {
-    if (username) {
-      localStorage.setItem("username", username);
+    if (user) {
+      localStorage.setItem("user", user); // Store `user` in localStorage
     }
-  }, [username]);
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -53,7 +53,6 @@ const Layout = ({ children }) => {
   };
 
   const handleMouseEnter = () => {
-    // Clear any existing timeout to prevent premature close
     if (dropdownTimeout) {
       clearTimeout(dropdownTimeout);
       setDropdownTimeout(null);
@@ -62,10 +61,9 @@ const Layout = ({ children }) => {
   };
 
   const handleMouseLeave = () => {
-    // Set a timeout to delay closing the dropdown
     const timeout = setTimeout(() => {
       setIsDropdownOpen(false);
-    }, 300); // Delay of 300ms
+    }, 300);
     setDropdownTimeout(timeout);
   };
 
@@ -99,7 +97,7 @@ const Layout = ({ children }) => {
               <div className="flex items-center space-x-2 cursor-pointer">
                 <UserCircleIcon className="w-8 h-8 text-gray-600" />
                 <span className="text-gray-800 font-medium">
-                  {username || localStorage.getItem("username")}
+                  {user?.name || localStorage.getItem("user")}
                 </span>
               </div>
               <div

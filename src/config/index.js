@@ -6,7 +6,8 @@
 export const BASE_URL = "https://anygym-api.iqsetters.com/api";
 export const MEDIA_URL = "https://anygym-api.iqsetters.com";
 
-export const LOGIN_URL = "/admin/login";
+export const ADMIN_LOGIN_URL = "/admin/login";
+export const STAFF_LOGIN_URL = "/staff/login-with-pass";
 
 export const GYM_URL = "/admin/gyms";
 export const PENDING_GYM_REQUEST_URL = "/staff/gym-request-pending";

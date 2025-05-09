@@ -4,28 +4,44 @@ import {
   loginSuccess,
   loginFailure,
 } from "../actions/authActions";
-import { BASE_URL , LOGIN_URL} from "../../config";
+import { BASE_URL, ADMIN_LOGIN_URL, STAFF_LOGIN_URL } from "../../config";
 import { postRequest } from "../../utils/apiHelper";
 
 function* loginSaga(action) {
   try {
-    
+    const endpoint =
+      action.payload.user_type === "ADMIN" ? ADMIN_LOGIN_URL : STAFF_LOGIN_URL;
+
     const response = yield call(
       postRequest,
-      `${BASE_URL}${LOGIN_URL}`,
+      `${BASE_URL}${endpoint}`,
       action.payload
     );
 
     if (response.status === 200) {
+      const { user, _id, authorization } = response.data;
+
+      // Dispatch loginSuccess with all data
       yield put(
         loginSuccess({
-          user: response.data.user,
-          token: response.data.authorization.token,
+          user,
+          token: authorization.token,
+          _id,
         })
       );
 
-      // Store token in localStorage
-      localStorage.setItem("token", response.data.authorization.token);
+      // Store all data in localStorage
+      localStorage.setItem("user", user); // Store user (e.g., "Huma RIzvi")
+      localStorage.setItem("_id", _id); // Store _id
+      localStorage.setItem("token", authorization.token); // Store token
+      localStorage.setItem("authorizationType", authorization.type); // Store token type
+
+      // Additional logic for AREA_MANAGER
+      if (action.payload.user_type === "AREA_MANAGER") {
+        localStorage.setItem("userType", "AREA_MANAGER");
+      } else {
+        localStorage.setItem("userType", "ADMIN");
+      }
     } else {
       yield put(loginFailure(response.message || "Invalid email or password"));
     }

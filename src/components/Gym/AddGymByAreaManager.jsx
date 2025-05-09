@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addGymRequest } from "../../redux/actions/addGymActions";
+import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Layout from "../../reuseable/Layout";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -10,6 +11,7 @@ const AddGymByAreaManager = () => {
   const navigate = useNavigate();
 
   const { loading, error, gymData } = useSelector((state) => state.addGym);
+  const { amenities = [] } = useSelector((state) => state.amenity);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +31,10 @@ const AddGymByAreaManager = () => {
     gymPincode: "",
     area_manager: "",
   });
+
+  useEffect(() => {
+    dispatch(fetchAmenitiesRequest());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -271,15 +277,14 @@ const AddGymByAreaManager = () => {
               Amenities
             </label>
             <div className="flex flex-wrap gap-2 mt-2">
-              {[
-                { id: "681b2aba5f9b0ef11bf6c5af", name: "WiFi" },
-                { id: "681b2aba5f9b0ef11bf6c5b0", name: "Parking" },
-                { id: "681b2aba5f9b0ef11bf6c5b1", name: "Swimming Pool" },
-              ].map((amenity) => (
-                <label key={amenity.id} className="flex items-center space-x-2">
+              {amenities.map((amenity) => (
+                <label
+                  key={amenity._id}
+                  className="flex items-center space-x-2"
+                >
                   <input
                     type="checkbox"
-                    value={amenity.id}
+                    value={amenity._id}
                     onChange={handleAmenitiesChange}
                     className="form-checkbox"
                   />
