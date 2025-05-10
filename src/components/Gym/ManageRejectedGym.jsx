@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchRejectedGymsRequest } from "../../redux/actions/rejectedGymActions";
+import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions"; // Reusing the same action
 import { MEDIA_URL } from "../../config";
 
 const ManageRejectedGym = () => {
@@ -11,18 +11,18 @@ const ManageRejectedGym = () => {
   const dispatch = useDispatch();
   const userType = localStorage.getItem("userType");
 
-  // Fetch rejected gyms from Redux state
+  // Fetch gyms from Redux state
   const {
-    gyms: rejectedGyms,
+    gyms: allGyms,
     loading,
     error,
-  } = useSelector((state) => state.rejectedGyms);
+  } = useSelector((state) => state.approvedGyms); // Using the same state for approved gyms
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchRejectedGymsRequest());
+    dispatch(fetchApprovedGymsRequest()); // Reusing the same action
   }, [dispatch]);
 
   const handleViewDetails = (gym) => {
@@ -32,7 +32,6 @@ const ManageRejectedGym = () => {
 
   return (
     <Layout>
-      {/* <main className="bg-gray-100 overflow-y-auto p-6"> */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
           Rejected Gyms
@@ -63,51 +62,52 @@ const ManageRejectedGym = () => {
       {/* Loading, Error, and Empty States */}
       {loading && <p className="text-gray-600">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && rejectedGyms.length === 0 && (
+      {!loading && !error && allGyms.filter((gym) => gym.status === "Rejected").length === 0 && (
         <p className="text-gray-600">No rejected gyms available.</p>
       )}
 
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {rejectedGyms.map((gym) => (
-          <div
-            key={gym._id}
-            className="bg-white p-4 rounded-lg shadow relative"
-          >
-            {/* Status Badge */}
-            <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
-              Rejected
-            </span>
+        {allGyms
+          .filter((gym) => gym.status === "Reject") // Filter gyms with "Rejected" status
+          .map((gym) => (
+            <div
+              key={gym._id}
+              className="bg-white p-4 rounded-lg shadow relative"
+            >
+              {/* Status Badge */}
+              <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
+                Rejected
+              </span>
 
-            {/* Gym Image */}
-            <img
-              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-              alt="Gym Front"
-              className="w-full h-40 object-cover rounded-lg mb-2"
-            />
+              {/* Gym Image */}
+              <img
+                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+                alt="Gym Front"
+                className="w-full h-40 object-cover rounded-lg mb-2"
+              />
 
-            {/* Gym Details */}
-            <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
-            <p className="text-sm text-gray-600">
-              Address: {gym.location.address}
-            </p>
-            <p className="text-sm text-gray-600">Status: {gym.status}</p>
+              {/* Gym Details */}
+              <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
+              <p className="text-sm text-gray-600">
+                Address: {gym.location.address}
+              </p>
+              <p className="text-sm text-gray-600">Status: {gym.status}</p>
 
-            {/* Action Icons */}
-            <div className="absolute bottom-4 right-4 flex space-x-2">
-              {/* View Icon */}
-              <button
-                onClick={() => handleViewDetails(gym)}
-                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
-                title="View"
-              >
-                <EyeIcon className="w-4 h-4" />
-              </button>
+              {/* Action Icons */}
+              <div className="absolute bottom-4 right-4 flex space-x-2">
+                {/* View Icon */}
+                <button
+                  onClick={() => handleViewDetails(gym)}
+                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                  title="View"
+                >
+                  <EyeIcon className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
-      {/* </main> */}
 
       {/* Gym Details Modal */}
       {isModalOpen && selectedGym && (

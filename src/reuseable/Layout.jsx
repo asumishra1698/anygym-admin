@@ -23,9 +23,9 @@ const Layout = ({ children }) => {
   const { loading: approvedGymsLoading } = useSelector(
     (state) => state.approvedGyms
   );
-  const { loading: rejectedGymsLoading } = useSelector(
-    (state) => state.rejectedGyms
-  );
+  // const { loading: rejectedGymsLoading } = useSelector(
+  //   (state) => state.rejectedGyms
+  // );
   const { loading: amenityLoading } = useSelector((state) => state.amenity);
 
   const isLoading =
@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
     gymOwnerLoading ||
     pendingGymsLoading ||
     approvedGymsLoading ||
-    rejectedGymsLoading ||
+    // rejectedGymsLoading ||
     amenityLoading;
 
   useEffect(() => {
