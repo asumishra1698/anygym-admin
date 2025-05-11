@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
+import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import {
   fetchApprovedGymsRequest,
@@ -23,6 +23,13 @@ const ManageApprovedGym = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
 
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState({
+    gymFront: [],
+    service: [],
+    videos: [],
+  });
+
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest());
   }, [dispatch]);
@@ -39,7 +46,32 @@ const ManageApprovedGym = () => {
   };
 
   const toggleToolkit = (gymId) => {
-    setToolkitOpen((prev) => (prev === gymId ? null : gymId)); 
+    setToolkitOpen((prev) => (prev === gymId ? null : gymId));
+  };
+
+  const handleFileChange = (e, type) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles((prev) => ({
+      ...prev,
+      [type]: [...prev[type], ...files],
+    }));
+  };
+
+  const handleDeleteFile = (type, index) => {
+    setSelectedFiles((prev) => ({
+      ...prev,
+      [type]: prev[type].filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleUploadSubmit = (e) => {
+    e.preventDefault();
+    if (selectedFiles.length === 0) {
+      alert("Please select files to upload.");
+      return;
+    }
+    setIsUploadModalOpen(false);
+    setSelectedFiles([]);
   };
 
   return (
@@ -57,14 +89,14 @@ const ManageApprovedGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
-          {userType === "AREA_MANAGER" && (
+          {/* {userType === "AREA_MANAGER" && ( */}
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
               className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
             >
-              + Add Gym by Area Manager
+              + Add Gym
             </button>
-          )}
+          {/* )} */}
         </div>
       </div>
 
@@ -108,6 +140,15 @@ const ManageApprovedGym = () => {
               >
                 <EyeIcon className="w-4 h-4" />
               </button>
+
+              <button
+                onClick={() => setIsUploadModalOpen(true)}
+                className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                title="Upload"
+              >
+                <UploadIcon className="w-4 h-4" />
+              </button>
+
               {/* Three-Dot Menu */}
               <div className="relative">
                 <button
@@ -247,6 +288,123 @@ const ManageApprovedGym = () => {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {isUploadModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Upload Gym Images and Videos
+            </h2>
+            <form onSubmit={handleUploadSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Gym Front Images
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "gymFront")}
+                  className="block w-full mb-2"
+                />
+                <div className="flex flex-wrap gap-2">
+                  {selectedFiles.gymFront.map((file, index) => (
+                    <div key={index} className="relative w-20 h-20">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteFile("gymFront", index)}
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Service Images
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "service")}
+                  className="block w-full mb-2"
+                />
+                <div className="flex flex-wrap gap-2">
+                  {selectedFiles.service.map((file, index) => (
+                    <div key={index} className="relative w-20 h-20">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteFile("service", index)}
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Gym Videos
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="video/*"
+                  onChange={(e) => handleFileChange(e, "videos")}
+                  className="block w-full mb-2"
+                />
+                <div className="flex flex-wrap gap-2">
+                  {selectedFiles.videos.map((file, index) => (
+                    <div key={index} className="relative w-20 h-20">
+                      <video
+                        src={URL.createObjectURL(file)}
+                        controls
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteFile("videos", index)}
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+              >
+                Upload
+              </button>
+            </form>
+            <button
+              onClick={() => setIsUploadModalOpen(false)}
+              className="mt-4 w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
