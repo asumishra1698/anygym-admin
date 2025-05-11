@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { BASE_URL } from "../../config";
+import { useDispatch, useSelector } from "react-redux";
+import { resetPasswordRequest } from "../../redux/actions/authActions";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email || ""; 
+  const dispatch = useDispatch();
+  const email = location.state?.email || "";
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const { resetPasswordMessage, error: reduxError } = useSelector(
+    (state) => state.auth
+  );
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!newPassword || !confirmPassword) {
@@ -32,31 +39,21 @@ const ResetPassword = () => {
     setLoading(true);
     setError("");
 
-    try {
-      const response = await fetch(
-        `${BASE_URL}/api/auth/reset-password`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, newPassword }),
-        }
-      );
+    // Dispatch the resetPasswordRequest action with email and password
+    dispatch(resetPasswordRequest({ email, password: newPassword }));
+  };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to reset password.");
-      }
-
+  React.useEffect(() => {
+    if (resetPasswordMessage) {
       alert("Password reset successfully! You can now log in.");
-      navigate("/login"); 
-    } catch (error) {
-      console.error("Reset Password Error:", error);
-      setError(error.message || "Something went wrong. Please try again.");
-    } finally {
+      navigate("/login");
+    }
+
+    if (reduxError) {
+      setError(reduxError);
       setLoading(false);
     }
-  };
+  }, [resetPasswordMessage, reduxError, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -109,7 +106,7 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+            className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
             disabled={loading}
           >
             {loading ? "Resetting..." : "Reset Password"}

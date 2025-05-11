@@ -8,6 +8,9 @@ import {
   VERIFY_OTP_REQUEST,
   VERIFY_OTP_SUCCESS,
   VERIFY_OTP_FAILURE,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILURE,
 } from "./actionTypes";
 
 // Login Action Creators
@@ -55,5 +58,21 @@ export const verifyOtpSuccess = (message) => ({
 
 export const verifyOtpFailure = (error) => ({
   type: VERIFY_OTP_FAILURE,
+  payload: error,
+});
+
+// Reset Password Action Creators
+export const resetPasswordRequest = (payload) => ({
+  type: RESET_PASSWORD_REQUEST,
+  payload,
+});
+
+export const resetPasswordSuccess = (message) => ({
+  type: RESET_PASSWORD_SUCCESS,
+  payload: message,
+});
+
+export const resetPasswordFailure = (error) => ({
+  type: RESET_PASSWORD_FAILURE,
   payload: error,
 });

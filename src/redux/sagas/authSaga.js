@@ -9,6 +9,9 @@ import {
   VERIFY_OTP_REQUEST,
   VERIFY_OTP_SUCCESS,
   VERIFY_OTP_FAILURE,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILURE,
 } from "../actions/actionTypes";
 import { BASE_URL, STAFF_LOGIN_URL, ADMIN_LOGIN_URL } from "../../config";
 import { postRequest } from "../../utils/apiHelper";
@@ -124,9 +127,40 @@ function* verifyOtpSaga(action) {
   }
 }
 
+function* resetPasswordSaga(action) {
+  try {
+    const response = yield call(
+      postRequest,
+      `${BASE_URL}/staff/reset-password`,
+      action.payload
+    );
+
+    console.log("Reset Password response:", response);
+
+    if (response.status === 200 && response.message) {
+      yield put({
+        type: RESET_PASSWORD_SUCCESS,
+        payload: response.message || "Password reset successfully!",
+      });
+    } else {
+      yield put({
+        type: RESET_PASSWORD_FAILURE,
+        payload: response.message || "Failed to reset password",
+      });
+    }
+  } catch (error) {
+    console.error("Reset Password error:", error);
+    yield put({
+      type: RESET_PASSWORD_FAILURE,
+      payload: error.message || "Something went wrong! Please try again.",
+    });
+  }
+}
+
 // Watcher Saga
 export default function* watchAuthSaga() {
   yield takeLatest(LOGIN_REQUEST, loginSaga);
   yield takeLatest(FORGOT_PASSWORD_REQUEST, forgotPasswordSaga);
   yield takeLatest(VERIFY_OTP_REQUEST, verifyOtpSaga);
+  yield takeLatest(RESET_PASSWORD_REQUEST, resetPasswordSaga);
 }

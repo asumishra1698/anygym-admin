@@ -8,6 +8,9 @@ import {
   VERIFY_OTP_REQUEST,
   VERIFY_OTP_SUCCESS,
   VERIFY_OTP_FAILURE,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILURE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -18,6 +21,7 @@ const initialState = {
   error: null,
   forgotPasswordMessage: null,
   verifyOtpMessage: null,
+  resetPasswordMessage: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -58,7 +62,6 @@ const authReducer = (state = initialState, action) => {
         forgotPasswordMessage: action.payload,
         error: null,
       };
-
     case FORGOT_PASSWORD_FAILURE:
       return {
         ...state,
@@ -72,21 +75,43 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loading: true,
         error: null,
-        verifyOtpMessage: null, 
+        verifyOtpMessage: null,
       };
     case VERIFY_OTP_SUCCESS:
       return {
         ...state,
         loading: false,
-        verifyOtpMessage: action.payload, 
-        error: null, 
+        verifyOtpMessage: action.payload,
+        error: null,
       };
     case VERIFY_OTP_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload, 
-        verifyOtpMessage: null, 
+        error: action.payload,
+        verifyOtpMessage: null,
+      };
+
+    case RESET_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        resetPasswordMessage: null,
+      };
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        resetPasswordMessage: action.payload,
+        error: null,
+      };
+    case RESET_PASSWORD_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        resetPasswordMessage: null,
       };
 
     default:
