@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Auth/Login";
+import Forgotpassword from "./components/Auth/ForgotPassword";
+import ResetPassword from "./components/Auth/ResetPassword";
+import OTPVerification from "./components/Auth/OTPVerification";
 import Amenities from "./components/Settings/Amenities/ManageAmenities";
 import AreaManager from "./components/AreaManager/ManageAreaManager";
 import EditAreaManager from "./components/AreaManager/EditAreaManager";
@@ -30,6 +33,9 @@ const App = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<Forgotpassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/otp-verification" element={<OTPVerification />} />
 
         {/* Protected Routes */}
         <Route

@@ -31,12 +31,12 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (isSubmitted && token) {      
-      localStorage.setItem("user", user); 
-      localStorage.setItem("_id", _id); 
-      localStorage.setItem("token", token); 
-      localStorage.setItem("userType", formData.user_type); 
-      localStorage.setItem("email", formData.email);   
+    if (isSubmitted && token) {
+      localStorage.setItem("user", user);
+      localStorage.setItem("_id", _id);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userType", formData.user_type);
+      localStorage.setItem("email", formData.email);
       setIsSubmitted(false);
       navigate("/dashboard");
     }
@@ -129,7 +129,14 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-          <div className="mt-4 text-center"></div>
+          <div className="mt-4 text-center">
+            <a
+              href="/forgot-password"
+              className="text-green-600 hover:text-green-800 text-sm font-medium"
+            >
+              Forgot Password?
+            </a>
+          </div>
         </form>
       </div>
     </div>
