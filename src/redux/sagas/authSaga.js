@@ -13,7 +13,14 @@ import {
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAILURE,
 } from "../actions/actionTypes";
-import { BASE_URL, STAFF_LOGIN_URL, ADMIN_LOGIN_URL } from "../../config";
+import {
+  BASE_URL,
+  STAFF_LOGIN_URL,
+  ADMIN_LOGIN_URL,
+  OTP_GENRATE_URL,
+  OTP_VERIFY_URL,
+  RESET_PASSWORD_URL,
+} from "../../config";
 import { postRequest } from "../../utils/apiHelper";
 
 // Login Saga
@@ -71,7 +78,7 @@ function* forgotPasswordSaga(action) {
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}/staff/otp-generate-pass-reset`,
+      `${BASE_URL}${OTP_GENRATE_URL}`,
       action.payload
     );
 
@@ -101,7 +108,7 @@ function* verifyOtpSaga(action) {
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}/staff/otp-verify-pass-reset`,
+      `${BASE_URL}${OTP_VERIFY_URL}`,
       action.payload
     );
 
@@ -131,7 +138,7 @@ function* resetPasswordSaga(action) {
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}/staff/reset-password`,
+      `${BASE_URL}${RESET_PASSWORD_URL}`,
       action.payload
     );
 

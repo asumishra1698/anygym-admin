@@ -8,6 +8,9 @@ export const MEDIA_URL = "https://anygym-api.iqsetters.com";
 
 export const ADMIN_LOGIN_URL = "/admin/login";
 export const STAFF_LOGIN_URL = "/staff/login-with-pass";
+export const OTP_GENRATE_URL = "/staff/otp-generate-pass-reset";
+export const OTP_VERIFY_URL = "/staff/otp-verify-pass-reset";
+export const RESET_PASSWORD_URL = "/staff/reset-password";
 
 export const GYM_URL = "/admin/gyms";
 export const PENDING_GYM_REQUEST_URL = "/staff/gym-request-pending";
