@@ -51,6 +51,10 @@ const Layout = ({ children }) => {
     navigate("/my-account");
   };
 
+   const handleChangePassword = () => {
+    navigate("/forgot-password");
+  };
+
   const handleMouseEnter = () => {
     if (dropdownTimeout) {
       clearTimeout(dropdownTimeout);
@@ -97,7 +101,7 @@ const Layout = ({ children }) => {
                 </span>
               </div>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out transform ${
+                className={`absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out transform ${
                   isDropdownOpen
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 pointer-events-none"
@@ -109,6 +113,14 @@ const Layout = ({ children }) => {
                 >
                   <UserCircleIcon className="w-5 h-5" />
                   <span className="ml-3">My Account</span>
+                </button>
+
+                <button
+                  onClick={handleChangePassword}
+                  className="flex items-center w-full py-2 px-4 text-gray-700 hover:bg-gray-100"
+                >
+                  <UserCircleIcon className="w-5 h-5" />
+                  <span className="ml-3">Change Password</span>
                 </button>
 
                 <button

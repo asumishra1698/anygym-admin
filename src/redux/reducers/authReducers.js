@@ -2,7 +2,10 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-} from "../actions/authActions";
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_FAILURE,
+} from "../actions/actionTypes"; 
 
 const initialState = {
   loading: false,
@@ -10,6 +13,7 @@ const initialState = {
   token: null,
   _id: null,
   error: null,
+  forgotPasswordMessage: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -26,6 +30,23 @@ const authReducer = (state = initialState, action) => {
       };
     case LOGIN_FAILURE:
       return { ...state, loading: false, error: action.payload };
+    
+    case FORGOT_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        forgotPasswordMessage: null,
+      };
+    case FORGOT_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        forgotPasswordMessage: action.payload,
+      };
+    case FORGOT_PASSWORD_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

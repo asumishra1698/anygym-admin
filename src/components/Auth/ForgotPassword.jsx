@@ -1,44 +1,37 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../config";
+import { forgotPasswordRequest } from "../../redux/actions/authActions";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
+  const { forgotPasswordMessage, error } = useSelector((state) => state.auth);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+    dispatch(forgotPasswordRequest(email));
+  };
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to send OTP. Please try again."
-        );
-      }
-
-      setMessage("OTP sent successfully! Check your email.");
-
-      // Redirect user to OTP verification page
+  React.useEffect(() => {
+    console.log("Forgot Password Message:", forgotPasswordMessage);
+    if (forgotPasswordMessage) {
+      setMessage(forgotPasswordMessage);
+      setLoading(false);
       navigate("/verify-otp", { state: { email } });
-    } catch (error) {
-      console.error("Forgot Password Error:", error);
-      setMessage(error.message || "Something went wrong. Try again.");
-    } finally {
+    }
+
+    if (error) {
+      setMessage(error);
       setLoading(false);
     }
-  };
+  }, [forgotPasswordMessage, error, navigate, email]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">
