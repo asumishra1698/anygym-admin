@@ -5,7 +5,7 @@ import {
   FORGOT_PASSWORD_REQUEST,
   FORGOT_PASSWORD_SUCCESS,
   FORGOT_PASSWORD_FAILURE,
-} from "../actions/actionTypes"; 
+} from "../actions/actionTypes";
 
 const initialState = {
   loading: false,
@@ -18,8 +18,13 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+   
     case LOGIN_REQUEST:
-      return { ...state, loading: true, error: null };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
@@ -27,26 +32,39 @@ const authReducer = (state = initialState, action) => {
         user: action.payload.user,
         token: action.payload.token,
         _id: action.payload._id,
+        error: null, 
       };
     case LOGIN_FAILURE:
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload, 
+      };
+
     
     case FORGOT_PASSWORD_REQUEST:
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null, 
         forgotPasswordMessage: null,
       };
     case FORGOT_PASSWORD_SUCCESS:
       return {
         ...state,
-        loading: false,
-        forgotPasswordMessage: action.payload,
+        loading: false,        
+        forgotPasswordMessage: action.payload, 
+        error: null, 
       };
+      
     case FORGOT_PASSWORD_FAILURE:
-      return { ...state, loading: false, error: action.payload };
-
+      return {
+        ...state,
+        loading: false,
+        error: action.payload, 
+        forgotPasswordMessage: null, 
+      };
+   
     default:
       return state;
   }

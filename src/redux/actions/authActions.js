@@ -5,8 +5,9 @@ import {
   FORGOT_PASSWORD_REQUEST,
   FORGOT_PASSWORD_SUCCESS,
   FORGOT_PASSWORD_FAILURE,
-} from "./actionTypes"; 
+} from "./actionTypes";
 
+// Login Action Creators
 export const loginRequest = (payload) => ({
   type: LOGIN_REQUEST,
   payload,
@@ -22,6 +23,7 @@ export const loginFailure = (error) => ({
   payload: error,
 });
 
+// Forgot Password Action Creators
 export const forgotPasswordRequest = (email) => ({
   type: FORGOT_PASSWORD_REQUEST,
   payload: { email },

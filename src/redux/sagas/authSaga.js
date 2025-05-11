@@ -10,6 +10,7 @@ import {
 import { BASE_URL, STAFF_LOGIN_URL, ADMIN_LOGIN_URL } from "../../config";
 import { postRequest } from "../../utils/apiHelper";
 
+// Login Saga
 function* loginSaga(action) {
   try {
     const endpoint =
@@ -40,26 +41,26 @@ function* loginSaga(action) {
       localStorage.setItem("token", authorization.token);
       localStorage.setItem("authorizationType", authorization.type);
 
-      // Additional logic for AREA_MANAGER
-      if (action.payload.user_type === "AREA_MANAGER") {
-        localStorage.setItem("userType", "AREA_MANAGER");
-      } else {
-        localStorage.setItem("userType", "ADMIN");
-      }
-    } else {
+      localStorage.setItem(
+        "userType",
+        action.payload.user_type === "AREA_MANAGER" ? "AREA_MANAGER" : "ADMIN"
+      );
+    } else {      
       yield put({
         type: LOGIN_FAILURE,
         payload: response.message || "Invalid email or password",
       });
     }
   } catch (error) {
+    console.error("Login error:", error); 
     yield put({
       type: LOGIN_FAILURE,
-      payload: "Something went wrong! Please try again.",
+      payload: error.message || "Something went wrong! Please try again.",
     });
   }
 }
 
+// Forgot Password Saga
 function* forgotPasswordSaga(action) {
   try {
     const response = yield call(
@@ -70,11 +71,10 @@ function* forgotPasswordSaga(action) {
 
     console.log("Forgot password response:", response);
 
-    if (response.status === 200 && response.data) {
+    if (response.status === 200 && response.message) {
       yield put({
         type: FORGOT_PASSWORD_SUCCESS,
-        payload:
-          response.data.message || "OTP Sent Successfully to your Email!",
+        payload: response.message || "OTP sent successfully!",
       });
     } else {
       yield put({
@@ -91,6 +91,7 @@ function* forgotPasswordSaga(action) {
   }
 }
 
+// Watcher Saga
 export default function* watchAuthSaga() {
   yield takeLatest(LOGIN_REQUEST, loginSaga);
   yield takeLatest(FORGOT_PASSWORD_REQUEST, forgotPasswordSaga);

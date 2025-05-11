@@ -20,11 +20,12 @@ const ForgotPassword = () => {
   };
 
   React.useEffect(() => {
-    console.log("Forgot Password Message:", forgotPasswordMessage);
     if (forgotPasswordMessage) {
       setMessage(forgotPasswordMessage);
       setLoading(false);
-      navigate("/verify-otp", { state: { email } });
+
+      // Redirect to verify OTP page
+      navigate("/otp-verification", { state: { email } });
     }
 
     if (error) {
