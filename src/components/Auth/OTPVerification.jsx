@@ -1,15 +1,21 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { BASE_URL } from "../../config";
+import { verifyOtpRequest } from "../../redux/actions/authActions";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || "";
 
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const { verifyOtpMessage, error: reduxError } = useSelector(
+    (state) => state.auth
+  );
 
   // Handle OTP input
   const handleChange = (index, value) => {
@@ -19,53 +25,44 @@ const VerifyOTP = () => {
     newOtp[index] = value.substring(value.length - 1); // Keep last digit
     setOtp(newOtp);
 
-    if (value && index < 5) {
+    if (value && index < 3) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
 
-  // Handle backspace to move to the previous input
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-${index - 1}`)?.focus();
     }
   };
 
-  // Submit OTP for verification
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const otpValue = otp.join("");
+    const otpValue = Number(otp.join(""));
 
-    if (otpValue.length !== 6) {
-      setError("Please enter a valid 6-digit OTP");
+    if (otpValue.toString().length !== 4) {
+      setError("Please enter a valid 4-digit OTP");
       return;
     }
 
     setLoading(true);
     setError("");
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/auth/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp: otpValue }),
-      });
+    console.log("Payload sent to verify OTP:", { email, otp: otpValue });
+    dispatch(verifyOtpRequest({ email, otp: otpValue }));
+  };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Invalid OTP. Please try again.");
-      }
-
+  React.useEffect(() => {
+    if (verifyOtpMessage) {
       alert("OTP Verified Successfully!");
-      navigate("/reset-password", { state: { email } }); // Redirect to reset password
-    } catch (error) {
-      console.error("OTP Verification Error:", error);
-      setError(error.message || "Something went wrong. Please try again.");
-    } finally {
+      navigate("/reset-password", { state: { email } });
+    }
+
+    if (reduxError) {
+      setError(reduxError);
       setLoading(false);
     }
-  };
+  }, [verifyOtpMessage, reduxError, navigate, email]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">
@@ -87,7 +84,7 @@ const VerifyOTP = () => {
               <input
                 key={index}
                 id={`otp-${index}`}
-                type="text"
+                type="number"
                 maxLength="1"
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
@@ -100,7 +97,7 @@ const VerifyOTP = () => {
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
-            disabled={loading || otp.join("").length !== 6}
+            disabled={loading || otp.join("").length !== 4}
           >
             {loading ? "Verifying..." : "Verify OTP"}
           </button>

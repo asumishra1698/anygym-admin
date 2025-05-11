@@ -5,6 +5,9 @@ import {
   FORGOT_PASSWORD_REQUEST,
   FORGOT_PASSWORD_SUCCESS,
   FORGOT_PASSWORD_FAILURE,
+  VERIFY_OTP_REQUEST,
+  VERIFY_OTP_SUCCESS,
+  VERIFY_OTP_FAILURE,
 } from "./actionTypes";
 
 // Login Action Creators
@@ -36,5 +39,21 @@ export const forgotPasswordSuccess = (message) => ({
 
 export const forgotPasswordFailure = (error) => ({
   type: FORGOT_PASSWORD_FAILURE,
+  payload: error,
+});
+
+// Verify OTP Action Creators
+export const verifyOtpRequest = (payload) => ({
+  type: VERIFY_OTP_REQUEST,
+  payload,
+});
+
+export const verifyOtpSuccess = (message) => ({
+  type: VERIFY_OTP_SUCCESS,
+  payload: message,
+});
+
+export const verifyOtpFailure = (error) => ({
+  type: VERIFY_OTP_FAILURE,
   payload: error,
 });

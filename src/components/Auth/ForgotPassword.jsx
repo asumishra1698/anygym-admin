@@ -23,8 +23,6 @@ const ForgotPassword = () => {
     if (forgotPasswordMessage) {
       setMessage(forgotPasswordMessage);
       setLoading(false);
-
-      // Redirect to verify OTP page
       navigate("/otp-verification", { state: { email } });
     }
 
