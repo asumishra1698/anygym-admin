@@ -32,6 +32,7 @@ const ManageApprovedGym = () => {
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
+
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
@@ -99,7 +100,6 @@ const ManageApprovedGym = () => {
         formData,
       })
     );
-    window.location.reload();
   };
 
   const handleDeleteFile = (type, index) => {
@@ -119,7 +119,7 @@ const ManageApprovedGym = () => {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed) {        
+      if (result.isConfirmed) {
         dispatch(
           deleteMediaRequest({
             gymId,

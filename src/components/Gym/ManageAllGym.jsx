@@ -6,12 +6,14 @@ import Layout from "../../reuseable/Layout";
 import { fetchGymsRequest } from "../../redux/actions/allGymActions";
 import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
+import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 
 const ManageAllGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
-    gyms: allGyms,
+    gyms: allGyms = [],
+    totalRecords = 0,
     loading,
     error,
   } = useSelector((state) => state.allGyms);
@@ -19,6 +21,11 @@ const ManageAllGym = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
   const [toolkitOpen, setToolkitOpen] = useState(null);
+  const { amenities = [] } = useSelector((state) => state.amenity);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(12);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
@@ -30,8 +37,12 @@ const ManageAllGym = () => {
   const userType = localStorage.getItem("userType");
 
   useEffect(() => {
-    dispatch(fetchGymsRequest(1, 10));
-  }, [dispatch]);
+    dispatch(fetchGymsRequest(currentPage, limit, searchQuery));
+    dispatch(fetchAmenitiesRequest());
+  }, [dispatch, currentPage, limit, searchQuery]);
+
+  const totalPages = Math.ceil(totalRecords / limit);
+  const itemsPerPageOptions = [20, 50, 100];
 
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);
@@ -46,6 +57,18 @@ const ManageAllGym = () => {
 
   const toggleToolkit = (gymId) => {
     setToolkitOpen((prev) => (prev === gymId ? null : gymId));
+  };
+
+  const getAmenityNames = (amenityIds) => {
+    if (!Array.isArray(amenityIds) || amenityIds.length === 0) {
+      return "No Amenities Available";
+    }
+    return amenityIds
+      .map((id) => {
+        const amenity = amenities.find((item) => item._id === id);
+        return amenity ? amenity.name : "Unknown Amenity";
+      })
+      .join(", ");
   };
 
   const handleFileChange = (e, type) => {
@@ -129,9 +152,9 @@ const ManageAllGym = () => {
             />
             <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
             <p className="text-sm text-gray-600">
-              Address: {gym.location.address}
+              Gym Pincode: {gym.gymPincode}
             </p>
-            <p className="text-sm text-gray-600">Status: {gym.status}</p>
+            <p className="text-sm text-gray-600">Schedule: {gym.status}</p>
             <div className="absolute bottom-4 right-4 flex space-x-2">
               <button
                 onClick={() => handleViewDetails(gym)}
@@ -219,9 +242,7 @@ const ManageAllGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Status:</strong> {selectedGym.status}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <strong>About:</strong> {selectedGym.about_gym}
-                </p>
+
                 <p className="text-sm text-gray-600">
                   <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
                 </p>
@@ -236,7 +257,8 @@ const ManageAllGym = () => {
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
+                  <strong>Amenities:</strong>{" "}
+                  {getAmenityNames(selectedGym.amenities)}
                 </p>
               </div>
               <div>
@@ -254,6 +276,11 @@ const ManageAllGym = () => {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="mt-6">
+              <p className="text-sm text-gray-600">
+                <strong>About:</strong> {selectedGym.about_gym}
+              </p>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -406,6 +433,65 @@ const ManageAllGym = () => {
           </div>
         </div>
       )}
+
+      {/* Pagination Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="flex items-center space-x-2">
+          <label htmlFor="limit" className="text-gray-700">
+            Items per page:
+          </label>
+          <select
+            id="limit"
+            value={limit}
+            onChange={(e) => {
+              setLimit(Number(e.target.value)); // Update the limit state
+              setCurrentPage(1); // Reset to the first page when limit changes
+            }}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            {itemsPerPageOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          {/* Previous Button */}
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            Previous
+          </button>
+
+          {/* Page Indicator */}
+          <span className="text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {/* Next Button */}
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </Layout>
   );
 };
