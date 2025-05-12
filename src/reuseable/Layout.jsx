@@ -82,12 +82,13 @@ const Layout = ({ children }) => {
         >
           <h1 className="text-xl font-bold text-gray-800 pl-8">Dashboard</h1>
           <div className="flex items-center space-x-6">
-            <div className="relative cursor-pointer">
+            
+            {/* <div className="relative cursor-pointer">
               <BsBell className="w-6 h-6 text-gray-600 hover:text-gray-800" />
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 3
               </span>
-            </div>
+            </div> */}
 
             <div
               className="relative"

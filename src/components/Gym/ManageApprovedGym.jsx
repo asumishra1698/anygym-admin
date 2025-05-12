@@ -7,9 +7,10 @@ import {
   fetchApprovedGymsRequest,
   updateGymStatusRequest,
 } from "../../redux/actions/approvedGymActions";
+import { uploadGalleryRequest } from "../../redux/actions/uploadActions";
 import { MEDIA_URL } from "../../config";
-const userType = localStorage.getItem("userType");
 
+const userType = localStorage.getItem("userType");
 const ManageApprovedGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,10 +20,13 @@ const ManageApprovedGym = () => {
     error,
   } = useSelector((state) => state.approvedGyms);
 
+  const { loading: uploadLoading } = useSelector(
+    (state) => state.uploadGallery
+  );
+
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
-
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
@@ -66,12 +70,41 @@ const ManageApprovedGym = () => {
 
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-    if (selectedFiles.length === 0) {
+
+    if (!selectedGym || !selectedGym._id) {
+      alert("Gym ID is required.");
+      return;
+    }
+
+    if (
+      selectedFiles.gymFront.length === 0 &&
+      selectedFiles.service.length === 0 &&
+      selectedFiles.videos.length === 0
+    ) {
       alert("Please select files to upload.");
       return;
     }
-    setIsUploadModalOpen(false);
-    setSelectedFiles([]);
+
+    const formData = new FormData();
+    formData.append("gym_id", selectedGym._id);
+
+    selectedFiles.gymFront.forEach((file) =>
+      formData.append("gym_front_gallery", file)
+    );
+    selectedFiles.service.forEach((file) =>
+      formData.append("service_gallery", file)
+    );
+    selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
+
+    dispatch(
+      uploadGalleryRequest({
+        formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    );
   };
 
   return (
@@ -89,14 +122,14 @@ const ManageApprovedGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
-          {/* {userType === "AREA_MANAGER" && ( */}
+          {userType === "AREA_MANAGER" && (
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
               className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
             >
               + Add Gym
             </button>
-          {/* )} */}
+          )}
         </div>
       </div>
 
@@ -142,14 +175,16 @@ const ManageApprovedGym = () => {
               </button>
 
               <button
-                onClick={() => setIsUploadModalOpen(true)}
+                onClick={() => {
+                  setSelectedGym(gym);
+                  setIsUploadModalOpen(true);
+                }}
                 className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
                 title="Upload"
               >
                 <UploadIcon className="w-4 h-4" />
               </button>
 
-              {/* Three-Dot Menu */}
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(gym._id)}
@@ -396,7 +431,7 @@ const ManageApprovedGym = () => {
                 type="submit"
                 className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
               >
-                Upload
+                {uploadLoading ? "Uploading..." : "Upload"}
               </button>
             </form>
             <button

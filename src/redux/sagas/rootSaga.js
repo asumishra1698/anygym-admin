@@ -7,6 +7,7 @@ import watchAreamanagerSaga from "./areaManagerSaga";
 import watchgymOwnerSaga from "./gymOwnerSaga";
 import watchallGymSaga from "./allGymSaga";
 import watchaddGymSaga from "./addGymSaga";
+import watchUploadGallery from "./uploadSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     watchAreamanagerSaga(),
     watchgymOwnerSaga(),
     watchaddGymSaga(),
+    watchUploadGallery(),
   ]);
 }

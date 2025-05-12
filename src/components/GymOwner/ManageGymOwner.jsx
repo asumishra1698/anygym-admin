@@ -43,7 +43,7 @@ const ManageGymOwner = () => {
     setSelectedOwner(null);
   };
 
-  const handleToggleStatus = (owner) => {    
+  const handleToggleStatus = (owner) => {
     const newStatus = owner.status === "Active" ? "Inactive" : "Active";
     const payload = {
       ownerId: owner._id,
@@ -76,12 +76,12 @@ const ManageGymOwner = () => {
             />
           </div>
 
-          <button
+          {/* <button
             onClick={() => navigate("/add-gym-owner")}
             className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             + Add Gym Owner
-          </button>
+          </button> */}
         </div>
       </div>
 
