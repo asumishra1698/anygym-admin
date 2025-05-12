@@ -20,7 +20,7 @@ function* uploadGallerySaga(action) {
 
     yield put({
       type: UPLOAD_GALLERY_SUCCESS,
-      payload: response, // Pass the response data
+      payload: response, 
     });
   } catch (error) {
     console.error("uploadGallerySaga error:", error);
@@ -32,7 +32,6 @@ function* uploadGallerySaga(action) {
   }
 }
 
-// Watcher Saga: Watches for UPLOAD_GALLERY_REQUEST actions
 export default function* watchUploadGallery() {
   yield takeLatest(UPLOAD_GALLERY_REQUEST, uploadGallerySaga);
 }
