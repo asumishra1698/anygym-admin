@@ -36,19 +36,19 @@ function* uploadGallerySaga(action) {
 
 function* deleteMediaSaga(action) {
   try {
-    const { gymId, galleryType, fileUrl } = action.payload;
+    const { gymId, type, fileUrl } = action.payload;
 
     // Send a POST request with gym_id, gallery_type, and file_url in the body
     const response = yield call(postRequest, `${BASE_URL}${DELETE_MEDIA_URL}`, {
       gym_id: gymId,
-      gallery_type: galleryType,
+      type: type,
       file_url: fileUrl,
     });
 
     yield put({
       type: DELETE_MEDIA_SUCCESS,
       payload: {
-        galleryType,
+        type,
         fileUrl,
         message: response.data.message || "Media deleted successfully",
       },

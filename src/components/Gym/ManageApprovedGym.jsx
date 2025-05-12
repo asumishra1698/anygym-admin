@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
+import Swal from "sweetalert2";
 
 import {
   fetchApprovedGymsRequest,
   updateGymStatusRequest,
 } from "../../redux/actions/approvedGymActions";
-import { uploadGalleryRequest } from "../../redux/actions/uploadActions";
+import {
+  uploadGalleryRequest,
+  deleteMediaRequest,
+} from "../../redux/actions/uploadActions";
 import { MEDIA_URL } from "../../config";
 
 const userType = localStorage.getItem("userType");
@@ -62,13 +66,6 @@ const ManageApprovedGym = () => {
     }));
   };
 
-  const handleDeleteFile = (type, index) => {
-    setSelectedFiles((prev) => ({
-      ...prev,
-      [type]: prev[type].filter((_, i) => i !== index),
-    }));
-  };
-
   const handleUploadSubmit = (e) => {
     e.preventDefault();
 
@@ -103,6 +100,37 @@ const ManageApprovedGym = () => {
       })
     );
     window.location.reload();
+  };
+
+  const handleDeleteFile = (type, index) => {
+    setSelectedFiles((prev) => ({
+      ...prev,
+      [type]: prev[type].filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleDeleteMedia = (gymId, type, fileUrl) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {        
+        dispatch(
+          deleteMediaRequest({
+            gymId,
+            type,
+            fileUrl,
+          })
+        );
+
+        Swal.fire("Deleted!", "Your media has been deleted.", "success");
+      }
+    });
   };
 
   return (
@@ -280,12 +308,25 @@ const ManageApprovedGym = () => {
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {selectedGym.gallery.gym_front_gallery.map((image, index) => (
-                    <img
-                      key={index}
-                      src={`${MEDIA_URL}${image}`}
-                      alt={`Gallery ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg shadow"
-                    />
+                    <div key={index} className="relative">
+                      <img
+                        src={`${MEDIA_URL}${image}`}
+                        alt={`Gallery ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow"
+                      />
+                      <button
+                        onClick={() =>
+                          handleDeleteMedia(
+                            selectedGym._id,
+                            "gym_front_gallery",
+                            image
+                          )
+                        }
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -296,12 +337,25 @@ const ManageApprovedGym = () => {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {selectedGym.gallery.service_gallery.map((image, index) => (
-                  <img
-                    key={index}
-                    src={`${MEDIA_URL}${image}`}
-                    alt={`Service ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg shadow"
-                  />
+                  <div key={index} className="relative">
+                    <img
+                      src={`${MEDIA_URL}${image}`}
+                      alt={`Service ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg shadow"
+                    />
+                    <button
+                      onClick={() =>
+                        handleDeleteMedia(
+                          selectedGym._id,
+                          "service_gallery",
+                          image
+                        )
+                      }
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -311,13 +365,22 @@ const ManageApprovedGym = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedGym.gallery.gym_video.map((video, index) => (
-                  <video
-                    key={index}
-                    controls
-                    className="w-full h-40 object-cover rounded-lg shadow"
-                  >
-                    <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
-                  </video>
+                  <div key={index} className="relative">
+                    <video
+                      controls
+                      className="w-full h-40 object-cover rounded-lg shadow"
+                    >
+                      <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
+                    </video>
+                    <button
+                      onClick={() =>
+                        handleDeleteMedia(selectedGym._id, "gym_video", video)
+                      }
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
