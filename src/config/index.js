@@ -24,4 +24,5 @@ export const GYM_OWNER_URL = "/owner/getAllOwners";
 export const UPDATE_STATAUS_OWNER_URL = "/owner/change-status";
 export const GYM_OWNER_BY_AREA_MANAGER_URL = "/owner/getOwnersByAreaManager";
 export const ADD_GYM_OWNER_URL = "/owner/register";
-export const UPLOAD_GALLERY = "/staff/gym/gallery";
+export const UPLOAD_MEDIA_URL = "/staff/gym/gallery";
+export const DELETE_MEDIA_URL = "/staff/gym/deletefile"

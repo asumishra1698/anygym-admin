@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
+
 import {
   fetchApprovedGymsRequest,
   updateGymStatusRequest,
@@ -99,12 +100,9 @@ const ManageApprovedGym = () => {
     dispatch(
       uploadGalleryRequest({
         formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
       })
     );
+    window.location.reload();
   };
 
   return (
