@@ -18,47 +18,44 @@ import {
   GYM_OWNER_URL,
   GYM_OWNER_BY_AREA_MANAGER_URL,
   ADD_GYM_OWNER_URL,
-  UPDATE_STATAUS_OWNER_URL,
+  UPDATE_STATUS_OWNER_URL, // Corrected typo
 } from "../../config";
 import { toast } from "react-toastify";
 
+// Fetch Gym Owners Saga
 function* fetchGymOwnersSaga(action) {
-  const { page, perPage, searchQuery } = action.payload; // Extract other payload properties
+  const { currentPage, limit, searchQuery } = action.payload;
   const userType = localStorage.getItem("userType");
+
   try {
-    // Determine the API endpoint based on the user_type
+    // Determine the API endpoint based on the user type
     const endpoint =
       userType === "ADMIN"
-        ? `${BASE_URL}${GYM_OWNER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+        ? `${BASE_URL}${GYM_OWNER_URL}?page=${currentPage}&limit=${limit}&search=${searchQuery}`
         : userType === "AREA_MANAGER"
-        ? `${BASE_URL}${GYM_OWNER_BY_AREA_MANAGER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+        ? `${BASE_URL}${GYM_OWNER_BY_AREA_MANAGER_URL}?page=${currentPage}&limit=${limit}&search=${searchQuery}`
         : null;
 
     if (!endpoint) {
-      throw new Error("Invalid user_type specified");
+      throw new Error("Invalid user type specified");
     }
 
     const response = yield call(getRequest, endpoint);
 
     if (response.status === 200) {
-      const { data } = response;
+      const { data, total_records } = response;
       if (data && Array.isArray(data)) {
-        const totalRecords = data.length;
-        const paginatedData = data.slice((page - 1) * perPage, page * perPage);
-
         yield put(
           fetchGymOwnersSuccess({
-            records: paginatedData,
-            page,
-            per_page: perPage,
-            total_records: totalRecords,
+            records: data,
+            currentPage,
+            limit: limit,
+            total_records: total_records || data.length,
           })
         );
       } else {
         yield put(
-          fetchGymOwnersFailure(
-            "Invalid response format: 'data' is not an array"
-          )
+          fetchGymOwnersFailure("Invalid response format: 'data' is not an array")
         );
       }
     } else {
@@ -68,9 +65,11 @@ function* fetchGymOwnersSaga(action) {
     }
   } catch (error) {
     yield put(fetchGymOwnersFailure(error.message || "Network error occurred"));
+    toast.error(error.message || "Failed to fetch gym owners.");
   }
 }
 
+// Add Gym Owner Saga
 function* addGymOwnerSaga(action) {
   try {
     const response = yield call(
@@ -90,26 +89,23 @@ function* addGymOwnerSaga(action) {
     }
   } catch (error) {
     yield put(addGymOwnerFailure(error.message || "Network error occurred"));
-    toast.error(
-      error.message || "An error occurred while adding the gym owner."
-    );
+    toast.error(error.message || "An error occurred while adding the gym owner.");
   }
 }
 
+// Update Gym Owner Status Saga
 function* updateGymOwnerStatusSaga(action) {
-  const { ownerId, status } = action.payload; // Extract ownerId and status from the payload
+  const { ownerId, status } = action.payload;
+
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}${UPDATE_STATAUS_OWNER_URL}`,
-      {
-        ownerId, 
-        status, 
-      }
+      `${BASE_URL}${UPDATE_STATUS_OWNER_URL}`, // Corrected typo
+      { ownerId, status }
     );
 
     if (response.status === 200) {
-      yield put(updateGymOwnerStatusSuccess(response.data)); // Pass the updated owner data
+      yield put(updateGymOwnerStatusSuccess(response.data));
       toast.success(
         response.data.message || "Gym owner status updated successfully!"
       );
