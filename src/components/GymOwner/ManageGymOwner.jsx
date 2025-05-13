@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { EyeIcon, SearchIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import {
@@ -10,7 +9,6 @@ import {
 
 const ManageGymOwner = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
