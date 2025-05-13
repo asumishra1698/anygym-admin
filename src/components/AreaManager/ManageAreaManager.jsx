@@ -86,12 +86,12 @@ const ManageAreaManager = () => {
           >
             Download AM
           </button>
-          <button
+          {/* <button
             onClick={() => navigate("/add-manager")}
             className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             + Add Manager
-          </button>
+          </button> */}
         </div>
       </div>
 

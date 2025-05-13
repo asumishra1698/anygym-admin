@@ -314,10 +314,7 @@ const ManageApprovedGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Amenities:</strong>{" "}
                   {getAmenityNames(selectedGym.amenities)}
-                </p>
-                {/* <p className="text-sm text-gray-600">
-                  <strong>assign_id:</strong> {selectedGym.assign_id}
-                </p> */}
+                </p>                
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
