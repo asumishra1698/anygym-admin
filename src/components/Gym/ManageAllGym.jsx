@@ -7,6 +7,11 @@ import { fetchGymsRequest } from "../../redux/actions/allGymActions";
 import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
+import Swal from "sweetalert2";
+import {
+  uploadGalleryRequest,
+  deleteMediaRequest,
+} from "../../redux/actions/uploadActions";
 
 const ManageAllGym = () => {
   const dispatch = useDispatch();
@@ -22,6 +27,9 @@ const ManageAllGym = () => {
   const [selectedGym, setSelectedGym] = useState(null);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const { amenities = [] } = useSelector((state) => state.amenity);
+  const { loading: uploadLoading } = useSelector(
+    (state) => state.uploadGallery
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,6 +87,41 @@ const ManageAllGym = () => {
     }));
   };
 
+  const handleUploadSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedGym || !selectedGym._id) {
+      alert("Gym ID is required.");
+      return;
+    }
+
+    if (
+      selectedFiles.gymFront.length === 0 &&
+      selectedFiles.service.length === 0 &&
+      selectedFiles.videos.length === 0
+    ) {
+      alert("Please select files to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("gym_id", selectedGym._id);
+
+    selectedFiles.gymFront.forEach((file) =>
+      formData.append("gym_front_gallery", file)
+    );
+    selectedFiles.service.forEach((file) =>
+      formData.append("service_gallery", file)
+    );
+    selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
+
+    dispatch(
+      uploadGalleryRequest({
+        formData,
+      })
+    );
+  };
+
   const handleDeleteFile = (type, index) => {
     setSelectedFiles((prev) => ({
       ...prev,
@@ -86,14 +129,28 @@ const ManageAllGym = () => {
     }));
   };
 
-  const handleUploadSubmit = (e) => {
-    e.preventDefault();
-    if (selectedFiles.length === 0) {
-      alert("Please select files to upload.");
-      return;
-    }
-    setIsUploadModalOpen(false);
-    setSelectedFiles([]);
+  const handleDeleteMedia = (gymId, type, fileUrl) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          deleteMediaRequest({
+            gymId,
+            type,
+            fileUrl,
+          })
+        );
+
+        Swal.fire("Deleted!", "Your media has been deleted.", "success");
+      }
+    });
   };
 
   return (
@@ -164,7 +221,10 @@ const ManageAllGym = () => {
                 <EyeIcon className="w-4 h-4" />
               </button>
               <button
-                onClick={() => setIsUploadModalOpen(true)}
+                onClick={() => {
+                  setSelectedGym(gym);
+                  setIsUploadModalOpen(true);
+                }}
                 className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
                 title="Upload"
               >
@@ -242,7 +302,9 @@ const ManageAllGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Status:</strong> {selectedGym.status}
                 </p>
-
+                <p className="text-sm text-gray-600">
+                  <strong>About:</strong> {selectedGym.about_gym}
+                </p>
                 <p className="text-sm text-gray-600">
                   <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
                 </p>
@@ -257,8 +319,7 @@ const ManageAllGym = () => {
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <strong>Amenities:</strong>{" "}
-                  {getAmenityNames(selectedGym.amenities)}
+                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
                 </p>
               </div>
               <div>
@@ -267,20 +328,28 @@ const ManageAllGym = () => {
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {selectedGym.gallery.gym_front_gallery.map((image, index) => (
-                    <img
-                      key={index}
-                      src={`${MEDIA_URL}${image}`}
-                      alt={`Gallery ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg shadow"
-                    />
+                    <div key={index} className="relative">
+                      <img
+                        src={`${MEDIA_URL}${image}`}
+                        alt={`Gallery ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow"
+                      />
+                      <button
+                        onClick={() =>
+                          handleDeleteMedia(
+                            selectedGym._id,
+                            "gym_front_gallery",
+                            image
+                          )
+                        }
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
-            </div>
-            <div className="mt-6">
-              <p className="text-sm text-gray-600">
-                <strong>About:</strong> {selectedGym.about_gym}
-              </p>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -288,12 +357,25 @@ const ManageAllGym = () => {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {selectedGym.gallery.service_gallery.map((image, index) => (
-                  <img
-                    key={index}
-                    src={`${MEDIA_URL}${image}`}
-                    alt={`Service ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg shadow"
-                  />
+                  <div key={index} className="relative">
+                    <img
+                      src={`${MEDIA_URL}${image}`}
+                      alt={`Service ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg shadow"
+                    />
+                    <button
+                      onClick={() =>
+                        handleDeleteMedia(
+                          selectedGym._id,
+                          "service_gallery",
+                          image
+                        )
+                      }
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -303,13 +385,22 @@ const ManageAllGym = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedGym.gallery.gym_video.map((video, index) => (
-                  <video
-                    key={index}
-                    controls
-                    className="w-full h-40 object-cover rounded-lg shadow"
-                  >
-                    <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
-                  </video>
+                  <div key={index} className="relative">
+                    <video
+                      controls
+                      className="w-full h-40 object-cover rounded-lg shadow"
+                    >
+                      <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
+                    </video>
+                    <button
+                      onClick={() =>
+                        handleDeleteMedia(selectedGym._id, "gym_video", video)
+                      }
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -421,7 +512,7 @@ const ManageAllGym = () => {
                 type="submit"
                 className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
               >
-                Upload
+                {uploadLoading ? "Uploading..." : "Upload"}
               </button>
             </form>
             <button
