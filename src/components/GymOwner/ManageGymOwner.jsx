@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { EyeIcon, SearchIcon } from "@heroicons/react/solid";
+import { EyeIcon, SearchIcon, DownloadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import {
   fetchGymOwnersRequest,
   updateGymOwnerStatusRequest,
 } from "../../redux/actions/gymOwnerActions";
+import { exportDataRequest } from "../../redux/actions/exportDataActions"; // Import the export action
 
 const ManageGymOwner = () => {
   const dispatch = useDispatch();
@@ -55,7 +56,9 @@ const ManageGymOwner = () => {
   const toggleToolkit = (ownerId) => {
     setToolkitOpen((prev) => (prev === ownerId ? null : ownerId));
   };
-
+  const handleExport = () => {    
+    dispatch(exportDataRequest()); 
+  };
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -74,12 +77,14 @@ const ManageGymOwner = () => {
             />
           </div>
 
-          {/* <button
-            onClick={() => navigate("/add-gym-owner")}
-            className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+          {/* Download Button */}
+          <button
+            onClick={handleExport}
+            className="flex items-center px-3 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            + Add Gym Owner
-          </button> */}
+            <DownloadIcon className="w-5 h-5 mr-2" />
+            Download
+          </button>
         </div>
       </div>
 
