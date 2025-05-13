@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Auth/Login";
+import AreaManagerAccount from "./components/AreaManager/AreaManagerAccount";
 import Forgotpassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import OTPVerification from "./components/Auth/OTPVerification";
@@ -36,7 +37,7 @@ const App = () => {
         <Route path="/forgot-password" element={<Forgotpassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/otp-verification" element={<OTPVerification />} />
-
+        <Route path="/area-manager-account" element={<AreaManagerAccount />} />
         {/* Protected Routes */}
         <Route
           path="/manage-area-manager"

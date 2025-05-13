@@ -2,6 +2,9 @@ import {
   FETCH_AREA_MANAGERS_REQUEST,
   FETCH_AREA_MANAGERS_SUCCESS,
   FETCH_AREA_MANAGERS_FAILURE,
+  FETCH_AREA_MANAGER_DETAILS_REQUEST,
+  FETCH_AREA_MANAGER_DETAILS_SUCCESS,
+  FETCH_AREA_MANAGER_DETAILS_FAILURE,
   ADD_AREA_MANAGER_REQUEST,
   ADD_AREA_MANAGER_SUCCESS,
   ADD_AREA_MANAGER_FAILURE,
@@ -23,7 +26,7 @@ const initialState = {
 };
 
 const areaManagerReducer = (state = initialState, action) => {
-  switch (action.type) {   
+  switch (action.type) {
     case FETCH_AREA_MANAGERS_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -40,6 +43,25 @@ const areaManagerReducer = (state = initialState, action) => {
 
     case FETCH_AREA_MANAGERS_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
+    case FETCH_AREA_MANAGER_DETAILS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FETCH_AREA_MANAGER_DETAILS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        areaManagerDetails: action.payload,
+      };
+    case FETCH_AREA_MANAGER_DETAILS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     // Add Area Manager
     case ADD_AREA_MANAGER_REQUEST:

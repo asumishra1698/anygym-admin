@@ -48,7 +48,7 @@ const Layout = ({ children }) => {
   };
 
   const handleMyAccount = () => {
-    navigate("/my-account");
+    navigate("/area-manager-account");
   };
 
    const handleChangePassword = () => {

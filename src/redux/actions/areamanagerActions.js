@@ -2,6 +2,9 @@ import {
   FETCH_AREA_MANAGERS_REQUEST,
   FETCH_AREA_MANAGERS_SUCCESS,
   FETCH_AREA_MANAGERS_FAILURE,
+  FETCH_AREA_MANAGER_DETAILS_REQUEST,
+  FETCH_AREA_MANAGER_DETAILS_SUCCESS,
+  FETCH_AREA_MANAGER_DETAILS_FAILURE,
   ADD_AREA_MANAGER_REQUEST,
   ADD_AREA_MANAGER_SUCCESS,
   ADD_AREA_MANAGER_FAILURE,
@@ -46,6 +49,22 @@ export const addAreaManagerSuccess = (manager) => ({
 
 export const addAreaManagerFailure = (error) => ({
   type: ADD_AREA_MANAGER_FAILURE,
+  payload: error,
+});
+
+// Fetch Area Manager Details Actions
+export const fetchAreaManagerDetailsRequest = (managerId) => ({
+  type: FETCH_AREA_MANAGER_DETAILS_REQUEST,
+  payload: managerId,
+});
+
+export const fetchAreaManagerDetailsSuccess = (managerDetails) => ({
+  type: FETCH_AREA_MANAGER_DETAILS_SUCCESS,
+  payload: managerDetails,
+});
+
+export const fetchAreaManagerDetailsFailure = (error) => ({
+  type: FETCH_AREA_MANAGER_DETAILS_FAILURE,
   payload: error,
 });
 

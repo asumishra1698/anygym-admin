@@ -4,6 +4,9 @@ import {
   ADD_AREA_MANAGER_REQUEST,
   UPDATE_AREA_MANAGER_STATUS_REQUEST,
   UPDATE_AREA_MANAGER_REQUEST,
+  FETCH_AREA_MANAGER_DETAILS_REQUEST,
+  FETCH_AREA_MANAGER_DETAILS_SUCCESS,
+  FETCH_AREA_MANAGER_DETAILS_FAILURE,
 } from "../actions/actionTypes";
 import {
   fetchAreaManagersSuccess,
@@ -16,8 +19,13 @@ import {
   updateAreaManagerFailure,
 } from "../actions/areaManagerActions";
 
-import { postRequest } from "../../utils/apiHelper";
-import { BASE_URL, AREA_MANAGER_URL, ADD_AREA_MANAGER_URL } from "../../config";
+import { postRequest, getRequest, putRequest } from "../../utils/apiHelper";
+import {
+  BASE_URL,
+  AREA_MANAGER_URL,
+  ADD_AREA_MANAGER_URL,
+  UPDATE_MANAGER_DETAILS_URL,
+} from "../../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -60,6 +68,31 @@ function* fetchAreaManagersSaga(action) {
     yield put(
       fetchAreaManagersFailure(error.message || "Network error occurred")
     );
+  }
+}
+
+function* fetchAreaManagerDetailsSaga(action) {
+  try {
+    const response = yield call(
+      getRequest,
+      `${BASE_URL}/admin/staff/${action.payload}`
+    );
+    if (response.status === 200) {
+      yield put({
+        type: FETCH_AREA_MANAGER_DETAILS_SUCCESS,
+        payload: response.data,
+      });
+    } else {
+      yield put({
+        type: FETCH_AREA_MANAGER_DETAILS_FAILURE,
+        payload: response.message || "Failed to fetch area manager details",
+      });
+    }
+  } catch (error) {
+    yield put({
+      type: FETCH_AREA_MANAGER_DETAILS_FAILURE,
+      payload: error.message || "Network error occurred",
+    });
   }
 }
 
@@ -129,16 +162,16 @@ function* updateAreaManagerStatusSaga(action) {
 
 // Update Area Manager Content Saga
 function* updateAreaManagerSaga(action) {
-  const { managerId, updatedData } = action.payload;
+  const { updatedData } = action.payload;
   try {
     const response = yield call(
-      postRequest,
-      `${BASE_URL}${AREA_MANAGER_URL}/${managerId}`,
+      putRequest,
+      `${BASE_URL}${UPDATE_MANAGER_DETAILS_URL}`,
       updatedData
     );
 
     if (response.status === 200) {
-      yield put(updateAreaManagerSuccess(managerId, response.data));
+      yield put(updateAreaManagerSuccess(response.data));
       toast.success(
         response.data.message || "Area Manager updated successfully!"
       );
@@ -165,6 +198,11 @@ function* updateAreaManagerSaga(action) {
 // Watcher Saga
 export default function* watchAreaManagerSaga() {
   yield takeLatest(FETCH_AREA_MANAGERS_REQUEST, fetchAreaManagersSaga);
+  yield takeLatest(
+    FETCH_AREA_MANAGER_DETAILS_REQUEST,
+    fetchAreaManagerDetailsSaga
+  );
+
   yield takeLatest(ADD_AREA_MANAGER_REQUEST, addAreaManagerSaga);
   yield takeLatest(
     UPDATE_AREA_MANAGER_STATUS_REQUEST,
