@@ -35,8 +35,8 @@ const Dashboard = () => {
     "Area Managers",
     "Gym Owners",
     "Customers",
-    "Subscriptions",
-    "Trainers",
+    "Total Booking",
+    "Total Revenue",
   ];
 
   const areaManagerData = {
@@ -44,7 +44,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Area Managers",
-        data: [120, 30], // Example data
+        data: [120, 30],
         backgroundColor: ["rgba(75, 192, 192, 0.6)", "rgba(255, 99, 132, 0.6)"],
         borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
         borderWidth: 1,
@@ -137,7 +137,7 @@ const Dashboard = () => {
             onClick={() => setSelectedPeriod(period)}
             className={`px-5 py-2 rounded-lg font-semibold transition-all ${
               selectedPeriod === period
-                ? "bg-blue-600 text-white shadow-lg"
+                ? "bg-black text-white shadow-lg"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >

@@ -31,7 +31,7 @@ const ManageAllGym = () => {
     (state) => state.uploadGallery
   );
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(12);
 
@@ -45,9 +45,9 @@ const ManageAllGym = () => {
   const userType = localStorage.getItem("userType");
 
   useEffect(() => {
-    dispatch(fetchGymsRequest(currentPage, limit, searchQuery));
+    dispatch(fetchGymsRequest(currentPage, limit));
     dispatch(fetchAmenitiesRequest());
-  }, [dispatch, currentPage, limit, searchQuery]);
+  }, [dispatch, currentPage, limit]);
 
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [20, 50, 100];
@@ -301,10 +301,7 @@ const ManageAllGym = () => {
                 </p>
                 <p className="text-sm text-gray-600">
                   <strong>Status:</strong> {selectedGym.status}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>About:</strong> {selectedGym.about_gym}
-                </p>
+                </p>                
                 <p className="text-sm text-gray-600">
                   <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
                 </p>
@@ -319,8 +316,12 @@ const ManageAllGym = () => {
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
+                  <strong>Amenities:</strong>{" "}
+                  {getAmenityNames(selectedGym.amenities)}
                 </p>
+                {/* <p className="text-sm text-gray-600">
+                  <strong>assign_id:</strong> {selectedGym.assign_id}
+                </p> */}
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -350,6 +351,11 @@ const ManageAllGym = () => {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="mt-6">
+              <p className="text-sm text-gray-600">
+                <strong>About:</strong> {selectedGym.about_gym}
+              </p>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -535,8 +541,8 @@ const ManageAllGym = () => {
             id="limit"
             value={limit}
             onChange={(e) => {
-              setLimit(Number(e.target.value)); // Update the limit state
-              setCurrentPage(1); // Reset to the first page when limit changes
+              setLimit(Number(e.target.value)); 
+              setCurrentPage(1); 
             }}
             className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >

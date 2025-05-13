@@ -9,6 +9,7 @@ import {
   fetchApprovedGymsRequest,
   updateGymStatusRequest,
 } from "../../redux/actions/approvedGymActions";
+import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -32,6 +33,7 @@ const ManageApprovedGym = () => {
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
+  const { amenities = [] } = useSelector((state) => state.amenity);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
@@ -42,7 +44,20 @@ const ManageApprovedGym = () => {
 
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest());
+    dispatch(fetchAmenitiesRequest());
   }, [dispatch]);
+
+  const getAmenityNames = (amenityIds) => {
+    if (!Array.isArray(amenityIds) || amenityIds.length === 0) {
+      return "No Amenities Available";
+    }
+    return amenityIds
+      .map((id) => {
+        const amenity = amenities.find((item) => item._id === id);
+        return amenity ? amenity.name : "Unknown Amenity";
+      })
+      .join(", ");
+  };
 
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);
@@ -282,9 +297,7 @@ const ManageApprovedGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Status:</strong> {selectedGym.status}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <strong>About:</strong> {selectedGym.about_gym}
-                </p>
+
                 <p className="text-sm text-gray-600">
                   <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
                 </p>
@@ -299,8 +312,12 @@ const ManageApprovedGym = () => {
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
+                  <strong>Amenities:</strong>{" "}
+                  {getAmenityNames(selectedGym.amenities)}
                 </p>
+                {/* <p className="text-sm text-gray-600">
+                  <strong>assign_id:</strong> {selectedGym.assign_id}
+                </p> */}
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -330,6 +347,11 @@ const ManageApprovedGym = () => {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="mt-6">
+              <p className="text-sm text-gray-600">
+                <strong>About:</strong> {selectedGym.about_gym}
+              </p>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
