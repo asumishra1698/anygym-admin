@@ -2,13 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAreaManagerDetailsRequest } from "../../redux/actions/areaManagerActions";
 import Layout from "../../reuseable/Layout";
-import { MEDIA_URL } from "../../config"; // Import the media base URL from the config file
+import { MEDIA_URL } from "../../config";
 
 const AreaManagerAccount = () => {
   const dispatch = useDispatch();
-
-  // Retrieve the ID from local storage
-  const id = localStorage.getItem("_id"); // Replace "_id" with the actual key used in local storage
+  const id = localStorage.getItem("_id");
 
   const { areaManagerDetails, loading } = useSelector(
     (state) => state.areaManager

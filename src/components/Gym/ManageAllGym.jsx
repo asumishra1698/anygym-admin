@@ -8,6 +8,8 @@ import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Swal from "sweetalert2";
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions"; // Import export action
+
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -153,6 +155,10 @@ const ManageAllGym = () => {
     });
   };
 
+  const handleDownload = () => {
+    dispatch(exportGymDataRequest());
+  };
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -169,12 +175,19 @@ const ManageAllGym = () => {
             />
           </div>
 
+          <button
+            onClick={handleDownload}
+            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+          >
+            Download GYM Data
+          </button>
+
           {userType === "AREA_MANAGER" && (
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
               className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
             >
-              + Add Gym bu Area Manager
+              + Add Gym by Area Manager
             </button>
           )}
         </div>
@@ -301,7 +314,7 @@ const ManageAllGym = () => {
                 </p>
                 <p className="text-sm text-gray-600">
                   <strong>Status:</strong> {selectedGym.status}
-                </p>                
+                </p>
                 <p className="text-sm text-gray-600">
                   <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
                 </p>
@@ -541,8 +554,8 @@ const ManageAllGym = () => {
             id="limit"
             value={limit}
             onChange={(e) => {
-              setLimit(Number(e.target.value)); 
-              setCurrentPage(1); 
+              setLimit(Number(e.target.value));
+              setCurrentPage(1);
             }}
             className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
