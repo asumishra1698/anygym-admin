@@ -37,8 +37,16 @@ const App = () => {
         <Route path="/forgot-password" element={<Forgotpassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/otp-verification" element={<OTPVerification />} />
-        <Route path="/area-manager-account" element={<AreaManagerAccount />} />
+
         {/* Protected Routes */}
+        <Route
+          path="/area-manager-account"
+          element={
+            <PrivateRoute allowedRoles={["AREA_MANAGER"]}>
+              <AreaManagerAccount />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/manage-area-manager"
           element={

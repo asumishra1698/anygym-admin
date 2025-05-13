@@ -31,12 +31,10 @@ function* handleExportData(action, url, successType, failureType, fileName) {
       }
     );
 
-    // Create a Blob from the response data
     const blob = new Blob([responseData], {
       type: "application/vnd.ms-excel",
     });
 
-    // Create a download link and trigger the download
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = downloadUrl;
@@ -45,13 +43,11 @@ function* handleExportData(action, url, successType, failureType, fileName) {
     link.click();
     document.body.removeChild(link);
 
-    // Dispatch success action
     yield put({ type: successType });
     toast.success("Data exported successfully!");
   } catch (error) {
     console.error("Export Data Error:", error);
 
-    // Dispatch failure action
     yield put({
       type: failureType,
       payload: error.message || "Network error occurred",
@@ -60,7 +56,6 @@ function* handleExportData(action, url, successType, failureType, fileName) {
   }
 }
 
-// Export Area Manager Data Saga
 function* exportAMDataSaga(action) {
   yield handleExportData(
     action,
@@ -71,7 +66,6 @@ function* exportAMDataSaga(action) {
   );
 }
 
-// Export Gym Data Saga
 function* exportGymDataSaga(action) {
   yield handleExportData(
     action,
@@ -82,7 +76,6 @@ function* exportGymDataSaga(action) {
   );
 }
 
-// Export Owner Data Saga
 function* exportOwnerDataSaga(action) {
   yield handleExportData(
     action,
@@ -93,7 +86,6 @@ function* exportOwnerDataSaga(action) {
   );
 }
 
-// Watcher Saga
 export default function* watchExportData() {
   yield takeLatest(EXPORT_AM_DATA_REQUEST, exportAMDataSaga);
   yield takeLatest(EXPORT_GYM_DATA_REQUEST, exportGymDataSaga);
