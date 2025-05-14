@@ -32,7 +32,11 @@ const Login = () => {
 
   React.useEffect(() => {
     if (isSubmitted && token) {
-      localStorage.setItem("user", user);
+      if (user?.user_type === "ADMIN") {
+        localStorage.setItem("user", user.name);
+      } else {
+        localStorage.setItem("user", user);
+      }
       localStorage.setItem("_id", _id);
       localStorage.setItem("token", token);
       localStorage.setItem("userType", formData.user_type);

@@ -8,6 +8,8 @@ import areaManagerReducer from "./areaManagerReducers";
 import gymOwnerReducer from "./gymOwnerReducers";
 import addGymReducer from "./addGymReducers";
 import uploadGalleryReducer from "./uploadReducers";
+import dashboardReducer from "./dashboardReducers";
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +21,7 @@ const rootReducer = combineReducers({
   gymOwner: gymOwnerReducer,
   addGym: addGymReducer,
   uploadGallery: uploadGalleryReducer,
+  dashboard: dashboardReducer,
 });
 
 export default rootReducer;

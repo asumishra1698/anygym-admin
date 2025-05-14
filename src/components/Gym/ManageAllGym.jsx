@@ -13,7 +13,7 @@ import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Swal from "sweetalert2";
-import { exportGymDataRequest } from "../../redux/actions/exportDataActions"; 
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 
 import {
   uploadGalleryRequest,
@@ -38,7 +38,6 @@ const ManageAllGym = () => {
     (state) => state.uploadGallery
   );
 
-  // const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(12);
 
@@ -49,8 +48,6 @@ const ManageAllGym = () => {
     videos: [],
   });
 
-  const userType = localStorage.getItem("userType");
-
   useEffect(() => {
     dispatch(fetchGymsRequest(currentPage, limit));
     dispatch(fetchAmenitiesRequest());
@@ -58,6 +55,7 @@ const ManageAllGym = () => {
 
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [20, 50, 100];
+  const userType = localStorage.getItem("userType");
 
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);

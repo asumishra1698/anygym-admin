@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "../reuseable/Layout";
 import { Bar, Pie } from "react-chartjs-2";
 import {
@@ -11,6 +12,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import { fetchDashboardMetricsRequest } from "../redux/actions/dashboardActions";
 
 ChartJS.register(
   CategoryScale,
@@ -22,29 +24,46 @@ ChartJS.register(
   ArcElement
 );
 
-const Dashboard = () => {
-  const adminData = {
-    yearly: [500, 300, 400, 1000, 700, 600],
-    monthly: [50, 30, 40, 100, 70, 60],
-    weekly: [10, 5, 8, 20, 15, 12],
-    daily: [2, 1, 3, 5, 4, 2],
-  };
+const adminLabels = [
+  "Total Gym",
+  "Area Managers",
+  "Gym Owners",
+  "Customers",
+  "Total Booking",
+  "Total Revenue",
+];
 
-  const adminLabels = [
-    "Total Gym",
-    "Area Managers",
-    "Gym Owners",
-    "Customers",
-    "Total Booking",
-    "Total Revenue",
-  ];
+const Dashboard = () => {
+  const dispatch = useDispatch();
+  const { loading, error, data } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(fetchDashboardMetricsRequest());
+  }, [dispatch]);
+
+  // Fallbacks if data is not loaded yet
+  const gyms = data?.gyms || {};
+  const owners = data?.owners || {};
+  const areaManagers = data?.area_managers || {};
+
+  // Prepare data for charts
+  const adminData = {
+    yearly: [
+      gyms.total || 0,
+      areaManagers.total || 0,
+      owners.total || 0,
+      0, // Customers (not in API)
+      0, // Total Booking (not in API)
+      0, // Total Revenue (not in API)
+    ],
+  };
 
   const areaManagerData = {
     labels: ["Active Area Managers", "Inactive Area Managers"],
     datasets: [
       {
         label: "Area Managers",
-        data: [120, 30],
+        data: [areaManagers.active || 0, areaManagers.inactive || 0],
         backgroundColor: ["rgba(75, 192, 192, 0.6)", "rgba(255, 99, 132, 0.6)"],
         borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
         borderWidth: 1,
@@ -57,7 +76,10 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Gyms",
-        data: [200, 50], // Example data
+        data: [
+          gyms.active || 0,
+          gyms.rejected || 0, // Using rejected as "Inactive" if that's your logic
+        ],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(255, 206, 86, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
         borderWidth: 1,
@@ -70,7 +92,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Gym Owners",
-        data: [80, 20], // Example data
+        data: [owners.active || 0, owners.inactive || 0],
         backgroundColor: [
           "rgba(153, 102, 255, 0.6)",
           "rgba(255, 159, 64, 0.6)",
@@ -95,16 +117,12 @@ const Dashboard = () => {
     },
   };
 
-  const [selectedPeriod, setSelectedPeriod] = useState("yearly");
-
   const getAdminData = () => ({
     labels: adminLabels,
     datasets: [
       {
-        label: `${
-          selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)
-        } Admin Metrics`,
-        data: adminData[selectedPeriod],
+        label: "Yearly Admin Metrics",
+        data: adminData.yearly,
         backgroundColor: [
           "rgba(75, 192, 192, 0.6)",
           "rgba(54, 162, 235, 0.6)",
@@ -126,77 +144,67 @@ const Dashboard = () => {
     ],
   });
 
-  const getTotalCounts = () => adminData[selectedPeriod];
+  const getTotalCounts = () => adminData.yearly;
 
   return (
     <Layout>
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {["yearly", "monthly", "weekly", "daily"].map((period) => (
-          <button
-            key={period}
-            onClick={() => setSelectedPeriod(period)}
-            className={`px-5 py-2 rounded-lg font-semibold transition-all ${
-              selectedPeriod === period
-                ? "bg-black text-white shadow-lg"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            {period.charAt(0).toUpperCase() + period.slice(1)}
-          </button>
-        ))}
-      </div>
+      {loading && <div className="text-center py-8">Loading...</div>}
+      {error && <div className="text-center text-red-500 py-8">{error}</div>}
+      {!loading && !error && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">
+                Admin Metrics
+              </h2>
+              <div className="h-64 md:h-80">
+                <Bar data={getAdminData()} options={options} />
+              </div>
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Admin Metrics
-          </h2>
-          <div className="h-64 md:h-80">
-            <Bar data={getAdminData()} options={options} />
-          </div>
-        </div>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">
+                Active vs Inactive Area Managers
+              </h2>
+              <div className="h-64 md:h-80">
+                <Pie data={areaManagerData} />
+              </div>
+            </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Active vs Inactive Area Managers
-          </h2>
-          <div className="h-64 md:h-80">
-            <Pie data={areaManagerData} />
-          </div>
-        </div>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">
+                Active vs Inactive Gyms
+              </h2>
+              <div className="h-64 md:h-80">
+                <Pie data={gymData} />
+              </div>
+            </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Active vs Inactive Gyms
-          </h2>
-          <div className="h-64 md:h-80">
-            <Pie data={gymData} />
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">
+                Active vs Inactive Gym Owners
+              </h2>
+              <div className="h-64 md:h-80">
+                <Pie data={gymOwnerData} />
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Active vs Inactive Gym Owners
-          </h2>
-          <div className="h-64 md:h-80">
-            <Pie data={gymOwnerData} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {adminLabels.map((label, index) => (
+              <div
+                key={label}
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <h2 className="text-lg font-semibold text-gray-700">{label}</h2>
+                <p className="text-4xl font-bold text-blue-600 mt-4">
+                  {getTotalCounts()[index]}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {adminLabels.map((label, index) => (
-          <div
-            key={label}
-            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <h2 className="text-lg font-semibold text-gray-700">{label}</h2>
-            <p className="text-4xl font-bold text-blue-600 mt-4">
-              {getTotalCounts()[index]}
-            </p>
-          </div>
-        ))}
-      </div>
+        </>
+      )}
     </Layout>
   );
 };

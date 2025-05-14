@@ -55,7 +55,9 @@ function* fetchGymOwnersSaga(action) {
         );
       } else {
         yield put(
-          fetchGymOwnersFailure("Invalid response format: 'data' is not an array")
+          fetchGymOwnersFailure(
+            "Invalid response format: 'data' is not an array"
+          )
         );
       }
     } else {
@@ -89,7 +91,9 @@ function* addGymOwnerSaga(action) {
     }
   } catch (error) {
     yield put(addGymOwnerFailure(error.message || "Network error occurred"));
-    toast.error(error.message || "An error occurred while adding the gym owner.");
+    toast.error(
+      error.message || "An error occurred while adding the gym owner."
+    );
   }
 }
 

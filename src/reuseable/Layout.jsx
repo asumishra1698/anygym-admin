@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { UserCircleIcon, LogoutIcon } from "@heroicons/react/solid";
-import { BsBell } from "react-icons/bs";
 import Loader from "./Loader";
 
 const Layout = ({ children }) => {
@@ -23,9 +22,7 @@ const Layout = ({ children }) => {
   const { loading: approvedGymsLoading } = useSelector(
     (state) => state.approvedGyms
   );
-  // const { loading: rejectedGymsLoading } = useSelector(
-  //   (state) => state.rejectedGyms
-  // );
+
   const { loading: amenityLoading } = useSelector((state) => state.amenity);
 
   const isLoading =
@@ -33,14 +30,7 @@ const Layout = ({ children }) => {
     gymOwnerLoading ||
     pendingGymsLoading ||
     approvedGymsLoading ||
-    // rejectedGymsLoading ||
     amenityLoading;
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", user);
-    }
-  }, [user]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -51,7 +41,7 @@ const Layout = ({ children }) => {
     navigate("/area-manager-account");
   };
 
-   const handleChangePassword = () => {
+  const handleChangePassword = () => {
     navigate("/forgot-password");
   };
 
@@ -82,14 +72,6 @@ const Layout = ({ children }) => {
         >
           <h1 className="text-xl font-bold text-gray-800 pl-8">Dashboard</h1>
           <div className="flex items-center space-x-6">
-            
-            {/* <div className="relative cursor-pointer">
-              <BsBell className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                3
-              </span>
-            </div> */}
-
             <div
               className="relative"
               onMouseEnter={handleMouseEnter}

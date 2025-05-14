@@ -47,17 +47,6 @@ function* loginSaga(action) {
           _id,
         },
       });
-
-      // Store all data in localStorage
-      localStorage.setItem("user", user);
-      localStorage.setItem("_id", _id);
-      localStorage.setItem("token", authorization.token);
-      localStorage.setItem("authorizationType", authorization.type);
-
-      localStorage.setItem(
-        "userType",
-        action.payload.user_type === "AREA_MANAGER" ? "AREA_MANAGER" : "ADMIN"
-      );
     } else {
       yield put({
         type: LOGIN_FAILURE,

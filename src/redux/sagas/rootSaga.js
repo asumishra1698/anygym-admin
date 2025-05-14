@@ -9,6 +9,9 @@ import watchallGymSaga from "./allGymSaga";
 import watchaddGymSaga from "./addGymSaga";
 import watchUploadGallery from "./uploadSaga";
 import watchExportData from "./exportDataSaga";
+import dashboardSaga from "./dashboardSaga"; 
+
+
 
 export default function* rootSaga() {
   yield all([
@@ -22,5 +25,6 @@ export default function* rootSaga() {
     watchaddGymSaga(),
     watchUploadGallery(),
     watchExportData(),
+    dashboardSaga(),
   ]);
 }
