@@ -15,22 +15,16 @@ const ManageGymOwner = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(12);
 
   const {
     loading,
     gymOwners = [],
-    totalRecords = 0,
     error,
   } = useSelector((state) => state.gymOwner);
 
   useEffect(() => {
-    dispatch(fetchGymOwnersRequest(currentPage, limit, searchQuery));
-  }, [dispatch, currentPage, limit, searchQuery]);
-
-  const totalPages = Math.ceil(totalRecords / limit);
-  const itemsPerPageOptions = [5, 10, 20, 50, 100];
+    dispatch(fetchGymOwnersRequest(searchQuery));
+  }, [dispatch, searchQuery]);
 
   const handleView = (owner) => {
     setSelectedOwner(owner);
@@ -48,7 +42,7 @@ const ManageGymOwner = () => {
       ownerId: owner._id,
       status: newStatus,
     };
-    console.log("Payload:", payload);
+    // console.log("Payload:", payload);
     dispatch(updateGymOwnerStatusRequest(payload));
     setToolkitOpen(null);
   };
@@ -165,62 +159,6 @@ const ManageGymOwner = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
-        <div className="flex items-center space-x-2">
-          <label htmlFor="limit" className="text-gray-700">
-            Items per page:
-          </label>
-          <select
-            id="limit"
-            value={limit}
-            onChange={(e) => setLimit(Number(e.target.value))}
-            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            {itemsPerPageOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* Previous Button */}
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
-          >
-            Previous
-          </button>
-
-          {/* Page Indicator */}
-          <span className="text-gray-700">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          {/* Next Button */}
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
-          >
-            Next
-          </button>
-        </div>
       </div>
 
       {/* Owner Details Popup */}

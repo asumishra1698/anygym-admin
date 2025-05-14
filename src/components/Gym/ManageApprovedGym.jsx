@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
+import {
+  SearchIcon,
+  EyeIcon,
+  UploadIcon,
+  DownloadIcon,
+} from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
 
@@ -10,6 +15,7 @@ import {
   updateGymStatusRequest,
 } from "../../redux/actions/approvedGymActions";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -148,6 +154,10 @@ const ManageApprovedGym = () => {
     });
   };
 
+  const handleDownload = () => {
+    dispatch(exportGymDataRequest());
+  };
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -171,6 +181,13 @@ const ManageApprovedGym = () => {
               + Add Gym
             </button>
           )}
+          <button
+            onClick={handleDownload}
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+          >
+            <DownloadIcon className="w-4 h-4 mr-2" />
+            Download GYM
+          </button>
         </div>
       </div>
 

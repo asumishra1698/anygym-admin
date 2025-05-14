@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { SearchIcon, EyeIcon } from "@heroicons/react/solid";
+import { SearchIcon, EyeIcon, DownloadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions"; // Reusing the same action
+import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions";
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import { MEDIA_URL } from "../../config";
 
 const ManageRejectedGym = () => {
@@ -28,6 +29,9 @@ const ManageRejectedGym = () => {
   const handleViewDetails = (gym) => {
     setSelectedGym(gym);
     setIsModalOpen(true);
+  };
+  const handleDownload = () => {
+    dispatch(exportGymDataRequest());
   };
 
   return (
@@ -56,6 +60,14 @@ const ManageRejectedGym = () => {
               + Add Gym
             </button>
           )}
+
+          <button
+            onClick={handleDownload}
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+          >
+            <DownloadIcon className="w-4 h-4 mr-2" />
+            Download GYM
+          </button>
         </div>
       </div>
 

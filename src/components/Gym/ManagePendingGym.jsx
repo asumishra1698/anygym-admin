@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
+import {
+  SearchIcon,
+  EyeIcon,
+  UploadIcon,
+  DownloadIcon,
+} from "@heroicons/react/solid";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
@@ -10,6 +15,7 @@ import {
   fetchPendingGymsRequest,
   updateGymStatusRequest,
 } from "../../redux/actions/pendingGymActions";
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -135,6 +141,10 @@ const ManagePendingGym = () => {
     });
   };
 
+  const handleDownload = () => {
+    dispatch(exportGymDataRequest());
+  };
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -152,15 +162,21 @@ const ManagePendingGym = () => {
             />
           </div>
 
-          {/* Add Gym Button */}
-          {/* {userType === "AREA_MANAGER" && ( */}
+          {userType === "AREA_MANAGER" && (
+            <button
+              onClick={() => navigate("/add-gym-by-area-manager")}
+              className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            >
+              + Add Gym
+            </button>
+          )}
           <button
-            onClick={() => navigate("/add-gym-by-area-manager")}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            onClick={handleDownload}
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
-            + Add Gym
+            <DownloadIcon className="w-4 h-4 mr-2" />
+            Download GYM
           </button>
-          {/* )} */}
         </div>
       </div>
 

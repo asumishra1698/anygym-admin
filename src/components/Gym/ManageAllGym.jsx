@@ -13,7 +13,7 @@ import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Swal from "sweetalert2";
-import { exportGymDataRequest } from "../../redux/actions/exportDataActions"; // Import export action
+import { exportGymDataRequest } from "../../redux/actions/exportDataActions"; 
 
 import {
   uploadGalleryRequest,
