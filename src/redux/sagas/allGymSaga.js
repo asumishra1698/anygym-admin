@@ -6,11 +6,11 @@ import { BASE_URL, GYM_URL } from "../../config";
 
 function* fetchGymsSaga(action) {
   try {
-    const { page, perPage } = action.payload;
+    const { page, limit } = action.payload;
 
     const response = yield call(getRequest, `${BASE_URL}${GYM_URL}`, {
       page,
-      per_page: perPage,
+      limit: limit,
     });
 
     if (response.status === 200) {

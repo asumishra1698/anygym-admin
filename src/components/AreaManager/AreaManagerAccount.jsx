@@ -23,7 +23,7 @@ const AreaManagerAccount = () => {
   return (
     <Layout>
       <main className="bg-gray-100 overflow-y-auto">
-        <div className="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <div className="max-w-full mx-auto bg-white p-8 rounded-lg shadow-md">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">My Account</h1>
 
           {loading ? (
@@ -33,7 +33,7 @@ const AreaManagerAccount = () => {
               {/* Left Side: Profile Picture and Basic Info */}
               <div className="col-span-1 flex flex-col items-center">
                 <img
-                  src={`${MEDIA_URL}${areaManagerDetails?.profileImage}`} // Prepend the base URL
+                  src={`${MEDIA_URL}${areaManagerDetails?.profileImage}`}
                   alt="Profile"
                   className="w-48 h-48 rounded-lg object-cover border border-gray-300 mb-4"
                 />

@@ -38,7 +38,7 @@ const ManageAllGym = () => {
     (state) => state.uploadGallery
   );
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -49,9 +49,9 @@ const ManageAllGym = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchGymsRequest(currentPage, limit));
+    dispatch(fetchGymsRequest(Page, limit));
     dispatch(fetchAmenitiesRequest());
-  }, [dispatch, currentPage, limit]);
+  }, [dispatch, Page, limit]);
 
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [20, 50, 100];
@@ -335,7 +335,7 @@ const ManageAllGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Amenities:</strong>{" "}
                   {getAmenityNames(selectedGym.amenities)}
-                </p>                
+                </p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -556,7 +556,7 @@ const ManageAllGym = () => {
             value={limit}
             onChange={(e) => {
               setLimit(Number(e.target.value));
-              setCurrentPage(1);
+              setPage(1);
             }}
             className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
@@ -571,10 +571,10 @@ const ManageAllGym = () => {
         <div className="flex items-center space-x-4">
           {/* Previous Button */}
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={Page === 1}
             className={`px-4 py-2 rounded-lg ${
-              currentPage === 1
+              Page === 1
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
@@ -584,17 +584,15 @@ const ManageAllGym = () => {
 
           {/* Page Indicator */}
           <span className="text-gray-700">
-            Page {currentPage} of {totalPages}
+            Page {Page} of {totalPages}
           </span>
 
           {/* Next Button */}
           <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={Page === totalPages}
             className={`px-4 py-2 rounded-lg ${
-              currentPage === totalPages
+              Page === totalPages
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}

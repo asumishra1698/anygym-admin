@@ -17,7 +17,7 @@ const ManageAreaManager = () => {
   const [selectedManager, setSelectedManager] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [toolkitOpen, setToolkitOpen] = useState(null);
 
@@ -29,8 +29,8 @@ const ManageAreaManager = () => {
   } = useSelector((state) => state.areaManager);
 
   useEffect(() => {
-    dispatch(fetchAreaManagersRequest(currentPage, limit, searchQuery));
-  }, [dispatch, currentPage, limit, searchQuery]);
+    dispatch(fetchAreaManagersRequest(Page, limit, searchQuery));
+  }, [dispatch, Page, limit, searchQuery]);
 
   const handleView = (manager) => {
     setSelectedManager(manager);
@@ -52,7 +52,7 @@ const ManageAreaManager = () => {
   };
 
   const handleDownload = () => {
-    dispatch(exportAMDataRequest()); // Dispatch export action with search filters
+    dispatch(exportAMDataRequest());
   };
 
   const totalPages = Math.ceil(totalRecords / limit);
@@ -222,12 +222,12 @@ const ManageAreaManager = () => {
         <div className="flex space-x-4">
           {/* Previous Button */}
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={Page === 1}
             className={`px-4 py-2 rounded-lg ${
-              currentPage === 1
+              Page === 1
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Previous
@@ -235,19 +235,19 @@ const ManageAreaManager = () => {
 
           {/* Page Indicator */}
           <span className="text-gray-700">
-            Page {currentPage} of {totalPages}
+            Page {Page} of {totalPages}
           </span>
 
           {/* Next Button */}
           <button
             onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              setPage((prev) => Math.min(prev + 1, totalPages))
             }
-            disabled={currentPage === totalPages}
+            disabled={Page === totalPages}
             className={`px-4 py-2 rounded-lg ${
-              currentPage === totalPages
+              Page === totalPages
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Next
