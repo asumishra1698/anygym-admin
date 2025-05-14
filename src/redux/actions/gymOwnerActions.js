@@ -11,13 +11,13 @@ import {
 } from "./actionTypes";
 
 // Fetch Gym Owners Actions
-export const fetchGymOwnersRequest = (
-  currentPage = 1,
+export const fetchGymOwnersRequest = ({
+  page = 1,
   limit = 10,
-  searchQuery = ""
-) => ({
+  search = "",
+} = {}) => ({
   type: FETCH_GYM_OWNERS_REQUEST,
-  payload: { currentPage, limit, searchQuery },
+  payload: { page, limit, search },
 });
 
 export const fetchGymOwnersSuccess = (data) => ({

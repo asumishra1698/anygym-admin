@@ -12,10 +12,12 @@ import {
 
 const initialState = {
   loading: false,
-  gymOwners: [],
-  currentPage: 1,
-  perPage: 10,
-  totalRecords: 0,
+  data: {
+    records: [],
+    page: 1,
+    per_page: 10,
+    total_records: 0,
+  },
   error: null,
 };
 
@@ -29,10 +31,7 @@ const gymOwnerReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        gymOwners: action.payload.records,
-        currentPage: action.payload.page,
-        perPage: action.payload.per_page,
-        totalRecords: action.payload.total_records,
+        data: action.payload, // { records, page, per_page, total_records }
         error: null,
       };
 
@@ -47,8 +46,11 @@ const gymOwnerReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        gymOwners: [...state.gymOwners, action.payload],
-        totalRecords: state.totalRecords + 1,
+        data: {
+          ...state.data,
+          records: [...state.data.records, action.payload],
+          total_records: state.data.total_records + 1,
+        },
         error: null,
       };
 
@@ -63,11 +65,12 @@ const gymOwnerReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        gymOwners: state.gymOwners.map((owner) =>
-          owner._id === action.payload._id // Match the updated owner by ID
-            ? action.payload // Replace the entire owner object with the updated one
-            : owner
-        ),
+        data: {
+          ...state.data,
+          records: state.data.records.map((owner) =>
+            owner._id === action.payload._id ? action.payload : owner
+          ),
+        },
         error: null,
       };
 

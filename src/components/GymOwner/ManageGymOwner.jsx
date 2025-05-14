@@ -15,16 +15,20 @@ const ManageGymOwner = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const {
-    loading,
-    gymOwners = [],
-    error,
-  } = useSelector((state) => state.gymOwner);
+  const { loading, error, data = {} } = useSelector((state) => state.gymOwner);
+  const gymOwners = data.records || [];
+  const totalRecords = data.total_records || 0;
+  const perPage = data.per_page || limit;
+  const totalPages = Math.ceil(totalRecords / perPage);
 
   useEffect(() => {
-    dispatch(fetchGymOwnersRequest(searchQuery));
-  }, [dispatch, searchQuery]);
+    dispatch(
+      fetchGymOwnersRequest({ page: currentPage, limit, search: searchQuery })
+    );
+  }, [dispatch, searchQuery, currentPage, limit]);
 
   const handleView = (owner) => {
     setSelectedOwner(owner);
@@ -42,7 +46,6 @@ const ManageGymOwner = () => {
       ownerId: owner._id,
       status: newStatus,
     };
-    // console.log("Payload:", payload);
     dispatch(updateGymOwnerStatusRequest(payload));
     setToolkitOpen(null);
   };
@@ -50,9 +53,22 @@ const ManageGymOwner = () => {
   const toggleToolkit = (ownerId) => {
     setToolkitOpen((prev) => (prev === ownerId ? null : ownerId));
   };
+
   const handleExport = () => {
     dispatch(exportOwnerDataRequest());
   };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handleLimitChange = (e) => {
+    setLimit(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -66,7 +82,10 @@ const ManageGymOwner = () => {
               type="text"
               placeholder="Search..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1); // Reset to first page on search
+              }}
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
@@ -159,6 +178,51 @@ const ManageGymOwner = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Controls (bottom, similar to ManageAllGym) */}
+      <div className="flex flex-col md:flex-row justify-between items-center mt-8">
+        <div className="flex items-center space-x-2">
+          <span className="text-gray-700">Rows per page:</span>
+          <select
+            value={perPage}
+            onChange={handleLimitChange}
+            className="border border-gray-300 rounded px-2 py-1"
+          >
+            {[5, 10, 20, 50].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center space-x-2 mt-2 md:mt-0">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded ${
+              currentPage === 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-700 text-white hover:bg-gray-800"
+            }`}
+          >
+            Prev
+          </button>
+          <span className="text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className={`px-3 py-1 rounded ${
+              currentPage === totalPages || totalPages === 0
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-700 text-white hover:bg-gray-800"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {/* Owner Details Popup */}

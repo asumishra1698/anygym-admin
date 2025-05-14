@@ -18,22 +18,31 @@ import {
   GYM_OWNER_URL,
   GYM_OWNER_BY_AREA_MANAGER_URL,
   ADD_GYM_OWNER_URL,
-  UPDATE_STATUS_OWNER_URL, // Corrected typo
+  UPDATE_STATUS_OWNER_URL,
 } from "../../config";
 import { toast } from "react-toastify";
 
 // Fetch Gym Owners Saga
 function* fetchGymOwnersSaga(action) {
-  const { currentPage, limit, searchQuery } = action.payload;
+  // Use correct keys: page, limit, search
+  const { page = 1, limit = 10, search = "" } = action.payload || {};
   const userType = localStorage.getItem("userType");
 
   try {
     // Determine the API endpoint based on the user type
     const endpoint =
       userType === "ADMIN"
-        ? `${BASE_URL}${GYM_OWNER_URL}?page=${currentPage}&limit=${limit}&search=${searchQuery}`
+        ? `${BASE_URL}${GYM_OWNER_URL}?page=${encodeURIComponent(
+            page
+          )}&limit=${encodeURIComponent(limit)}&search=${encodeURIComponent(
+            search
+          )}`
         : userType === "AREA_MANAGER"
-        ? `${BASE_URL}${GYM_OWNER_BY_AREA_MANAGER_URL}?page=${currentPage}&limit=${limit}&search=${searchQuery}`
+        ? `${BASE_URL}${GYM_OWNER_BY_AREA_MANAGER_URL}?page=${encodeURIComponent(
+            page
+          )}&limit=${encodeURIComponent(limit)}&search=${encodeURIComponent(
+            search
+          )}`
         : null;
 
     if (!endpoint) {
@@ -42,24 +51,9 @@ function* fetchGymOwnersSaga(action) {
 
     const response = yield call(getRequest, endpoint);
 
-    if (response.status === 200) {
-      const { data, total_records } = response;
-      if (data && Array.isArray(data)) {
-        yield put(
-          fetchGymOwnersSuccess({
-            records: data,
-            currentPage,
-            limit: limit,
-            total_records: total_records || data.length,
-          })
-        );
-      } else {
-        yield put(
-          fetchGymOwnersFailure(
-            "Invalid response format: 'data' is not an array"
-          )
-        );
-      }
+    if (response.status === 200 && response.data) {
+      // response.data is the object with page, per_page, total_records, records
+      yield put(fetchGymOwnersSuccess(response.data));
     } else {
       yield put(
         fetchGymOwnersFailure(response.message || "Failed to fetch gym owners")
@@ -104,7 +98,7 @@ function* updateGymOwnerStatusSaga(action) {
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}${UPDATE_STATUS_OWNER_URL}`, // Corrected typo
+      `${BASE_URL}${UPDATE_STATUS_OWNER_URL}`,
       { ownerId, status }
     );
 
