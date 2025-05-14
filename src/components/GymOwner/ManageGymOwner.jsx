@@ -16,7 +16,7 @@ const ManageGymOwner = () => {
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(9);
 
   const { loading, error, data = {} } = useSelector((state) => state.gymOwner);
   const gymOwners = data.records || [];
@@ -200,10 +200,10 @@ const ManageGymOwner = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-3 py-1 rounded ${
+            className={`px-4 py-2 rounded-lg ${
               currentPage === 1
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-700 text-white hover:bg-gray-800"
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Prev
@@ -214,10 +214,10 @@ const ManageGymOwner = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || totalPages === 0}
-            className={`px-3 py-1 rounded ${
+            className={`px-4 py-2 rounded-lg ${
               currentPage === totalPages || totalPages === 0
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-700 text-white hover:bg-gray-800"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Next

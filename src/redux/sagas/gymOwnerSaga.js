@@ -29,7 +29,6 @@ function* fetchGymOwnersSaga(action) {
   const userType = localStorage.getItem("userType");
 
   try {
-    // Determine the API endpoint based on the user type
     const endpoint =
       userType === "ADMIN"
         ? `${BASE_URL}${GYM_OWNER_URL}?page=${encodeURIComponent(

@@ -335,10 +335,7 @@ const ManageAllGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Amenities:</strong>{" "}
                   {getAmenityNames(selectedGym.amenities)}
-                </p>
-                {/* <p className="text-sm text-gray-600">
-                  <strong>assign_id:</strong> {selectedGym.assign_id}
-                </p> */}
+                </p>                
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -579,7 +576,7 @@ const ManageAllGym = () => {
             className={`px-4 py-2 rounded-lg ${
               currentPage === 1
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Previous
@@ -599,7 +596,7 @@ const ManageAllGym = () => {
             className={`px-4 py-2 rounded-lg ${
               currentPage === totalPages
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Next
