@@ -35,7 +35,7 @@ const ManageApprovedGym = () => {
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
-  const activeGyms = approvedGyms.filter((gym) => gym.status === "Active");
+  const gymsToShow = approvedGyms; 
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
@@ -197,7 +197,7 @@ const ManageApprovedGym = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {activeGyms.map((gym) => (
+       {gymsToShow.map((gym) => (
           <div
             key={gym._id}
             className="bg-white p-4 rounded-lg shadow relative"
