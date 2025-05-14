@@ -29,7 +29,7 @@ const ManageApprovedGym = () => {
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
-
+  const activeGyms = approvedGyms.filter((gym) => gym.status === "Active");
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
@@ -180,7 +180,7 @@ const ManageApprovedGym = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {approvedGyms.map((gym) => (
+        {activeGyms.map((gym) => (
           <div
             key={gym._id}
             className="bg-white p-4 rounded-lg shadow relative"
@@ -314,7 +314,7 @@ const ManageApprovedGym = () => {
                 <p className="text-sm text-gray-600">
                   <strong>Amenities:</strong>{" "}
                   {getAmenityNames(selectedGym.amenities)}
-                </p>                
+                </p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">

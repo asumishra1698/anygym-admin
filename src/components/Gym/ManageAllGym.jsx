@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SearchIcon, EyeIcon, UploadIcon } from "@heroicons/react/solid";
+import {
+  SearchIcon,
+  EyeIcon,
+  UploadIcon,
+  DownloadIcon,
+} from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { fetchGymsRequest } from "../../redux/actions/allGymActions";
 import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
@@ -177,9 +182,10 @@ const ManageAllGym = () => {
 
           <button
             onClick={handleDownload}
-            className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
-            Download GYM Data
+            <DownloadIcon className="w-4 h-4 mr-2" />
+            Download GYM
           </button>
 
           {userType === "AREA_MANAGER" && (
@@ -187,7 +193,7 @@ const ManageAllGym = () => {
               onClick={() => navigate("/add-gym-by-area-manager")}
               className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
             >
-              + Add Gym by Area Manager
+              + Add Gym
             </button>
           )}
         </div>

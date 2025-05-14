@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { EyeIcon, SearchIcon, PencilIcon } from "@heroicons/react/solid";
+import { EyeIcon, SearchIcon, DownloadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { MEDIA_URL } from "../../config";
 import {
@@ -35,10 +35,6 @@ const ManageAreaManager = () => {
   const handleView = (manager) => {
     setSelectedManager(manager);
     setIsModalOpen(true);
-  };
-
-  const handleEdit = (manager) => {
-    navigate(`/edit-area-manager/${manager._id}`);
   };
 
   const toggleToolkit = (managerId) => {
@@ -82,16 +78,17 @@ const ManageAreaManager = () => {
           </div>
           <button
             onClick={handleDownload}
-            className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
+            <DownloadIcon className="w-4 h-4 mr-2" />
             Download AM
           </button>
-          {/* <button
+          <button
             onClick={() => navigate("/add-manager")}
             className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             + Add Manager
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -153,17 +150,6 @@ const ManageAreaManager = () => {
               >
                 <EyeIcon className="w-3 h-3" />
               </button>
-
-              {/* Edit Button */}
-              {manager.status === "Inactive" && (
-                <button
-                  onClick={() => handleEdit(manager)}
-                  className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
-                  title="Edit"
-                >
-                  <PencilIcon className="w-3 h-3" />
-                </button>
-              )}
 
               {/* Three-Dot Menu */}
               <div className="relative">

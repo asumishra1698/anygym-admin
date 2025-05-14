@@ -80,10 +80,10 @@ const ManageGymOwner = () => {
           {/* Download Button */}
           <button
             onClick={handleExport}
-            className="flex items-center px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
-            <DownloadIcon className="w-5 h-5 mr-2" />
-            Download
+            <DownloadIcon className="w-4 h-4 mr-2" />
+            Download Owners
           </button>
         </div>
       </div>

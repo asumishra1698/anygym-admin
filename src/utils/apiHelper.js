@@ -21,18 +21,19 @@ export const postRequest = async (url, payload, headers = {}) => {
 };
 
 // GET Request Helper
-export const getRequest = async (url, params = null) => {
+export const getRequest = async (url, params = null, config = {}) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Making GET request to:", url);
-    const response = await axios.get(url, {
+    const axiosConfig = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       params: params,
-    });
+      ...config, 
+    };
 
+    const response = await axios.get(url, axiosConfig);
     return response.data;
   } catch (error) {
     console.error("Error in getRequest:", error);

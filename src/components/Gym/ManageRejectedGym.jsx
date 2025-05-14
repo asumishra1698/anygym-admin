@@ -53,7 +53,7 @@ const ManageRejectedGym = () => {
               onClick={() => navigate("/add-gym-by-area-manager")}
               className="px-3 py-3 bg-black text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 whitespace-nowrap"
             >
-              + Add Gym by Area Manager
+              + Add Gym
             </button>
           )}
         </div>
@@ -62,14 +62,16 @@ const ManageRejectedGym = () => {
       {/* Loading, Error, and Empty States */}
       {loading && <p className="text-gray-600">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && allGyms.filter((gym) => gym.status === "Rejected").length === 0 && (
-        <p className="text-gray-600">No rejected gyms available.</p>
-      )}
+      {!loading &&
+        !error &&
+        allGyms.filter((gym) => gym.status === "Reject").length === 0 && (
+          <p className="text-gray-600">No rejected gyms available.</p>
+        )}
 
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {allGyms
-          .filter((gym) => gym.status === "Reject") // Filter gyms with "Rejected" status
+          .filter((gym) => gym.status === "Reject")
           .map((gym) => (
             <div
               key={gym._id}
@@ -88,7 +90,9 @@ const ManageRejectedGym = () => {
               />
 
               {/* Gym Details */}
-              <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                {gym.name}
+              </h3>
               <p className="text-sm text-gray-600">
                 Address: {gym.location.address}
               </p>

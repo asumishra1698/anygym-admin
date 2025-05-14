@@ -17,7 +17,7 @@ import { BASE_URL } from "../../config";
 // API Endpoints
 const EXPORT_AM_URL = "/admin/export-excel";
 const EXPORT_GYM_URL = "/admin/gyms/download-excel";
-const EXPORT_OWNER_URL = "/admin/owners/download-excel";
+const EXPORT_OWNER_URL = "/owner/export-owners";
 
 // Generic function to handle export data
 function* handleExportData(action, url, successType, failureType, fileName) {
@@ -31,10 +31,24 @@ function* handleExportData(action, url, successType, failureType, fileName) {
       }
     );
 
-    const blob = new Blob([responseData], {
-      type: "application/vnd.ms-excel",
-    });
+    if (!(responseData instanceof Blob)) {
+      let errorText = "";
+      if (responseData && typeof responseData.text === "function") {
+        errorText = yield call([responseData, "text"]);
+      } else if (typeof responseData === "object") {
+        errorText = JSON.stringify(responseData);
+      } else {
+        errorText = String(responseData);
+      }
+      toast.error("Export failed: " + errorText);
+      yield put({
+        type: failureType,
+        payload: errorText,
+      });
+      return;
+    }
 
+    const blob = responseData;
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = downloadUrl;

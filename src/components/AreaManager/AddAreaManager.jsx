@@ -15,7 +15,7 @@ const AddAreaManager = () => {
     email: "",
     mobile: "",
     dob: "",
-    referral_id: "",
+    // referral_id: "",
     status: "Pending",
     profileImage: null,
     location: {
@@ -223,7 +223,7 @@ const AddAreaManager = () => {
           </div>
 
           {/* Referral ID */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">
               Referral ID
             </label>
@@ -235,7 +235,7 @@ const AddAreaManager = () => {
               placeholder="Enter referral ID"
               className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
             />
-          </div>
+          </div> */}
 
           {/* Status */}
           <div>
