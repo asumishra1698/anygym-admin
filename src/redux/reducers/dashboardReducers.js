@@ -13,7 +13,7 @@ const initialState = {
       active: 0,
       pending: 0,
       rejected: 0,
-      approve: 0,
+      inactive: 0,
     },
     owners: {
       total: 0,

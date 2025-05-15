@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SEO from "../../reuseable/SEO";
 import { toast } from "react-toastify";
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Add this import
 import { loginRequest } from "../../redux/actions/authActions";
 
 const Login = () => {
@@ -50,6 +51,7 @@ const Login = () => {
       setIsSubmitted(false);
     }
   }, [isSubmitted, token, error, message, user, formData, _id, navigate]);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-100">
@@ -95,15 +97,29 @@ const Login = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-green-700 focus:outline-none"
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <EyeOffIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="mb-4">

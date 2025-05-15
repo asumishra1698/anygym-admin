@@ -78,7 +78,7 @@ const Dashboard = () => {
         label: "Gyms",
         data: [
           gyms.active || 0,
-          gyms.rejected || 0, // Using rejected as "Inactive" if that's your logic
+          gyms.inactive || 0, // Using rejected as "Inactive" if that's your logic
         ],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(255, 206, 86, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
