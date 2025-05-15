@@ -9,6 +9,7 @@ import {
 } from "../actions/actionTypes";
 import { postRequest } from "../../utils/apiHelper";
 import { BASE_URL, UPLOAD_MEDIA_URL, DELETE_MEDIA_URL } from "../../config";
+import { fetchGymsRequest } from "../actions/allGymActions";
 
 function* uploadGallerySaga(action) {
   try {
@@ -24,6 +25,9 @@ function* uploadGallerySaga(action) {
       type: UPLOAD_GALLERY_SUCCESS,
       payload: response,
     });
+
+    // After upload, fetch all gyms
+    yield put(fetchGymsRequest());
   } catch (error) {
     console.error("uploadGallerySaga error:", error);
 
@@ -37,8 +41,6 @@ function* uploadGallerySaga(action) {
 function* deleteMediaSaga(action) {
   try {
     const { gymId, type, fileUrl } = action.payload;
-
-    // Send a POST request with gym_id, gallery_type, and file_url in the body
     const response = yield call(postRequest, `${BASE_URL}${DELETE_MEDIA_URL}`, {
       gym_id: gymId,
       type: type,
@@ -53,6 +55,9 @@ function* deleteMediaSaga(action) {
         message: response.data.message || "Media deleted successfully",
       },
     });
+
+    // After delete, fetch all gyms
+    yield put(fetchGymsRequest());
   } catch (error) {
     console.error("deleteMediaSaga error:", error);
 

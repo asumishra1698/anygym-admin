@@ -5,6 +5,9 @@ import {
   UPDATE_GYM_STATUS_REQUEST,
   UPDATE_GYM_STATUS_SUCCESS,
   UPDATE_GYM_STATUS_FAILURE,
+  FETCH_GYM_BY_ID_REQUEST,
+  FETCH_GYM_BY_ID_SUCCESS,
+  FETCH_GYM_BY_ID_FAILURE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -12,11 +15,11 @@ const initialState = {
   gyms: [],
   totalRecords: 0,
   error: null,
+  selectedGym: null, 
 };
 
 const gymReducer = (state = initialState, action) => {
-  switch (action.type) {
-    // Fetch Gyms
+  switch (action.type) {    
     case FETCH_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -30,6 +33,21 @@ const gymReducer = (state = initialState, action) => {
       };
 
     case FETCH_GYMS_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    // Fetch single gym by ID
+    case FETCH_GYM_BY_ID_REQUEST:
+      return { ...state, loading: true, error: null };
+
+    case FETCH_GYM_BY_ID_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        selectedGym: action.payload,
+        error: null,
+      };
+
+    case FETCH_GYM_BY_ID_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
     // Update Gym Status

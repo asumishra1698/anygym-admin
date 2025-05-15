@@ -13,6 +13,7 @@ export const OTP_GENRATE_URL = "/staff/otp-generate-pass-reset";
 export const OTP_VERIFY_URL = "/staff/otp-verify-pass-reset";
 export const RESET_PASSWORD_URL = "/staff/reset-password";
 export const GYM_URL = "/admin/gyms";
+export const GYM_BY_ID_URL = "/staff/getGymData";
 export const PENDING_GYM_REQUEST_URL = "/staff/gym-request-pending";
 export const APPROVE_AND_REJECT_GYM_REQUEST_URL = "/staff/approve-gym/";
 export const APPROVED_GYM_REQUEST_URL = "/staff/gym-request-approved";

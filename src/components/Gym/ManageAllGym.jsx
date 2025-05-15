@@ -8,13 +8,15 @@ import {
   DownloadIcon,
 } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
-import { fetchGymsRequest } from "../../redux/actions/allGymActions";
+import {
+  fetchGymsRequest,
+  fetchGymByIdRequest,
+} from "../../redux/actions/allGymActions";
 import { updateGymStatusRequest } from "../../redux/actions/approvedGymActions";
 import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Swal from "sweetalert2";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
-
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -28,13 +30,13 @@ const ManageAllGym = () => {
     totalRecords = 0,
     loading,
     error,
+    selectedGym,
   } = useSelector((state) => state.allGyms);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedGym, setSelectedGym] = useState(null);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const { amenities = [] } = useSelector((state) => state.amenity);
-  const { loading: uploadLoading } = useSelector(
+  const { loading: uploadLoading, error: uploadError } = useSelector(
     (state) => state.uploadGallery
   );
 
@@ -47,18 +49,39 @@ const ManageAllGym = () => {
     service: [],
     videos: [],
   });
+  const [uploadGymId, setUploadGymId] = useState(null);
+  const [uploadStarted, setUploadStarted] = useState(false);
 
   useEffect(() => {
     dispatch(fetchGymsRequest(Page, limit));
     dispatch(fetchAmenitiesRequest());
   }, [dispatch, Page, limit]);
 
+  // Close upload modal after successful upload
+  useEffect(() => {
+    if (
+      uploadStarted &&
+      !uploadLoading &&
+      isUploadModalOpen &&
+      !uploadError
+    ) {
+      setIsUploadModalOpen(false);
+      setSelectedFiles({
+        gymFront: [],
+        service: [],
+        videos: [],
+      });
+      setUploadGymId(null);
+      setUploadStarted(false);
+    }
+  }, [uploadLoading, uploadError, isUploadModalOpen, uploadStarted]);
+
   const totalPages = Math.ceil(totalRecords / limit);
   const itemsPerPageOptions = [20, 50, 100];
   const userType = localStorage.getItem("userType");
 
   const handleViewDetails = (gym) => {
-    setSelectedGym(gym);
+    dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
   };
 
@@ -92,10 +115,15 @@ const ManageAllGym = () => {
     }));
   };
 
+  const handleUploadClick = (gym) => {
+    setUploadGymId(gym._id);
+    setIsUploadModalOpen(true);
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
 
-    if (!selectedGym || !selectedGym._id) {
+    if (!uploadGymId) {
       alert("Gym ID is required.");
       return;
     }
@@ -110,7 +138,7 @@ const ManageAllGym = () => {
     }
 
     const formData = new FormData();
-    formData.append("gym_id", selectedGym._id);
+    formData.append("gym_id", uploadGymId);
 
     selectedFiles.gymFront.forEach((file) =>
       formData.append("gym_front_gallery", file)
@@ -120,6 +148,7 @@ const ManageAllGym = () => {
     );
     selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
 
+    setUploadStarted(true);
     dispatch(
       uploadGalleryRequest({
         formData,
@@ -152,7 +181,10 @@ const ManageAllGym = () => {
             fileUrl,
           })
         );
-
+        // Refresh gym details in modal if open
+        if (isModalOpen && selectedGym && selectedGym._id === gymId) {
+          dispatch(fetchGymByIdRequest(gymId));
+        }
         Swal.fire("Deleted!", "Your media has been deleted.", "success");
       }
     });
@@ -175,6 +207,7 @@ const ManageAllGym = () => {
               type="text"
               placeholder="Search..."
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+              // Add search logic if needed
             />
           </div>
 
@@ -238,10 +271,7 @@ const ManageAllGym = () => {
                 <EyeIcon className="w-4 h-4" />
               </button>
               <button
-                onClick={() => {
-                  setSelectedGym(gym);
-                  setIsUploadModalOpen(true);
-                }}
+                onClick={() => handleUploadClick(gym)}
                 className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
                 title="Upload"
               >
