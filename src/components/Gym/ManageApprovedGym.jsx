@@ -17,7 +17,6 @@ import {
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
-
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -25,6 +24,7 @@ import {
 import { MEDIA_URL } from "../../config";
 
 const userType = localStorage.getItem("userType");
+
 const ManageApprovedGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,10 +50,26 @@ const ManageApprovedGym = () => {
     videos: [],
   });
 
+  // Track upload completion to close modal
+  const [uploadCompleted, setUploadCompleted] = useState(false);
+
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest());
     dispatch(fetchAmenitiesRequest());
   }, [dispatch]);
+
+  // Close upload modal after upload completes
+  useEffect(() => {
+    if (uploadCompleted && isUploadModalOpen && !uploadLoading) {
+      setIsUploadModalOpen(false);
+      setSelectedFiles({
+        gymFront: [],
+        service: [],
+        videos: [],
+      });
+      setUploadCompleted(false);
+    }
+  }, [uploadCompleted, isUploadModalOpen, uploadLoading]);
 
   const getAmenityNames = (amenityIds) => {
     if (!Array.isArray(amenityIds) || amenityIds.length === 0) {
@@ -91,7 +107,7 @@ const ManageApprovedGym = () => {
   };
 
   const handleUploadClick = (gym) => {
-    dispatch(fetchGymByIdRequest(gym._id)); // fetch gym details if needed
+    dispatch(fetchGymByIdRequest(gym._id));
     setIsUploadModalOpen(true);
   };
 
@@ -126,8 +142,11 @@ const ManageApprovedGym = () => {
     dispatch(
       uploadGalleryRequest({
         formData,
+        // If your saga supports a callback, you can use:
+        // onSuccess: () => setUploadCompleted(true),
       })
     );
+    setUploadCompleted(true); // If not using a callback, set directly here
   };
 
   const handleDeleteFile = (type, index) => {
@@ -155,7 +174,6 @@ const ManageApprovedGym = () => {
             fileUrl,
           })
         );
-
         Swal.fire("Deleted!", "Your media has been deleted.", "success");
       }
     });
@@ -204,85 +222,89 @@ const ManageApprovedGym = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {gymsToShow.map((gym) => (
-          <div
-            key={gym._id}
-            className="bg-white p-4 rounded-lg shadow relative"
-          >
-            <span
-              className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Active"
-                  ? "bg-green-100 text-green-800"
-                  : gym.status === "Inactive"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
+        {gymsToShow
+          .filter((gym) => gym.status === "Active")
+          .map((gym) => (
+            <div
+              key={gym._id}
+              className="bg-white p-4 rounded-lg shadow relative"
             >
-              {gym.status}
-            </span>
-            <img
-              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-              alt="Gym Front"
-              className="w-full h-40 object-cover rounded-lg mb-2"
-            />
-            <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
-            <p className="text-sm text-gray-600">
-              Address: {gym.location.address}
-            </p>
-            <p className="text-sm text-gray-600">Status: {gym.status}</p>
-            <div className="absolute bottom-4 right-4 flex space-x-2">
-              <button
-                onClick={() => handleViewDetails(gym)}
-                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
-                title="View"
+              <span
+                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                  gym.status === "Active"
+                    ? "bg-green-100 text-green-800"
+                    : gym.status === "Inactive"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
               >
-                <EyeIcon className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => handleUploadClick(gym)}
-                className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
-                title="Upload"
-              >
-                <UploadIcon className="w-4 h-4" />
-              </button>
-
-              <div className="relative">
+                {gym.status}
+              </span>
+              <img
+                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+                alt="Gym Front"
+                className="w-full h-40 object-cover rounded-lg mb-2"
+              />
+              <h3 className="text-lg font-semibold text-gray-800">
+                {gym.name}
+              </h3>
+              <p className="text-sm text-gray-600">
+                Address: {gym.location.address}
+              </p>
+              <p className="text-sm text-gray-600">Status: {gym.status}</p>
+              <div className="absolute bottom-4 right-4 flex space-x-2">
                 <button
-                  onClick={() => toggleToolkit(gym._id)}
-                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
-                  title="More Actions"
+                  onClick={() => handleViewDetails(gym)}
+                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                  title="View"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v.01M12 12v.01M12 18v.01"
-                    />
-                  </svg>
+                  <EyeIcon className="w-4 h-4" />
                 </button>
 
-                {toolkitOpen === gym._id && (
-                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                    <button
-                      onClick={() => handleToggleStatus(gym)}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                <button
+                  onClick={() => handleUploadClick(gym)}
+                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  title="Upload"
+                >
+                  <UploadIcon className="w-4 h-4" />
+                </button>
+
+                <div className="relative">
+                  <button
+                    onClick={() => toggleToolkit(gym._id)}
+                    className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                    title="More Actions"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      {gym.status === "Active" ? "Deactivate" : "Activate"}
-                    </button>
-                  </div>
-                )}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6v.01M12 12v.01M12 18v.01"
+                      />
+                    </svg>
+                  </button>
+
+                  {toolkitOpen === gym._id && (
+                    <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                      <button
+                        onClick={() => handleToggleStatus(gym)}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        {gym.status === "Active" ? "Deactivate" : "Activate"}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {isModalOpen && selectedGym && (

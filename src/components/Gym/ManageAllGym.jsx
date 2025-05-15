@@ -59,12 +59,7 @@ const ManageAllGym = () => {
 
   // Close upload modal after successful upload
   useEffect(() => {
-    if (
-      uploadStarted &&
-      !uploadLoading &&
-      isUploadModalOpen &&
-      !uploadError
-    ) {
+    if (uploadStarted && !uploadLoading && isUploadModalOpen && !uploadError) {
       setIsUploadModalOpen(false);
       setSelectedFiles({
         gymFront: [],

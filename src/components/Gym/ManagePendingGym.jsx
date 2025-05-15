@@ -49,10 +49,24 @@ const ManagePendingGym = () => {
     service: [],
     videos: [],
   });
+  const [uploadCompleted, setUploadCompleted] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPendingGymsRequest());
   }, [dispatch]);
+
+  // Close upload modal after upload completes
+  useEffect(() => {
+    if (uploadCompleted && isUploadModalOpen && !uploadLoading) {
+      setIsUploadModalOpen(false);
+      setSelectedFiles({
+        gymFront: [],
+        service: [],
+        videos: [],
+      });
+      setUploadCompleted(false);
+    }
+  }, [uploadCompleted, isUploadModalOpen, uploadLoading]);
 
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
@@ -78,6 +92,7 @@ const ManagePendingGym = () => {
   };
 
   const handleUploadClick = (gym) => {
+    dispatch(fetchGymByIdRequest(gym._id));
     setUploadGymId(gym._id);
     setIsUploadModalOpen(true);
     setSelectedFiles({
@@ -118,7 +133,7 @@ const ManagePendingGym = () => {
         formData,
       })
     );
-    setIsUploadModalOpen(false);
+    setUploadCompleted(true);
   };
 
   const handleDeleteFile = (type, index) => {
