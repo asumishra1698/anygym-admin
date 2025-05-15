@@ -15,11 +15,12 @@ const initialState = {
   gyms: [],
   totalRecords: 0,
   error: null,
-  selectedGym: null, 
+  selectedGym: null, // Add this for single gym details
 };
 
 const gymReducer = (state = initialState, action) => {
   switch (action.type) {
+    // Fetch Gyms
     case FETCH_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -43,7 +44,7 @@ const gymReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        selectedGym: action.payload, // This is correct
+        selectedGym: action.payload,
         error: null,
       };
 
