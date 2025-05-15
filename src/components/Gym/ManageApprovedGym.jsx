@@ -50,7 +50,6 @@ const ManageApprovedGym = () => {
     videos: [],
   });
 
-  // Track upload completion to close modal
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
   useEffect(() => {
@@ -142,11 +141,9 @@ const ManageApprovedGym = () => {
     dispatch(
       uploadGalleryRequest({
         formData,
-        // If your saga supports a callback, you can use:
-        // onSuccess: () => setUploadCompleted(true),
       })
     );
-    setUploadCompleted(true); // If not using a callback, set directly here
+    setUploadCompleted(true);
   };
 
   const handleDeleteFile = (type, index) => {
@@ -566,6 +563,7 @@ const ManageApprovedGym = () => {
           </div>
         </div>
       )}
+      
     </Layout>
   );
 };

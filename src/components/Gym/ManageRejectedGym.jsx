@@ -26,7 +26,7 @@ const ManageRejectedGym = () => {
 
 
   useEffect(() => {
-    dispatch(fetchApprovedGymsRequest()); // Reusing the same action
+    dispatch(fetchApprovedGymsRequest()); 
   }, [dispatch]);
 
   const handleViewDetails = (gym) => {
@@ -206,6 +206,7 @@ const ManageRejectedGym = () => {
           </div>
         </div>
       )}
+      
     </Layout>
   );
 };
