@@ -12,7 +12,8 @@ import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
 import {
   fetchPendingGymsRequest,
-  updateGymStatusRequest,
+  approveGymRequest,
+  rejectGymRequest,
 } from "../../redux/actions/pendingGymActions";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import {
@@ -74,14 +75,41 @@ const ManagePendingGym = () => {
   };
 
   const handleApprove = (gymId) => {
-    dispatch(updateGymStatusRequest(gymId, "Approved"));
+    dispatch(approveGymRequest(gymId));
     navigate("/manage-approved-gym");
   };
 
   const handleReject = (gymId) => {
-    dispatch(updateGymStatusRequest(gymId, "Reject"));
-    navigate("/manage-rejected-gym");
+    Swal.fire({
+      title: "Reject Gym",
+      input: "textarea",
+      inputLabel: "Reason for rejection",
+      inputPlaceholder: "Type your message here...",
+      inputAttributes: {
+        "aria-label": "Type your message here",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Reject",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      preConfirm: (message) => {
+        if (!message) {
+          Swal.showValidationMessage("Message is required");
+        }
+        return message;
+      },
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        dispatch(rejectGymRequest({ gymId, message: result.value }));
+        navigate("/manage-rejected-gym");
+      }
+    });
   };
+
+  // const handleReject = (gymId) => {
+  //   dispatch(rejectGymRequest(gymId));
+  //   navigate("/manage-rejected-gym");
+  // };
 
   const handleFileChange = (e, type) => {
     const files = Array.from(e.target.files);
@@ -216,78 +244,80 @@ const ManagePendingGym = () => {
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {pendingGyms
-        .filter((gym) => gym.status === "Active" || gym.status === "Inactive")
-        .map((gym) => (
-          <div
-            key={gym._id}
-            className="bg-white p-4 rounded-lg shadow relative"
-          >
-            {/* Status Badge */}
-            <span
-              className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Approved"
-                  ? "bg-green-100 text-green-800"
-                  : gym.status === "Rejected"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
+          .filter((gym) => gym.status === "Active" || gym.status === "Inactive")
+          .map((gym) => (
+            <div
+              key={gym._id}
+              className="bg-white p-4 rounded-lg shadow relative"
             >
-              {gym.status}
-            </span>
-
-            {/* Gym Image */}
-            <img
-              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-              alt="Gym Front"
-              className="w-full h-40 object-cover rounded-lg mb-2"
-            />
-
-            {/* Gym Details */}
-            <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
-            <p className="text-sm text-gray-600">Status: {gym.status}</p>
-            <p className="text-sm text-gray-600">
-              Address: {gym.location.address}
-            </p>
-
-            {/* Action Icons */}
-            <div className="absolute bottom-4 right-4 flex space-x-2">
-              {/* View Icon */}
-              <button
-                onClick={() => handleViewDetails(gym)}
-                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
-                title="View"
+              {/* Status Badge */}
+              <span
+                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                  gym.status === "Approved"
+                    ? "bg-green-100 text-green-800"
+                    : gym.status === "Rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
               >
-                <EyeIcon className="w-4 h-4" />
-              </button>
+                {gym.status}
+              </span>
 
-              <button
-                onClick={() => handleUploadClick(gym)}
-                className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
-                title="Upload"
-              >
-                <UploadIcon className="w-4 h-4" />
-              </button>
+              {/* Gym Image */}
+              <img
+                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+                alt="Gym Front"
+                className="w-full h-40 object-cover rounded-lg mb-2"
+              />
 
-              {/* Approve Icon */}
-              <button
-                onClick={() => handleApprove(gym._id)}
-                className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                title="Approve"
-              >
-                <FaCheck className="w-4 h-4" />
-              </button>
+              {/* Gym Details */}
+              <h3 className="text-lg font-semibold text-gray-800">
+                {gym.name}
+              </h3>
+              <p className="text-sm text-gray-600">Status: {gym.status}</p>
+              <p className="text-sm text-gray-600">
+                Address: {gym.location.address}
+              </p>
 
-              {/* Reject Icon */}
-              <button
-                onClick={() => handleReject(gym._id)}
-                className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                title="Reject"
-              >
-                <FaTimes className="w-4 h-4" />
-              </button>
+              {/* Action Icons */}
+              <div className="absolute bottom-4 right-4 flex space-x-2">
+                {/* View Icon */}
+                <button
+                  onClick={() => handleViewDetails(gym)}
+                  className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                  title="View"
+                >
+                  <EyeIcon className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => handleUploadClick(gym)}
+                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  title="Upload"
+                >
+                  <UploadIcon className="w-4 h-4" />
+                </button>
+
+                {/* Approve Icon */}
+                <button
+                  onClick={() => handleApprove(gym._id)}
+                  className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                  title="Approve"
+                >
+                  <FaCheck className="w-4 h-4" />
+                </button>
+
+                {/* Reject Icon */}
+                <button
+                  onClick={() => handleReject(gym._id)}
+                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                  title="Reject"
+                >
+                  <FaTimes className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {/* Gym Details Modal */}
@@ -570,8 +600,6 @@ const ManagePendingGym = () => {
           </div>
         </div>
       )}
-
-      
     </Layout>
   );
 };

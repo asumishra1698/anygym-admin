@@ -32,11 +32,17 @@ const pendingGymReducer = (state = initialState, action) => {
       return { ...state, loading: true };
 
     case APPROVE_GYM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        gyms: state.gyms.filter((gym) => gym._id !== action.payload._id), // Remove approved gym by _id
+      };
+
     case REJECT_GYM_SUCCESS:
       return {
         ...state,
         loading: false,
-        gyms: state.gyms.filter((gym) => gym._id !== action.payload.gymId),
+        gyms: state.gyms.filter((gym) => gym._id !== action.payload._id), // Remove rejected gym by _id
       };
 
     case APPROVE_GYM_FAILURE:

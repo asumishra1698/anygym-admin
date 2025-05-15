@@ -25,18 +25,34 @@ export const fetchPendingGymsFailure = (error) => ({
   payload: error,
 });
 
-// Approve or Reject Gym Request
-export const updateGymStatusRequest = (gymId, status) => ({
-  type: status === "Approved" ? APPROVE_GYM_REQUEST : REJECT_GYM_REQUEST,
-  payload: { gymId, status },
+// Approve Gym Actions
+export const approveGymRequest = (gymId) => ({
+  type: APPROVE_GYM_REQUEST,
+  payload: gymId,
 });
 
-export const updateGymStatusSuccess = (gymId, status) => ({
-  type: status === "Approved" ? APPROVE_GYM_SUCCESS : REJECT_GYM_SUCCESS,
-  payload: { gymId, status },
+export const approveGymSuccess = (gym) => ({
+  type: APPROVE_GYM_SUCCESS,
+  payload: gym, // should be the approved gym object or at least its _id
 });
 
-export const updateGymStatusFailure = (error, status) => ({
-  type: status === "Approved" ? APPROVE_GYM_FAILURE : REJECT_GYM_FAILURE,
+export const approveGymFailure = (error) => ({
+  type: APPROVE_GYM_FAILURE,
+  payload: error,
+});
+
+// Reject Gym Actions
+export const rejectGymRequest = ({ gymId, message }) => ({
+  type: REJECT_GYM_REQUEST,
+  payload: { gymId, message },
+});
+
+export const rejectGymSuccess = (gym) => ({
+  type: REJECT_GYM_SUCCESS,
+  payload: gym, // should be the rejected gym object or at least its _id
+});
+
+export const rejectGymFailure = (error) => ({
+  type: REJECT_GYM_FAILURE,
   payload: error,
 });
