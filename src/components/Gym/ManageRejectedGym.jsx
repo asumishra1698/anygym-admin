@@ -5,6 +5,8 @@ import { SearchIcon, EyeIcon, DownloadIcon } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
+import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
+
 import { MEDIA_URL } from "../../config";
 
 const ManageRejectedGym = () => {
@@ -20,14 +22,15 @@ const ManageRejectedGym = () => {
   } = useSelector((state) => state.approvedGyms);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedGym, setSelectedGym] = useState(null);
+    const selectedGym = useSelector((state) => state.allGyms.selectedGym);
+
 
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest()); // Reusing the same action
   }, [dispatch]);
 
   const handleViewDetails = (gym) => {
-    setSelectedGym(gym);
+    dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
   };
   const handleDownload = () => {

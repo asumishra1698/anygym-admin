@@ -10,7 +10,6 @@ import {
 import { FaCheck, FaTimes } from "react-icons/fa";
 import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
-
 import {
   fetchPendingGymsRequest,
   updateGymStatusRequest,
@@ -21,7 +20,6 @@ import {
   deleteMediaRequest,
 } from "../../redux/actions/uploadActions";
 import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
-
 import { MEDIA_URL } from "../../config";
 
 const userType = localStorage.getItem("userType");
