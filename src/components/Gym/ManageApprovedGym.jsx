@@ -90,6 +90,11 @@ const ManageApprovedGym = () => {
     }));
   };
 
+  const handleUploadClick = (gym) => {
+    dispatch(fetchGymByIdRequest(gym._id)); // fetch gym details if needed
+    setIsUploadModalOpen(true);
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
 
@@ -235,7 +240,7 @@ const ManageApprovedGym = () => {
               </button>
 
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => handleUploadClick(gym)}
                 className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
                 title="Upload"
               >
