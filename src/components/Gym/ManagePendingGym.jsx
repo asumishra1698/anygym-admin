@@ -20,6 +20,8 @@ import {
   uploadGalleryRequest,
   deleteMediaRequest,
 } from "../../redux/actions/uploadActions";
+import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
+
 import { MEDIA_URL } from "../../config";
 
 const userType = localStorage.getItem("userType");
@@ -28,20 +30,22 @@ const ManagePendingGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Redux state
   const {
     gyms: pendingGyms,
     loading,
     error,
   } = useSelector((state) => state.pendingGyms);
 
+  const selectedGym = useSelector((state) => state.gymDetails?.selectedGym);
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
 
+  // Local state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedGym, setSelectedGym] = useState(null);
-
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadGymId, setUploadGymId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
     service: [],
@@ -53,7 +57,7 @@ const ManagePendingGym = () => {
   }, [dispatch]);
 
   const handleViewDetails = (gym) => {
-    setSelectedGym(gym);
+    dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
   };
 
@@ -75,14 +79,23 @@ const ManagePendingGym = () => {
     }));
   };
 
+  const handleUploadClick = (gym) => {
+    setUploadGymId(gym._id);
+    setIsUploadModalOpen(true);
+    setSelectedFiles({
+      gymFront: [],
+      service: [],
+      videos: [],
+    });
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
 
-    if (!selectedGym || !selectedGym._id) {
+    if (!uploadGymId) {
       alert("Gym ID is required.");
       return;
     }
-
     if (
       selectedFiles.gymFront.length === 0 &&
       selectedFiles.service.length === 0 &&
@@ -91,9 +104,8 @@ const ManagePendingGym = () => {
       alert("Please select files to upload.");
       return;
     }
-
     const formData = new FormData();
-    formData.append("gym_id", selectedGym._id);
+    formData.append("gym_id", uploadGymId);
 
     selectedFiles.gymFront.forEach((file) =>
       formData.append("gym_front_gallery", file)
@@ -108,6 +120,7 @@ const ManagePendingGym = () => {
         formData,
       })
     );
+    setIsUploadModalOpen(false);
   };
 
   const handleDeleteFile = (type, index) => {
@@ -135,7 +148,6 @@ const ManagePendingGym = () => {
             fileUrl,
           })
         );
-
         Swal.fire("Deleted!", "Your media has been deleted.", "success");
       }
     });
@@ -145,6 +157,7 @@ const ManagePendingGym = () => {
     dispatch(exportGymDataRequest());
   };
 
+  // Render
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -233,10 +246,7 @@ const ManagePendingGym = () => {
               </button>
 
               <button
-                onClick={() => {
-                  setSelectedGym(gym);
-                  setIsUploadModalOpen(true);
-                }}
+                onClick={() => handleUploadClick(gym)}
                 className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
                 title="Upload"
               >
@@ -266,145 +276,169 @@ const ManagePendingGym = () => {
       </div>
 
       {/* Gym Details Modal */}
-      {isModalOpen && selectedGym && (
+      {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-y-auto max-h-screen">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {selectedGym.name}
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700 focus:outline-none"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">
-                  <strong>Address:</strong> {selectedGym.location.address}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Coordinates:</strong>{" "}
-                  {selectedGym.location.coordinates.join(", ")}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Schedule:</strong> {selectedGym.schedule.opening_time}{" "}
-                  - {selectedGym.schedule.closing_time}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Days:</strong> {selectedGym.schedule.day.join(", ")}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Status:</strong> {selectedGym.status}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>About:</strong> {selectedGym.about_gym}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Weekly Charges:</strong> ₹{selectedGym.charges.weekly}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Monthly Charges:</strong> ₹
-                  {selectedGym.charges.monthly}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  GYM Front
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {selectedGym.gallery.gym_front_gallery.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={`${MEDIA_URL}${image}`}
-                        alt={`Gallery ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg shadow"
-                      />
-                      <button
-                        onClick={() =>
-                          handleDeleteMedia(
-                            selectedGym._id,
-                            "gym_front_gallery",
-                            image
-                          )
-                        }
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
+            {!selectedGym ? (
+              <div className="text-center py-10">Loading...</div>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    {selectedGym.name}
+                  </h2>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    ✕
+                  </button>
                 </div>
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Service Gallery
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {selectedGym.gallery.service_gallery.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={`${MEDIA_URL}${image}`}
-                      alt={`Service ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg shadow"
-                    />
-                    <button
-                      onClick={() =>
-                        handleDeleteMedia(
-                          selectedGym._id,
-                          "service_gallery",
-                          image
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      <strong>Address:</strong> {selectedGym.location.address}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Coordinates:</strong>{" "}
+                      {selectedGym.location.coordinates.join(", ")}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Schedule:</strong>{" "}
+                      {selectedGym.schedule.opening_time} -{" "}
+                      {selectedGym.schedule.closing_time}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Days:</strong>{" "}
+                      {selectedGym.schedule.day.join(", ")}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Status:</strong> {selectedGym.status}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>About:</strong> {selectedGym.about_gym}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Hourly Charges:</strong> ₹
+                      {selectedGym.charges.hourly}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Weekly Charges:</strong> ₹
+                      {selectedGym.charges.weekly}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Monthly Charges:</strong> ₹
+                      {selectedGym.charges.monthly}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Yearly Charges:</strong> ₹
+                      {selectedGym.charges.yearly}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Amenities:</strong>{" "}
+                      {Array.isArray(selectedGym.amenities)
+                        ? selectedGym.amenities.join(", ")
+                        : ""}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      GYM Front
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {selectedGym.gallery.gym_front_gallery.map(
+                        (image, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={`${MEDIA_URL}${image}`}
+                              alt={`Gallery ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg shadow"
+                            />
+                            <button
+                              onClick={() =>
+                                handleDeleteMedia(
+                                  selectedGym._id,
+                                  "gym_front_gallery",
+                                  image
+                                )
+                              }
+                              className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                            >
+                              ✕
+                            </button>
+                          </div>
                         )
-                      }
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      ✕
-                    </button>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Videos
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedGym.gallery.gym_video.map((video, index) => (
-                  <div key={index} className="relative">
-                    <video
-                      controls
-                      className="w-full h-40 object-cover rounded-lg shadow"
-                    >
-                      <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
-                    </video>
-                    <button
-                      onClick={() =>
-                        handleDeleteMedia(selectedGym._id, "gym_video", video)
-                      }
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      ✕
-                    </button>
+                </div>
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Service Gallery
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {selectedGym.gallery.service_gallery.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={`${MEDIA_URL}${image}`}
+                          alt={`Service ${index + 1}`}
+                          className="w-full h-32 object-cover rounded-lg shadow"
+                        />
+                        <button
+                          onClick={() =>
+                            handleDeleteMedia(
+                              selectedGym._id,
+                              "service_gallery",
+                              image
+                            )
+                          }
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Videos
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedGym.gallery.gym_video.map((video, index) => (
+                      <div key={index} className="relative">
+                        <video
+                          controls
+                          className="w-full h-40 object-cover rounded-lg shadow"
+                        >
+                          <source
+                            src={`${MEDIA_URL}${video}`}
+                            type="video/mp4"
+                          />
+                        </video>
+                        <button
+                          onClick={() =>
+                            handleDeleteMedia(
+                              selectedGym._id,
+                              "gym_video",
+                              video
+                            )
+                          }
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
 
+      {/* Upload Modal */}
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

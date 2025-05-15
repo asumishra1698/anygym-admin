@@ -19,7 +19,7 @@ const initialState = {
 };
 
 const gymReducer = (state = initialState, action) => {
-  switch (action.type) {    
+  switch (action.type) {
     case FETCH_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -43,7 +43,7 @@ const gymReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        selectedGym: action.payload,
+        selectedGym: action.payload, // This is correct
         error: null,
       };
 

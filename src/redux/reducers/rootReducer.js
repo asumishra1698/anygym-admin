@@ -9,7 +9,7 @@ import gymOwnerReducer from "./gymOwnerReducers";
 import addGymReducer from "./addGymReducers";
 import uploadGalleryReducer from "./uploadReducers";
 import dashboardReducer from "./dashboardReducers";
-
+import gymReducer from "./allGymReducers";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -22,6 +22,7 @@ const rootReducer = combineReducers({
   addGym: addGymReducer,
   uploadGallery: uploadGalleryReducer,
   dashboard: dashboardReducer,
+  gymDetails: gymReducer,
 });
 
 export default rootReducer;

@@ -10,6 +10,7 @@ import {
 import { postRequest } from "../../utils/apiHelper";
 import { BASE_URL, UPLOAD_MEDIA_URL, DELETE_MEDIA_URL } from "../../config";
 import { fetchGymsRequest } from "../actions/allGymActions";
+import { toast } from "react-toastify"; // Add this import at the top
 
 function* uploadGallerySaga(action) {
   try {
@@ -25,6 +26,9 @@ function* uploadGallerySaga(action) {
       type: UPLOAD_GALLERY_SUCCESS,
       payload: response,
     });
+
+    toast.success("Gallery uploaded successfully!");
+
 
     // After upload, fetch all gyms
     yield put(fetchGymsRequest());
