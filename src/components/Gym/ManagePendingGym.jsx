@@ -215,7 +215,9 @@ const ManagePendingGym = () => {
 
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pendingGyms.map((gym) => (
+        {pendingGyms
+        .filter((gym) => gym.status === "Active" || gym.status === "Inactive")
+        .map((gym) => (
           <div
             key={gym._id}
             className="bg-white p-4 rounded-lg shadow relative"
