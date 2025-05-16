@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
   EyeIcon,
   UploadIcon,
   DownloadIcon,
+  SelectorIcon,
 } from "@heroicons/react/solid";
 import Layout from "../../reuseable/Layout";
 import {
@@ -17,6 +18,7 @@ import { MEDIA_URL } from "../../config";
 import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import Swal from "sweetalert2";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
+import { fetchAreaManagersRequest } from "../../redux/actions/areaManagerActions";
 import {
   uploadGalleryRequest,
   deleteMediaRequest,
@@ -27,11 +29,11 @@ const ManageAllGym = () => {
   const navigate = useNavigate();
   const {
     gyms: allGyms = [],
-    totalRecords = 0,
     loading,
     error,
     selectedGym,
   } = useSelector((state) => state.allGyms);
+  const { areaManagers = [] } = useSelector((state) => state.areaManager);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toolkitOpen, setToolkitOpen] = useState(null);
@@ -40,9 +42,16 @@ const ManageAllGym = () => {
     (state) => state.uploadGallery
   );
 
+  // Pagination and filter/search state
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
+  const [filterStatus, setFilterStatus] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [areaManagerDropdownOpen, setAreaManagerDropdownOpen] = useState(false);
+  const [selectedAreaManagers, setSelectedAreaManagers] = useState([]);
+  const areaManagerDropdownRef = useRef(null);
 
+  // Upload modal state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
@@ -52,10 +61,17 @@ const ManageAllGym = () => {
   const [uploadGymId, setUploadGymId] = useState(null);
   const [uploadStarted, setUploadStarted] = useState(false);
 
+  // Fetch gyms, amenities, and area managers
   useEffect(() => {
-    dispatch(fetchGymsRequest(Page, limit));
+    dispatch(fetchGymsRequest(1, 1000)); // fetch all gyms for client-side filtering/pagination
     dispatch(fetchAmenitiesRequest());
-  }, [dispatch, Page, limit]);
+    dispatch(fetchAreaManagersRequest(1, 1000, ""));
+  }, [dispatch]);
+
+  // Reset page to 1 when filters/search change
+  useEffect(() => {
+    setPage(1);
+  }, [filterStatus, searchQuery, selectedAreaManagers]);
 
   // Close upload modal after successful upload
   useEffect(() => {
@@ -71,10 +87,59 @@ const ManageAllGym = () => {
     }
   }, [uploadLoading, uploadError, isUploadModalOpen, uploadStarted]);
 
-  const totalPages = Math.ceil(totalRecords / limit);
-  const itemsPerPageOptions = [20, 50, 100];
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        areaManagerDropdownRef.current &&
+        !areaManagerDropdownRef.current.contains(event.target)
+      ) {
+        setAreaManagerDropdownOpen(false);
+      }
+    }
+    if (areaManagerDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [areaManagerDropdownOpen]);
+
+  const itemsPerPageOptions = [12, 20, 50, 100];
   const userType = localStorage.getItem("userType");
 
+  // Helper to get area manager name by ID
+  const getAreaManagerName = (id) => {
+    const manager = areaManagers.find((am) => am._id === id);
+    return manager ? manager.name : id;
+  };
+
+  // Handle area manager checkbox
+  const handleAreaManagerCheckbox = (id) => {
+    setSelectedAreaManagers((prev) =>
+      prev.includes(id) ? prev.filter((amId) => amId !== id) : [...prev, id]
+    );
+  };
+
+  // Filter gyms based on area manager selection, status, and search
+  const filteredGyms = allGyms
+    .filter(
+      (gym) =>
+        selectedAreaManagers.length === 0 ||
+        selectedAreaManagers.includes(gym.assign_id)
+    )
+    .filter((gym) => !filterStatus || gym.status === filterStatus)
+    .filter((gym) =>
+      gym.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  // Pagination based on filtered gyms
+  const totalPages = Math.ceil(filteredGyms.length / limit);
+  const paginatedGyms = filteredGyms.slice((Page - 1) * limit, Page * limit);
+
+  // View, status, toolkit, and upload handlers
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
@@ -195,25 +260,95 @@ const ManageAllGym = () => {
         <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
           All Gyms
         </h2>
-        <div className="flex items-center space-x-4 w-full md:w-auto">
-          <div className="relative w-full md:w-auto">
-            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-              // Add search logic if needed
-            />
-          </div>
-
-          <button
-            onClick={handleDownload}
-            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+        {/* Responsive filter/search/add row */}
+        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-2 sm:gap-4">
+          {/* Area Manager Filter Dropdown */}
+          <div
+            className="relative w-full sm:w-auto"
+            ref={areaManagerDropdownRef}
           >
-            <DownloadIcon className="w-4 h-4 mr-2" />
-            Download GYM
-          </button>
-
+            <button
+              type="button"
+              onClick={() => setAreaManagerDropdownOpen((open) => !open)}
+              className="flex items-center border border-gray-300 rounded-lg px-2 py-2 mr-2 bg-white focus:outline-none focus:ring-2 focus:ring-gray-500 w-full sm:w-auto"
+            >
+              <span className="mr-2 text-gray-700 text-sm truncate">
+                {selectedAreaManagers.length === 0
+                  ? "Filter by Area Manager"
+                  : areaManagers
+                      .filter((am) => selectedAreaManagers.includes(am._id))
+                      .map((am) => am.name)
+                      .join(", ")}
+              </span>
+              <SelectorIcon className="w-4 h-4 text-gray-500" />
+            </button>
+            {areaManagerDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-56 max-h-64 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg z-20">
+                <div className="p-2">
+                  {areaManagers.length === 0 && (
+                    <div className="text-gray-500 text-sm">
+                      No Area Managers
+                    </div>
+                  )}
+                  {areaManagers.map((am) => (
+                    <label
+                      key={am._id}
+                      className="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100 rounded"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedAreaManagers.includes(am._id)}
+                        onChange={() => handleAreaManagerCheckbox(am._id)}
+                        className="mr-2"
+                      />
+                      <span className="text-gray-700 text-sm">{am.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Filter Dropdown */}
+          <div className="relative w-full sm:w-auto">
+            <select
+              className="border border-gray-300 rounded-lg px-2 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full sm:w-auto"
+              value={filterStatus}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          {/* Search and Download in one line, responsive */}
+          <div className="flex w-full sm:w-auto gap-2">
+            <div className="relative flex-1">
+              <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
+              />
+            </div>
+            <button
+              onClick={handleDownload}
+              className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            >
+              <DownloadIcon className="w-4 h-4 mr-2" />
+              Download GYM
+            </button>
+          </div>
           {userType === "AREA_MANAGER" && (
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
@@ -226,12 +361,12 @@ const ManageAllGym = () => {
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && allGyms.length === 0 && (
+      {!loading && !error && filteredGyms.length === 0 && (
         <p className="text-gray-600">No gyms available.</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allGyms.map((gym) => (
+        {paginatedGyms.map((gym) => (
           <div
             key={gym._id}
             className="bg-white p-4 rounded-lg shadow relative"
@@ -255,6 +390,9 @@ const ManageAllGym = () => {
             <h3 className="text-lg font-semibold text-gray-800">{gym.name}</h3>
             <p className="text-sm text-gray-600">
               Gym Pincode: {gym.gymPincode}
+            </p>
+            <p className="text-sm text-gray-600">
+              Assign to: {getAreaManagerName(gym.assign_id)}
             </p>
             <p className="text-sm text-gray-600">Schedule: {gym.status}</p>
             <div className="absolute bottom-4 right-4 flex space-x-2">
@@ -615,9 +753,9 @@ const ManageAllGym = () => {
           {/* Next Button */}
           <button
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={Page === totalPages}
+            disabled={Page === totalPages || totalPages === 0}
             className={`px-4 py-2 rounded-lg ${
-              Page === totalPages
+              Page === totalPages || totalPages === 0
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
