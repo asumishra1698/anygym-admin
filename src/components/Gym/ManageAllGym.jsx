@@ -27,31 +27,23 @@ import {
 const ManageAllGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    gyms: allGyms = [],
-    loading,
-    error,
-    selectedGym,
-  } = useSelector((state) => state.allGyms);
+  const gymsState = useSelector((state) => state.allGyms);
+  const allGyms = Array.isArray(gymsState.gyms) ? gymsState.gyms : [];
+  const { loading, error, selectedGym } = gymsState;
   const { areaManagers = [] } = useSelector((state) => state.areaManager);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const { amenities = [] } = useSelector((state) => state.amenity);
   const { loading: uploadLoading, error: uploadError } = useSelector(
     (state) => state.uploadGallery
   );
-
-  // Pagination and filter/search state
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
-  const [filterStatus, setFilterStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");  
   const [areaManagerDropdownOpen, setAreaManagerDropdownOpen] = useState(false);
   const [selectedAreaManagers, setSelectedAreaManagers] = useState([]);
   const areaManagerDropdownRef = useRef(null);
-
-  // Upload modal state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
@@ -61,19 +53,16 @@ const ManageAllGym = () => {
   const [uploadGymId, setUploadGymId] = useState(null);
   const [uploadStarted, setUploadStarted] = useState(false);
 
-  // Fetch gyms, amenities, and area managers
   useEffect(() => {
-    dispatch(fetchGymsRequest(1, 1000)); // fetch all gyms for client-side filtering/pagination
+    dispatch(fetchGymsRequest(1, 1000));
     dispatch(fetchAmenitiesRequest());
     dispatch(fetchAreaManagersRequest(1, 1000, ""));
   }, [dispatch]);
-
-  // Reset page to 1 when filters/search change
+ 
   useEffect(() => {
     setPage(1);
   }, [filterStatus, searchQuery, selectedAreaManagers]);
-
-  // Close upload modal after successful upload
+  
   useEffect(() => {
     if (uploadStarted && !uploadLoading && isUploadModalOpen && !uploadError) {
       setIsUploadModalOpen(false);
@@ -86,8 +75,7 @@ const ManageAllGym = () => {
       setUploadStarted(false);
     }
   }, [uploadLoading, uploadError, isUploadModalOpen, uploadStarted]);
-
-  // Close dropdown on outside click
+  
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -107,23 +95,20 @@ const ManageAllGym = () => {
     };
   }, [areaManagerDropdownOpen]);
 
-  const itemsPerPageOptions = [12, 20, 50, 100];
+  const itemsPerPageOptions = [12, 20, 50, 100, 1000, 2000];
   const userType = localStorage.getItem("userType");
-
-  // Helper to get area manager name by ID
+  
   const getAreaManagerName = (id) => {
     const manager = areaManagers.find((am) => am._id === id);
     return manager ? manager.name : id;
   };
-
-  // Handle area manager checkbox
+ 
   const handleAreaManagerCheckbox = (id) => {
     setSelectedAreaManagers((prev) =>
       prev.includes(id) ? prev.filter((amId) => amId !== id) : [...prev, id]
     );
   };
 
-  // Filter gyms based on area manager selection, status, and search
   const filteredGyms = allGyms
     .filter(
       (gym) =>
@@ -134,12 +119,10 @@ const ManageAllGym = () => {
     .filter((gym) =>
       gym.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-  // Pagination based on filtered gyms
+  
   const totalPages = Math.ceil(filteredGyms.length / limit);
   const paginatedGyms = filteredGyms.slice((Page - 1) * limit, Page * limit);
 
-  // View, status, toolkit, and upload handlers
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);

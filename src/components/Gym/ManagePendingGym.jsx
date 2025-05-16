@@ -106,11 +106,6 @@ const ManagePendingGym = () => {
     });
   };
 
-  // const handleReject = (gymId) => {
-  //   dispatch(rejectGymRequest(gymId));
-  //   navigate("/manage-rejected-gym");
-  // };
-
   const handleFileChange = (e, type) => {
     const files = Array.from(e.target.files);
     setSelectedFiles((prev) => ({
@@ -244,7 +239,12 @@ const ManagePendingGym = () => {
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {pendingGyms
-          .filter((gym) => gym.status === "Active" || gym.status === "Inactive" || gym.status === "Pending")
+          .filter(
+            (gym) =>
+              gym.status === "Active" ||
+              gym.status === "Inactive" ||
+              gym.status === "Pending"
+          )
           .map((gym) => (
             <div
               key={gym._id}

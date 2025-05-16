@@ -7,10 +7,10 @@ import {
   UPDATE_GYM_STATUS_FAILURE,
 } from "./actionTypes";
 
-
-export const fetchApprovedGymsRequest = () => {
+export const fetchApprovedGymsRequest = ({ page = 1, limit = 10, search = "" } = {}) => {
   return {
     type: FETCH_APPROVED_GYMS_REQUEST,
+    payload: { page, limit, search },
   };
 };
 

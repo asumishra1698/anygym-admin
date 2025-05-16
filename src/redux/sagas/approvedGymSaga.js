@@ -12,12 +12,18 @@ import { getRequest, putRequest } from "../../utils/apiHelper";
 import { BASE_URL, APPROVED_GYM_REQUEST_URL } from "../../config";
 import { toast } from "react-toastify";
 
-function* fetchApprovedGymsSaga() {
+function* fetchApprovedGymsSaga(action) {
   try {
+    const { page, limit } = action.payload;
     const response = yield call(
       getRequest,
-      `${BASE_URL}${APPROVED_GYM_REQUEST_URL}`
+      `${BASE_URL}${APPROVED_GYM_REQUEST_URL}`,
+      {
+        page,
+        limit: limit,
+      }
     );
+
     if (response.status === 200) {
       yield put({ type: FETCH_APPROVED_GYMS_SUCCESS, payload: response.data });
     } else {

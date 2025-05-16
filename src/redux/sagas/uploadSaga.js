@@ -11,6 +11,7 @@ import { postRequest } from "../../utils/apiHelper";
 import { BASE_URL, UPLOAD_MEDIA_URL, DELETE_MEDIA_URL } from "../../config";
 import { fetchGymsRequest } from "../actions/allGymActions";
 import { fetchApprovedGymsRequest } from "../actions/approvedGymActions";
+import { fetchPendingGymsRequest } from "../actions/pendingGymActions";
 import { toast } from "react-toastify";
 
 function* uploadGallerySaga(action) {
@@ -29,10 +30,9 @@ function* uploadGallerySaga(action) {
     });
 
     toast.success("Gallery uploaded successfully!");
-
-    // Fetch both all gyms and approved gyms after upload
     yield put(fetchGymsRequest());
     yield put(fetchApprovedGymsRequest());
+    yield put(fetchPendingGymsRequest());
   } catch (error) {
     console.error("uploadGallerySaga error:", error);
 
@@ -61,9 +61,9 @@ function* deleteMediaSaga(action) {
       },
     });
 
-    // After delete, fetch all gyms and approved gyms
     yield put(fetchGymsRequest());
     yield put(fetchApprovedGymsRequest());
+    yield put(fetchPendingGymsRequest());
   } catch (error) {
     console.error("deleteMediaSaga error:", error);
 

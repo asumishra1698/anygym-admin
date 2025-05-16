@@ -10,6 +10,10 @@ import {
 const initialState = {
   loading: false,
   gyms: [],
+  total: 0,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
   error: null,
 };
 
@@ -18,10 +22,17 @@ const approvedGymReducer = (state = initialState, action) => {
     // Fetch Approved Gyms
     case FETCH_APPROVED_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
-
     case FETCH_APPROVED_GYMS_SUCCESS:
-      return { ...state, loading: false, gyms: action.payload, error: null };
-
+      return {
+        ...state,
+        loading: false,
+        gyms: Array.isArray(action.payload.gyms) ? action.payload.gyms : [],
+        total: action.payload.total || 0,
+        page: action.payload.page || 1,
+        limit: action.payload.limit || 10,
+        totalPages: action.payload.totalPages || 1,
+        error: null,
+      };
     case FETCH_APPROVED_GYMS_FAILURE:
       return { ...state, loading: false, error: action.payload };
 

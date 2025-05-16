@@ -15,7 +15,7 @@ const initialState = {
   gyms: [],
   totalRecords: 0,
   error: null,
-  selectedGym: null, // Add this for single gym details
+  selectedGym: null, 
 };
 
 const gymReducer = (state = initialState, action) => {

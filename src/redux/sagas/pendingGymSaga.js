@@ -12,10 +12,7 @@ import {
   REJECT_GYM_REQUEST,
   FETCH_PENDING_GYMS_REQUEST,
 } from "../actions/actionTypes";
-import {
-  BASE_URL,
-  PENDING_GYM_REQUEST_URL,
-} from "../../config";
+import { BASE_URL, PENDING_GYM_REQUEST_URL } from "../../config";
 import { getRequest, postRequest } from "../../utils/apiHelper";
 
 function* fetchPendingGymsSaga() {
@@ -25,7 +22,7 @@ function* fetchPendingGymsSaga() {
       `${BASE_URL}${PENDING_GYM_REQUEST_URL}`
     );
     if (response.status === 200) {
-      yield put(fetchPendingGymsSuccess(response.data));
+      yield put(fetchPendingGymsSuccess(response.data.gyms));
     } else {
       yield put(fetchPendingGymsFailure("Failed to fetch pending gyms"));
     }
@@ -41,7 +38,7 @@ function* approveGymSaga(action) {
     const response = yield call(
       postRequest,
       `${BASE_URL}/staff/approve-gym/${gymId}`,
-      { status: "Approved" } 
+      { status: "Approved" }
     );
     if (response.status === 200) {
       yield put(approveGymSuccess(response.data));
@@ -50,7 +47,9 @@ function* approveGymSaga(action) {
     }
   } catch (error) {
     console.error("Error in approveGymSaga:", error);
-    yield put(approveGymFailure(error.response?.data?.message || "Network error"));
+    yield put(
+      approveGymFailure(error.response?.data?.message || "Network error")
+    );
   }
 }
 
@@ -60,7 +59,7 @@ function* rejectGymSaga(action) {
     const response = yield call(
       postRequest,
       `${BASE_URL}/staff/reject-gym/${gymId}`,
-      { status: "Reject", message } 
+      { status: "Reject", message }
     );
     if (response.status === 200) {
       yield put(rejectGymSuccess(response.data));
@@ -69,7 +68,9 @@ function* rejectGymSaga(action) {
     }
   } catch (error) {
     console.error("Error in rejectGymSaga:", error);
-    yield put(rejectGymFailure(error.response?.data?.message || "Network error"));
+    yield put(
+      rejectGymFailure(error.response?.data?.message || "Network error")
+    );
   }
 }
 
