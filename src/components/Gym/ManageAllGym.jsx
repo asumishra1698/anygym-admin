@@ -306,7 +306,7 @@ const ManageAllGym = () => {
               <option value="Inactive">Inactive</option>
               <option value="Pending">Pending</option>
               <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
+              <option value="Reject">Rejected</option>
             </select>
           </div>
           {/* Search and Download in one line, responsive */}
@@ -356,9 +356,9 @@ const ManageAllGym = () => {
           >
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Active"
+                gym.status === "Approved" || gym.status === "Active" || gym.status === "Accept"
                   ? "bg-green-100 text-green-800"
-                  : gym.status === "Inactive"
+                  : gym.status === "Inactive" || gym.status === "Reject"
                   ? "bg-red-100 text-red-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}
