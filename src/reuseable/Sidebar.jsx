@@ -129,7 +129,9 @@ const Sidebar = ({
               </li>
             )}
 
-            {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
+            {(userType === "ADMIN" ||
+              userType === "SUB_ADMIN" ||
+              userType === "AREA_MANAGER") && (
               <li>
                 <div
                   onClick={() => setIsGymSubmenuOpen(!isGymSubmenuOpen)}
@@ -149,7 +151,7 @@ const Sidebar = ({
                 </div>
                 {!initialIsCollapsed && isGymSubmenuOpen && (
                   <ul className="ml-8 mt-2 space-y-2">
-                    {userType === "ADMIN" && (
+                    {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
                       <li>
                         <Link
                           to="/manage-all-gym"
