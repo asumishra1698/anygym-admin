@@ -41,7 +41,7 @@ function* approveGymSaga(action) {
     const response = yield call(
       postRequest,
       `${BASE_URL}/staff/approve-gym/${gymId}`,
-      { status: "Accept" } 
+      { status: "Approved" } 
     );
     if (response.status === 200) {
       yield put(approveGymSuccess(response.data));

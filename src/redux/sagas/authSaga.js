@@ -27,7 +27,9 @@ import { postRequest } from "../../utils/apiHelper";
 function* loginSaga(action) {
   try {
     const endpoint =
-      action.payload.user_type === "ADMIN" ? ADMIN_LOGIN_URL : STAFF_LOGIN_URL;
+      action.payload.user_type === "AREA_MANAGER"
+        ? STAFF_LOGIN_URL
+        : ADMIN_LOGIN_URL;
 
     const response = yield call(
       postRequest,

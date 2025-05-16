@@ -30,7 +30,7 @@ function* fetchGymOwnersSaga(action) {
 
   try {
     const endpoint =
-      userType === "ADMIN"
+      userType === "ADMIN" || userType === "SUB_ADMIN"
         ? `${BASE_URL}${GYM_OWNER_URL}?page=${encodeURIComponent(
             page
           )}&limit=${encodeURIComponent(limit)}&search=${encodeURIComponent(

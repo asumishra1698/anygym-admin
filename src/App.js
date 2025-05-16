@@ -50,7 +50,7 @@ const App = () => {
         <Route
           path="/manage-area-manager"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <AreaManager />
             </PrivateRoute>
           }
@@ -58,7 +58,7 @@ const App = () => {
         <Route
           path="/amenities"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <Amenities />
             </PrivateRoute>
           }
@@ -66,7 +66,7 @@ const App = () => {
         <Route
           path="/edit-area-manager/:id"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <EditAreaManager />
             </PrivateRoute>
           }
@@ -74,7 +74,7 @@ const App = () => {
         <Route
           path="/add-manager"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <AddAreaManager />
             </PrivateRoute>
           }
@@ -82,7 +82,7 @@ const App = () => {
         <Route
           path="/manage-products"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <ManageProducts />
             </PrivateRoute>
           }
@@ -90,7 +90,7 @@ const App = () => {
         <Route
           path="/manage-products-category"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <ManageProductsCategory />
             </PrivateRoute>
           }
@@ -98,7 +98,7 @@ const App = () => {
         <Route
           path="/manage-reports"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <ManageReports />
             </PrivateRoute>
           }
@@ -107,7 +107,7 @@ const App = () => {
         <Route
           path="/manage-gym-owner"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <ManageGymOwner />
             </PrivateRoute>
           }
@@ -115,7 +115,7 @@ const App = () => {
         <Route
           path="/add-gym-by-area-manager"
           element={
-            <PrivateRoute allowedRoles={["AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["AREA_MANAGER", "SUB_ADMIN"]}>
               <AddGymByAreaManager />
             </PrivateRoute>
           }
@@ -123,7 +123,7 @@ const App = () => {
         <Route
           path="/add-gym-owner"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <AddGymOwner />
             </PrivateRoute>
           }
@@ -131,7 +131,7 @@ const App = () => {
         <Route
           path="/edit-gym-owner/:id"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <EditGymOwner />
             </PrivateRoute>
           }
@@ -139,7 +139,7 @@ const App = () => {
         <Route
           path="/manage-pending-gym"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <ManagePendingGym />
             </PrivateRoute>
           }
@@ -147,7 +147,7 @@ const App = () => {
         <Route
           path="/manage-approved-gym"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <ManageApprovedGym />
             </PrivateRoute>
           }
@@ -155,7 +155,7 @@ const App = () => {
         <Route
           path="/manage-rejected-gym"
           element={
-            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "AREA_MANAGER", "SUB_ADMIN"]}>
               <ManageRejectedGym />
             </PrivateRoute>
           }
@@ -163,7 +163,7 @@ const App = () => {
         <Route
           path="/manage-all-gym"
           element={
-            <PrivateRoute allowedRoles={["ADMIN"]}>
+            <PrivateRoute allowedRoles={["ADMIN", "SUB_ADMIN"]}>
               <ManageAllGym />
             </PrivateRoute>
           }

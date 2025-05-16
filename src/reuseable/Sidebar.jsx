@@ -99,7 +99,7 @@ const Sidebar = ({
               </Link>
             </li>
 
-            {userType === "ADMIN" && (
+            {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
               <li>
                 <Link
                   to="/manage-area-manager"
@@ -113,7 +113,9 @@ const Sidebar = ({
               </li>
             )}
 
-            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+            {(userType === "ADMIN" ||
+              userType === "SUB_ADMIN" ||
+              userType === "AREA_MANAGER") && (
               <li>
                 <Link
                   to="/manage-gym-owner"
@@ -127,7 +129,7 @@ const Sidebar = ({
               </li>
             )}
 
-            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+            {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
               <li>
                 <div
                   onClick={() => setIsGymSubmenuOpen(!isGymSubmenuOpen)}
@@ -270,7 +272,7 @@ const Sidebar = ({
               </li>
             )} */}
 
-            {userType === "ADMIN" && (
+            {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
               <li>
                 <div
                   onClick={() => setIsSettingSubmenuOpen(!isSettingSubmenuOpen)}
