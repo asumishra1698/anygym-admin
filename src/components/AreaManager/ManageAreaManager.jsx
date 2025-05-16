@@ -8,7 +8,7 @@ import {
   fetchAreaManagersRequest,
   updateAreaManagerStatusRequest,
 } from "../../redux/actions/areaManagerActions";
-import { exportAMDataRequest } from "../../redux/actions/exportDataActions";
+import { exportAMDataRequest } from "../../redux/actions/exportDataActions"; // Import export action
 
 const ManageAreaManager = () => {
   const dispatch = useDispatch();
@@ -20,11 +20,6 @@ const ManageAreaManager = () => {
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [toolkitOpen, setToolkitOpen] = useState(null);
-  // For gym status menu per card
-  const [gymTabMenuOpen, setGymTabMenuOpen] = useState(null);
-  const [gymStatusFilter, setGymStatusFilter] = useState({});
-
-  const userType = localStorage.getItem("userType");
 
   const {
     loading,
@@ -44,10 +39,6 @@ const ManageAreaManager = () => {
 
   const toggleToolkit = (managerId) => {
     setToolkitOpen((prev) => (prev === managerId ? null : managerId));
-  };
-
-  const toggleGymTabMenu = (managerId) => {
-    setGymTabMenuOpen((prev) => (prev === managerId ? null : managerId));
   };
 
   const handleStatusChange = (manager, newStatus) => {
@@ -149,86 +140,7 @@ const ManageAreaManager = () => {
               Registered on: {new Date(manager.createdAt).toLocaleDateString()}
             </p>
 
-            {/* Gym Status Three-Dot Menu */}
-            {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
-              <div className="relative w-full flex flex-col items-center">
-                <div className="flex justify-center w-full">
-                  <button
-                    onClick={() => toggleGymTabMenu(manager._id)}
-                    className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
-                    title="Show Gym Tabs"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v.01M12 12v.01M12 18v.01"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                {gymTabMenuOpen === manager._id && (
-                  <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white border border-gray-300 rounded-lg shadow-lg z-20 flex flex-col min-w-[160px]">
-                    {["Approved", "Pending", "Rejected"].map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => {
-                          setGymStatusFilter((prev) => ({
-                            ...prev,
-                            [manager._id]: status,
-                          }));
-                          setGymTabMenuOpen(null);
-                        }}
-                        className={`px-4 py-2 text-left ${
-                          (gymStatusFilter && gymStatusFilter[manager._id] === status) ||
-                          (!gymStatusFilter?.[manager._id] && status === "Approved")
-                            ? "bg-[#24963d] text-white"
-                            : "hover:bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {status} Gyms
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Gym List Filtered by Status */}
-            {(userType === "ADMIN" || userType === "SUB_ADMIN") && manager.gyms && (
-              <div className="mt-2 w-full">
-                <p className="font-semibold text-gray-700 mb-1">
-                  {(gymStatusFilter && gymStatusFilter[manager._id]) || "Approved"} Gyms:
-                </p>
-                <ul className="list-disc list-inside text-xs text-gray-600">
-                  {manager.gyms
-                    .filter(
-                      (gym) =>
-                        gym.status ===
-                        ((gymStatusFilter && gymStatusFilter[manager._id]) ||
-                          "Approved")
-                    )
-                    .map((gym) => (
-                      <li key={gym._id}>{gym.name}</li>
-                    ))}
-                  {manager.gyms.filter(
-                    (gym) =>
-                      gym.status ===
-                      ((gymStatusFilter && gymStatusFilter[manager._id]) ||
-                        "Approved")
-                  ).length === 0 && <li>No gyms found.</li>}
-                </ul>
-              </div>
-            )}
-
-            {/* Action Buttons and Toolkit */}
+            {/* Action Buttons */}
             <div className="flex space-x-4 mt-4 items-center">
               {/* View Button */}
               <button
@@ -239,7 +151,7 @@ const ManageAreaManager = () => {
                 <EyeIcon className="w-3 h-3" />
               </button>
 
-              {/* Toolkit (Three-Dot Menu) */}
+              {/* Three-Dot Menu */}
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(manager._id)}
@@ -363,6 +275,7 @@ const ManageAreaManager = () => {
               <strong>Mobile:</strong> {selectedManager.mobile}
             </p>
             <p>
+              {" "}
               <strong>Area Pincode :</strong> {selectedManager.areaPincode}
             </p>
             <p>
