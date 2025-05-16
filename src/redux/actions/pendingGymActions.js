@@ -11,8 +11,13 @@ import {
 } from "./actionTypes";
 
 // Fetch Pending Gyms
-export const fetchPendingGymsRequest = () => ({
+export const fetchPendingGymsRequest = ({
+  page = 1,
+  limit = 10,
+  search = "",
+} = {}) => ({
   type: FETCH_PENDING_GYMS_REQUEST,
+  payload: { page, limit, search },
 });
 
 export const fetchPendingGymsSuccess = (gyms) => ({

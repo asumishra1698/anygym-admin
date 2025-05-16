@@ -13,13 +13,26 @@ import {
 const initialState = {
   loading: false,
   gyms: [],
+  total: 0,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
   error: null,
 };
 
 const pendingGymReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_PENDING_GYMS_REQUEST:
-      return { ...state, loading: true, error: null };
+      return {
+        ...state,
+        loading: false,
+        gyms: Array.isArray(action.payload.gyms) ? action.payload.gyms : [],
+        total: action.payload.total || 0,
+        page: action.payload.page || 1,
+        limit: action.payload.limit || 10,
+        totalPages: action.payload.totalPages || 1,
+        error: null,
+      };
 
     case FETCH_PENDING_GYMS_SUCCESS:
       return { ...state, loading: false, gyms: action.payload };

@@ -15,11 +15,16 @@ import {
 import { BASE_URL, PENDING_GYM_REQUEST_URL } from "../../config";
 import { getRequest, postRequest } from "../../utils/apiHelper";
 
-function* fetchPendingGymsSaga() {
+function* fetchPendingGymsSaga(action) {
   try {
+    const { page, limit } = action.payload;
     const response = yield call(
       getRequest,
-      `${BASE_URL}${PENDING_GYM_REQUEST_URL}`
+      `${BASE_URL}${PENDING_GYM_REQUEST_URL}`,
+      {
+        page,
+        limit: limit,
+      }
     );
     if (response.status === 200) {
       yield put(fetchPendingGymsSuccess(response.data.gyms));

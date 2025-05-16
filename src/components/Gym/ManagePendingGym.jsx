@@ -34,6 +34,10 @@ const ManagePendingGym = () => {
     gyms: pendingGyms,
     loading,
     error,
+    total = 0,
+    page: currentPage = 1,
+    limit: currentLimit = 10,
+    totalPages = 1,
   } = useSelector((state) => state.pendingGyms);
 
   const selectedGym = useSelector((state) => state.gymDetails?.selectedGym);
@@ -52,9 +56,13 @@ const ManagePendingGym = () => {
   });
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(currentLimit);
+  const [search, setSearch] = useState("");
+
   useEffect(() => {
-    dispatch(fetchPendingGymsRequest());
-  }, [dispatch]);
+    dispatch(fetchPendingGymsRequest(page, limit, search));
+  }, [dispatch, page, limit, search]);
 
   // Close upload modal after upload completes
   useEffect(() => {
@@ -600,6 +608,56 @@ const ManagePendingGym = () => {
           </div>
         </div>
       )}
+
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="flex items-center space-x-2">
+          <label htmlFor="limit" className="text-gray-700">
+            Items per page:
+          </label>
+          <select
+            id="limit"
+            value={limit}
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+              setPage(1);
+            }}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            {[6, 10, 20, 50].map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page === 1}
+            className={`px-4 py-2 rounded-lg ${
+              page === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-gray-700">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page === totalPages || totalPages === 0}
+            className={`px-4 py-2 rounded-lg ${
+              page === totalPages || totalPages === 0
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#24963d] text-white hover:bg-[#24963d]"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </Layout>
   );
 };
