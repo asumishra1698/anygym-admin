@@ -161,30 +161,39 @@ const Sidebar = ({
                         </Link>
                       </li>
                     )}
-                    <li>
-                      <Link
-                        to="/manage-pending-gym"
-                        className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-                      >
-                        <span>Pending Gym</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/manage-approved-gym"
-                        className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-                      >
-                        <span>Approved Gym</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/manage-rejected-gym"
-                        className="flex items-center py-2 px-4 rounded hover:bg-green-700"
-                      >
-                        <span>Rejected Gym</span>
-                      </Link>
-                    </li>
+
+                    {userType === "AREA_MANAGER" && (
+                      <li>
+                        <Link
+                          to="/manage-pending-gym"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                        >
+                          <span>Pending Gym</span>
+                        </Link>
+                      </li>
+                    )}
+
+                    {userType === "AREA_MANAGER" && (
+                      <li>
+                        <Link
+                          to="/manage-approved-gym"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                        >
+                          <span>Approved Gym</span>
+                        </Link>
+                      </li>
+                    )}
+
+                    {userType === "AREA_MANAGER" && (
+                      <li>
+                        <Link
+                          to="/manage-rejected-gym"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                        >
+                          <span>Rejected Gym</span>
+                        </Link>
+                      </li>
+                    )}
                   </ul>
                 )}
               </li>
