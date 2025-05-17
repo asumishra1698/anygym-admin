@@ -83,7 +83,7 @@ const Sidebar = ({
         </button>
 
         {!initialIsCollapsed && (
-          <div className="p-4 text-center border-b border-green-500 bg-[#29a745] dark:border-gray-600 bg-white dark:bg-gray-900">
+          <div className="p-4 text-center border-b border-green-500 bg-[#29a745] dark:border-gray-600 dark:bg-gray-900">
             <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
           </div>
         )}
