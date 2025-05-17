@@ -31,11 +31,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Fetch Area Managers Saga with Pagination
 function* fetchAreaManagersSaga(action) {
-  const { page, perPage, searchQuery } = action.payload;
+  const { page, limit, searchQuery } = action.payload;
   try {
     const response = yield call(
       postRequest,
-      `${BASE_URL}${AREA_MANAGER_URL}?page=${page}&limit=${perPage}&search=${searchQuery}`
+      `${BASE_URL}${AREA_MANAGER_URL}?page=${page}&limit=${limit}&search=${searchQuery}`
     );
 
     if (response.status === 200) {

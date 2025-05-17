@@ -19,11 +19,11 @@ import {
 // Fetch Area Managers Actions
 export const fetchAreaManagersRequest = (
   page = 1,
-  perPage = 10,
+  limit = 10,
   searchQuery = ""
 ) => ({
   type: FETCH_AREA_MANAGERS_REQUEST,
-  payload: { page, perPage, searchQuery },
+  payload: { page, limit, searchQuery },
 });
 
 export const fetchAreaManagersSuccess = (managers) => ({

@@ -84,7 +84,7 @@ const ManageGymOwner = () => {
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
-                setCurrentPage(1); // Reset to first page on search
+                setCurrentPage(1); 
               }}
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
@@ -189,7 +189,7 @@ const ManageGymOwner = () => {
             onChange={handleLimitChange}
             className="border border-gray-300 dark:border-gray-700 rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100"
           >
-            {[5, 10, 20, 50].map((size) => (
+            {[12, 20, 50, 100, 200, 500, 1000].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>

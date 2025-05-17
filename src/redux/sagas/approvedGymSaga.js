@@ -14,14 +14,13 @@ import { toast } from "react-toastify";
 
 function* fetchApprovedGymsSaga(action) {
   try {
-    const { page, limit } = action.payload;
+    const { page = 1, limit = 12, search = "" } = action.payload || {};
+    let query = `?page=${page}&limit=${limit}`;
+    if (search) query += `&search=${encodeURIComponent(search)}`;
+
     const response = yield call(
       getRequest,
-      `${BASE_URL}${APPROVED_GYM_REQUEST_URL}`,
-      {
-        page,
-        limit: limit,
-      }
+      `${BASE_URL}${APPROVED_GYM_REQUEST_URL}${query}`
     );
 
     if (response.status === 200) {

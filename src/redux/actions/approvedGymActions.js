@@ -9,14 +9,12 @@ import {
 
 export const fetchApprovedGymsRequest = ({
   page = 1,
-  limit = 10,
+  limit = 12,
   search = "",
-} = {}) => {
-  return {
-    type: FETCH_APPROVED_GYMS_REQUEST,
-    payload: { page, limit, search },
-  };
-};
+} = {}) => ({
+  type: FETCH_APPROVED_GYMS_REQUEST,
+  payload: { page, limit, search },
+});
 
 export const fetchApprovedGymsSuccess = (gyms) => ({
   type: FETCH_APPROVED_GYMS_SUCCESS,

@@ -12,27 +12,30 @@ const initialState = {
   gyms: [],
   total: 0,
   page: 1,
-  limit: 10,
+  limit: 12,
   totalPages: 1,
   error: null,
 };
 
 const approvedGymReducer = (state = initialState, action) => {
-  switch (action.type) {
-    // Fetch Approved Gyms
+  switch (action.type) {    
     case FETCH_APPROVED_GYMS_REQUEST:
       return { ...state, loading: true, error: null };
-    case FETCH_APPROVED_GYMS_SUCCESS:
+    case FETCH_APPROVED_GYMS_SUCCESS: {
+      const payload = action.payload.data
+        ? action.payload.data
+        : action.payload;
       return {
         ...state,
         loading: false,
-        gyms: Array.isArray(action.payload.gyms) ? action.payload.gyms : [],
-        total: action.payload.total || 0,
-        page: action.payload.page || 1,
-        limit: action.payload.limit || 10,
-        totalPages: action.payload.totalPages || 1,
+        gyms: Array.isArray(payload.gyms) ? payload.gyms : [],
+        total: payload.total || 0,
+        page: payload.page || 1,
+        limit: payload.limit || 12,
+        totalPages: payload.totalPages || 1,
         error: null,
       };
+    }
     case FETCH_APPROVED_GYMS_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
