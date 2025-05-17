@@ -32,6 +32,7 @@ const ManageApprovedGym = () => {
     gyms: approvedGyms,
     loading,
     error,
+    total = 0,
     page: currentPage = 1,
     limit: currentLimit = 10,
     totalPages = 1,

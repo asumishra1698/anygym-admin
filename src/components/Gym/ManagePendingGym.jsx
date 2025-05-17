@@ -33,9 +33,9 @@ const ManagePendingGym = () => {
   const {
     gyms: pendingGyms = [],
     loading,
-    error,    
+    error,
     page: currentPage = 1,
-    limit: currentLimit = 12,   
+    limit: currentLimit = 12,
   } = useSelector((state) => state.pendingGyms);
 
   const selectedGym = useSelector((state) => state.gymDetails?.selectedGym);
@@ -205,7 +205,14 @@ const ManagePendingGym = () => {
   };
 
   // Only show gyms with these statuses
-  const gymsToShow = Array.isArray(pendingGyms) ? pendingGyms : [];
+  const gymsToShow = Array.isArray(pendingGyms)
+    ? pendingGyms.filter(
+        (gym) =>
+          gym.status === "Pending" ||
+          gym.status === "Active" ||
+          gym.status === "Inactive"
+      )
+    : [];
 
   return (
     <Layout>
