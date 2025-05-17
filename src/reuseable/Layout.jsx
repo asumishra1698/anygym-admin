@@ -96,7 +96,7 @@ const Layout = ({ children }) => {
                 // Moon SVG
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -112,7 +112,7 @@ const Layout = ({ children }) => {
                 // Sun SVG
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -140,7 +140,7 @@ const Layout = ({ children }) => {
               onMouseLeave={handleMouseLeave}
             >
               <div className="flex items-center space-x-2 cursor-pointer">
-                <UserCircleIcon className="w-8 h-8 text-gray-600 dark:text-gray-100" />
+                <UserCircleIcon className="w-9 h-9 text-gray-600 dark:text-gray-100" />
                 <span className="text-gray-800 dark:text-gray-100 font-medium">
                   {user?.name || localStorage.getItem("user")}
                 </span>

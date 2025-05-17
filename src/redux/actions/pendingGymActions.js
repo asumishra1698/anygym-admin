@@ -13,7 +13,7 @@ import {
 // Fetch Pending Gyms
 export const fetchPendingGymsRequest = ({
   page = 1,
-  limit = 10,
+  limit = 12,
   search = "",
 } = {}) => ({
   type: FETCH_PENDING_GYMS_REQUEST,

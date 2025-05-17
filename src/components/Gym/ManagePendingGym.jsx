@@ -31,13 +31,11 @@ const ManagePendingGym = () => {
 
   // Redux state
   const {
-    gyms: pendingGyms,
+    gyms: pendingGyms = [],
     loading,
-    error,
-    total = 0,
+    error,    
     page: currentPage = 1,
-    limit: currentLimit = 10,
-    totalPages = 1,
+    limit: currentLimit = 12,   
   } = useSelector((state) => state.pendingGyms);
 
   const selectedGym = useSelector((state) => state.gymDetails?.selectedGym);
@@ -56,12 +54,17 @@ const ManagePendingGym = () => {
   });
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
 
+  // Sync local page with API page
   useEffect(() => {
-    dispatch(fetchPendingGymsRequest(page, limit, search));
+    setPage(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    dispatch(fetchPendingGymsRequest({ page, limit, search }));
   }, [dispatch, page, limit, search]);
 
   // Close upload modal after upload completes
@@ -201,7 +204,9 @@ const ManagePendingGym = () => {
     dispatch(exportGymDataRequest());
   };
 
-  // Render
+  // Only show gyms with these statuses
+  const gymsToShow = Array.isArray(pendingGyms) ? pendingGyms : [];
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -247,7 +252,7 @@ const ManagePendingGym = () => {
         <p className="text-gray-600 dark:text-gray-300">Loading...</p>
       )}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && pendingGyms.length === 0 && (
+      {!loading && !error && gymsToShow.length === 0 && (
         <p className="text-gray-600 dark:text-gray-300">
           No pending gyms available.
         </p>
@@ -255,88 +260,89 @@ const ManagePendingGym = () => {
 
       {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pendingGyms
-          .filter(
-            (gym) =>
-              gym.status === "Active" ||
-              gym.status === "Inactive" ||
-              gym.status === "Pending"
-          )
-          .map((gym) => (
-            <div
-              key={gym._id}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
+        {gymsToShow.map((gym) => (
+          <div
+            key={gym._id}
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
+          >
+            {/* Status Badge */}
+            <span
+              className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                gym.status === "Approved"
+                  ? "bg-green-100 text-green-800"
+                  : gym.status === "Rejected" || gym.status === "Reject"
+                  ? "bg-red-100 text-red-800"
+                  : gym.status === "Accept"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
             >
-              {/* Status Badge */}
-              <span
-                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                  gym.status === "Approved"
-                    ? "bg-green-100 text-green-800"
-                    : gym.status === "Rejected"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+              {gym.status}
+            </span>
+
+            {/* Gym Image */}
+            <img
+              src={
+                gym.gallery &&
+                gym.gallery.gym_front_gallery &&
+                gym.gallery.gym_front_gallery.length > 0
+                  ? `${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`
+                  : "/no-image.jpg"
+              }
+              alt="Gym Front"
+              className="w-full h-40 object-cover rounded-lg mb-2"
+            />
+
+            {/* Gym Details */}
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              {gym.name}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Status: {gym.status}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Address: {gym.location.address}
+            </p>
+
+            {/* Action Icons */}
+            <div className="absolute bottom-4 right-4 flex space-x-2">
+              {/* View Icon */}
+              <button
+                onClick={() => handleViewDetails(gym)}
+                className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
+                title="View"
               >
-                {gym.status}
-              </span>
+                <EyeIcon className="w-4 h-4" />
+              </button>
 
-              {/* Gym Image */}
-              <img
-                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-                alt="Gym Front"
-                className="w-full h-40 object-cover rounded-lg mb-2"
-              />
+              <button
+                onClick={() => handleUploadClick(gym)}
+                className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
+                title="Upload"
+              >
+                <UploadIcon className="w-4 h-4" />
+              </button>
 
-              {/* Gym Details */}
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                {gym.name}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Status: {gym.status}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Address: {gym.location.address}
-              </p>
+              {/* Approve Icon */}
+              <button
+                onClick={() => handleApprove(gym._id)}
+                className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+                title="Approve"
+              >
+                <FaCheck className="w-4 h-4" />
+              </button>
 
-              {/* Action Icons */}
-              <div className="absolute bottom-4 right-4 flex space-x-2">
-                {/* View Icon */}
-                <button
-                  onClick={() => handleViewDetails(gym)}
-                  className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
-                  title="View"
-                >
-                  <EyeIcon className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => handleUploadClick(gym)}
-                  className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
-                  title="Upload"
-                >
-                  <UploadIcon className="w-4 h-4" />
-                </button>
-
-                {/* Approve Icon */}
-                <button
-                  onClick={() => handleApprove(gym._id)}
-                  className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
-                  title="Approve"
-                >
-                  <FaCheck className="w-4 h-4" />
-                </button>
-
-                {/* Reject Icon */}
-                <button
-                  onClick={() => handleReject(gym._id)}
-                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                  title="Reject"
-                >
-                  <FaTimes className="w-4 h-4" />
-                </button>
-              </div>
+              {/* Reject Icon */}
+              <button
+                onClick={() => handleReject(gym._id)}
+                className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                title="Reject"
+              >
+                <FaTimes className="w-4 h-4" />
+              </button>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
 
       {/* Gym Details Modal */}
@@ -620,6 +626,7 @@ const ManagePendingGym = () => {
         </div>
       )}
 
+      {/* Pagination Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex items-center space-x-2">
           <label htmlFor="limit" className="text-gray-700 dark:text-gray-100">
@@ -653,14 +660,12 @@ const ManagePendingGym = () => {
           >
             Previous
           </button>
-          <span className="text-gray-700 dark:text-gray-100">
-            Page {page} of {totalPages}
-          </span>
+          <span className="text-gray-700 dark:text-gray-100">Page {page}</span>
           <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages || totalPages === 0}
+            onClick={() => setPage((prev) => prev + 1)}
+            disabled={gymsToShow.length < limit}
             className={`px-4 py-2 rounded-lg ${
-              page === totalPages || totalPages === 0
+              gymsToShow.length < limit
                 ? "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}

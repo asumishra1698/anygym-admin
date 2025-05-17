@@ -73,7 +73,7 @@ const Sidebar = ({
       >
         <button
           onClick={() => setIsCollapsed(!initialIsCollapsed)}
-          className="absolute top-4 right-[-35px] bg-green-700 dark:bg-gray-700 text-white p-2 rounded-full shadow hover:bg-green-600 dark:hover:bg-gray-600 transition-all duration-300"
+          className="absolute top-4 right-[-42px] bg-green-700 dark:bg-gray-700 text-white p-2 rounded-full shadow hover:bg-green-600 dark:hover:bg-gray-600 transition-all duration-300"
         >
           {initialIsCollapsed ? (
             <BsChevronRight className="w-5 h-5" />
@@ -83,7 +83,7 @@ const Sidebar = ({
         </button>
 
         {!initialIsCollapsed && (
-          <div className="p-4 text-center border-b border-green-500 bg-[#29a745] dark:border-green-900 bg-white dark:bg-gray-900">
+          <div className="p-4 text-center border-b border-green-500 bg-[#29a745] dark:border-gray-600 bg-white dark:bg-gray-900">
             <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
           </div>
         )}
@@ -200,7 +200,7 @@ const Sidebar = ({
               </li>
             )}
 
-             {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
+            {(userType === "ADMIN" || userType === "AREA_MANAGER") && (
               <li>
                 <Link
                   to="/manage-customers"
@@ -282,7 +282,7 @@ const Sidebar = ({
                   )}
                 </Link>
               </li>
-            )} 
+            )}
 
             {(userType === "ADMIN" || userType === "SUB_ADMIN") && (
               <li>
@@ -319,7 +319,7 @@ const Sidebar = ({
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-green-500 dark:border-green-900 bg-[#29a745] dark:bg-gray-800">
+        <div className="p-4 border-t border-green-500 dark:border-gray-600 bg-[#29a745] dark:bg-gray-800">
           <button
             onClick={handleLogout}
             className="flex items-center w-full py-2 px-4 bg-black dark:bg-gray-600 rounded hover:bg-red-600 dark:hover:bg-red-700 text-white"

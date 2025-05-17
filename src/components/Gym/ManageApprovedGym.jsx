@@ -32,7 +32,6 @@ const ManageApprovedGym = () => {
     gyms: approvedGyms,
     loading,
     error,
-    total = 0,
     page: currentPage = 1,
     limit: currentLimit = 10,
     totalPages = 1,
@@ -41,6 +40,7 @@ const ManageApprovedGym = () => {
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
+  // Remove frontend filter here!
   const gymsToShow = Array.isArray(approvedGyms)
     ? approvedGyms.filter((gym) => gym.status === "Approved")
     : [];
@@ -62,6 +62,7 @@ const ManageApprovedGym = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    // Pass status: "Approved" to backend for correct pagination
     dispatch(fetchApprovedGymsRequest({ page, limit, search }));
     dispatch(fetchAmenitiesRequest());
   }, [dispatch, page, limit, search]);
@@ -225,98 +226,96 @@ const ManageApprovedGym = () => {
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && approvedGyms.length === 0 && (
+      {!loading && !error && gymsToShow.length === 0 && (
         <p className="text-gray-600 dark:text-gray-300">
           No approved gyms available.
         </p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {gymsToShow
-          .filter((gym) => gym.status === "Approved")
-          .map((gym) => (
-            <div
-              key={gym._id}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
+        {gymsToShow.map((gym) => (
+          <div
+            key={gym._id}
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
+          >
+            <span
+              className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                gym.status === "Active"
+                  ? "bg-green-100 text-green-800"
+                  : gym.status === "Inactive"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
             >
-              <span
-                className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                  gym.status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : gym.status === "Inactive"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+              {gym.status}
+            </span>
+            <img
+              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+              alt="Gym Front"
+              className="w-full h-40 object-cover rounded-lg mb-2"
+            />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              {gym.name}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Address: {gym.location.address}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Status: {gym.status}
+            </p>
+            <div className="absolute bottom-4 right-4 flex space-x-2">
+              <button
+                onClick={() => handleViewDetails(gym)}
+                className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
+                title="View"
               >
-                {gym.status}
-              </span>
-              <img
-                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-                alt="Gym Front"
-                className="w-full h-40 object-cover rounded-lg mb-2"
-              />
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                {gym.name}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Address: {gym.location.address}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Status: {gym.status}
-              </p>
-              <div className="absolute bottom-4 right-4 flex space-x-2">
-                <button
-                  onClick={() => handleViewDetails(gym)}
-                  className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
-                  title="View"
-                >
-                  <EyeIcon className="w-4 h-4" />
-                </button>
+                <EyeIcon className="w-4 h-4" />
+              </button>
 
+              <button
+                onClick={() => handleUploadClick(gym)}
+                className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
+                title="Upload"
+              >
+                <UploadIcon className="w-4 h-4" />
+              </button>
+
+              <div className="relative">
                 <button
-                  onClick={() => handleUploadClick(gym)}
+                  onClick={() => toggleToolkit(gym._id)}
                   className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
-                  title="Upload"
+                  title="More Actions"
                 >
-                  <UploadIcon className="w-4 h-4" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v.01M12 12v.01M12 18v.01"
+                    />
+                  </svg>
                 </button>
 
-                <div className="relative">
-                  <button
-                    onClick={() => toggleToolkit(gym._id)}
-                    className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
-                    title="More Actions"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                {toolkitOpen === gym._id && (
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                    <button
+                      onClick={() => handleToggleStatus(gym)}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v.01M12 12v.01M12 18v.01"
-                      />
-                    </svg>
-                  </button>
-
-                  {toolkitOpen === gym._id && (
-                    <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                      <button
-                        onClick={() => handleToggleStatus(gym)}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        {gym.status === "Active" ? "Deactivate" : "Activate"}
-                      </button>
-                    </div>
-                  )}
-                </div>
+                      {gym.status === "Active" ? "Deactivate" : "Activate"}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
 
       {isModalOpen && selectedGym && (
@@ -593,9 +592,9 @@ const ManageApprovedGym = () => {
             }}
             className="border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
           >
-            {[6, 10, 20, 50].map((option) => (
+            {[6, 10, 12, 20, 50, 100, 1000000].map((option) => (
               <option key={option} value={option}>
-                {option}
+                {option === 1000000 ? "All" : option}
               </option>
             ))}
           </select>
