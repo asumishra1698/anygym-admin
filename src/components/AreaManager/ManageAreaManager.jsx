@@ -8,7 +8,7 @@ import {
   fetchAreaManagersRequest,
   updateAreaManagerStatusRequest,
 } from "../../redux/actions/areaManagerActions";
-import { exportAMDataRequest } from "../../redux/actions/exportDataActions"; // Import export action
+import { exportAMDataRequest } from "../../redux/actions/exportDataActions";
 
 const ManageAreaManager = () => {
   const dispatch = useDispatch();
@@ -62,30 +62,30 @@ const ManageAreaManager = () => {
     <Layout>
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-100 mb-4 md:mb-0">
           Manage Area Managers
         </h2>
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
             <input
               type="text"
               placeholder="Search by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
           </div>
           <button
             onClick={handleDownload}
-            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            className="flex items-center px-3 py-3 bg-black dark:bg-gray-800 text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             <DownloadIcon className="w-4 h-4 mr-2" />
             Download AM
           </button>
           <button
             onClick={() => navigate("/add-manager")}
-            className="px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            className="px-3 py-3 bg-black dark:bg-gray-800 text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             + Add Manager
           </button>
@@ -97,7 +97,9 @@ const ManageAreaManager = () => {
 
       {/* No Data Message */}
       {!loading && !error && areaManagers.length === 0 && (
-        <p className="text-gray-600">No area managers found.</p>
+        <p className="text-gray-600 dark:text-gray-300">
+          No area managers found.
+        </p>
       )}
 
       {/* Area Manager Cards */}
@@ -105,7 +107,7 @@ const ManageAreaManager = () => {
         {areaManagers.map((manager) => (
           <div
             key={manager._id}
-            className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center relative"
           >
             {/* Status Badge */}
             <span
@@ -132,11 +134,13 @@ const ManageAreaManager = () => {
             />
 
             {/* Manager Details */}
-            <h4 className="text-sm font-bold text-gray-800">
+            <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">
               Area Manager : {manager.name}
             </h4>
-            <p className="text-sm text-gray-600">{manager.mobile}</p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              {manager.mobile}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Registered on: {new Date(manager.createdAt).toLocaleDateString()}
             </p>
 
@@ -145,7 +149,7 @@ const ManageAreaManager = () => {
               {/* View Button */}
               <button
                 onClick={() => handleView(manager)}
-                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
                 title="View"
               >
                 <EyeIcon className="w-3 h-3" />
@@ -155,7 +159,7 @@ const ManageAreaManager = () => {
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(manager._id)}
-                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
                   title="More Actions"
                 >
                   <svg
@@ -176,16 +180,16 @@ const ManageAreaManager = () => {
 
                 {/* Toolkit Dropdown */}
                 {toolkitOpen === manager._id && (
-                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                     <button
                       onClick={() => handleStatusChange(manager, "Active")}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Activate
                     </button>
                     <button
                       onClick={() => handleStatusChange(manager, "Inactive")}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Inactive
                     </button>
@@ -201,14 +205,17 @@ const ManageAreaManager = () => {
       <div className="flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0 md:space-x-4">
         {/* Items Per Page Dropdown */}
         <div className="flex items-center space-x-2">
-          <label htmlFor="itemsPerPage" className="text-gray-700">
+          <label
+            htmlFor="itemsPerPage"
+            className="text-gray-700 dark:text-gray-100"
+          >
             Items per page:
           </label>
           <select
             id="limit"
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
-            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
           >
             {itemsPerPageOptions.map((option) => (
               <option key={option} value={option}>
@@ -226,7 +233,7 @@ const ManageAreaManager = () => {
             disabled={Page === 1}
             className={`px-4 py-2 rounded-lg ${
               Page === 1
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
@@ -234,19 +241,17 @@ const ManageAreaManager = () => {
           </button>
 
           {/* Page Indicator */}
-          <span className="text-gray-700">
+          <span className="text-gray-700 dark:text-gray-100">
             Page {Page} of {totalPages}
           </span>
 
           {/* Next Button */}
           <button
-            onClick={() =>
-              setPage((prev) => Math.min(prev + 1, totalPages))
-            }
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={Page === totalPages}
             className={`px-4 py-2 rounded-lg ${
               Page === totalPages
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
@@ -258,33 +263,34 @@ const ManageAreaManager = () => {
       {/* Modal for Viewing Manager Details */}
       {isModalOpen && selectedManager && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Area Manager Details</h2>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+              Area Manager Details
+            </h2>
             <img
               src={`${MEDIA_URL}${selectedManager.profileImage}`}
               alt={selectedManager.name}
               className="w-24 h-24 rounded-full mx-auto mb-4"
             />
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Name:</strong> {selectedManager.name}
             </p>
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Email:</strong> {selectedManager.email}
             </p>
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Mobile:</strong> {selectedManager.mobile}
             </p>
-            <p>
-              {" "}
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Area Pincode :</strong> {selectedManager.areaPincode}
             </p>
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Referral Id:</strong> {selectedManager.referral_id}
             </p>
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Status:</strong> {selectedManager.status}
             </p>
-            <p>
+            <p className="text-gray-800 dark:text-gray-100">
               <strong>Registered On:</strong>{" "}
               {new Date(selectedManager.createdAt).toLocaleDateString()}
             </p>

@@ -51,6 +51,7 @@ const Sidebar = ({
 
   return (
     <>
+      {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity ${
           isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -59,7 +60,7 @@ const Sidebar = ({
       ></div>
 
       <aside
-        className={`fixed top-0 left-0 h-full bg-gradient-to-br from-green-700 to-green-800 text-white flex flex-col transition-transform duration-300 z-50 ${
+        className={`fixed top-0 left-0 h-full bg-[#29a745] dark:bg-gray-800 text-white dark:text-gray-100 flex flex-col transition-transform duration-300 z-50 ${
           isSidebarOpen || !initialIsCollapsed
             ? "translate-x-0"
             : "-translate-x-full"
@@ -67,12 +68,12 @@ const Sidebar = ({
           initialIsCollapsed ? "md:w-20" : "w-64"
         }`}
         style={{
-          background: "linear-gradient(45deg, #29a643, #1e7d34)",
+          boxShadow: "2px 0 8px rgba(0,0,0,0.07)",
         }}
       >
         <button
           onClick={() => setIsCollapsed(!initialIsCollapsed)}
-          className="absolute top-4 right-[-35px] bg-green-700 text-white p-2 rounded-full shadow hover:bg-green-600 transition-all duration-300"
+          className="absolute top-4 right-[-35px] bg-green-700 dark:bg-gray-700 text-white p-2 rounded-full shadow hover:bg-green-600 dark:hover:bg-gray-600 transition-all duration-300"
         >
           {initialIsCollapsed ? (
             <BsChevronRight className="w-5 h-5" />
@@ -82,7 +83,7 @@ const Sidebar = ({
         </button>
 
         {!initialIsCollapsed && (
-          <div className="p-4 text-center border-b border-green-700">
+          <div className="p-4 text-center border-b border-green-500 bg-[#29a745] dark:border-green-900 bg-white dark:bg-gray-900">
             <img src="/logo.webp" alt="Any Gym Logo" className="mx-auto w-48" />
           </div>
         )}
@@ -92,7 +93,7 @@ const Sidebar = ({
             <li>
               <Link
                 to="/dashboard"
-                className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
               >
                 <BsHouseDoor className="w-5 h-5" />
                 {!initialIsCollapsed && <span className="ml-3">Dashboard</span>}
@@ -103,7 +104,7 @@ const Sidebar = ({
               <li>
                 <Link
                   to="/manage-area-manager"
-                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                 >
                   <BsMap className="w-5 h-5" />
                   {!initialIsCollapsed && (
@@ -119,7 +120,7 @@ const Sidebar = ({
               <li>
                 <Link
                   to="/manage-gym-owner"
-                  className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                 >
                   <BsBuilding className="w-5 h-5" />
                   {!initialIsCollapsed && (
@@ -135,7 +136,7 @@ const Sidebar = ({
               <li>
                 <div
                   onClick={() => setIsGymSubmenuOpen(!isGymSubmenuOpen)}
-                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800 cursor-pointer"
                 >
                   <BsBuilding className="w-5 h-5" />
                   {!initialIsCollapsed && (
@@ -155,7 +156,7 @@ const Sidebar = ({
                       <li>
                         <Link
                           to="/manage-all-gym"
-                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                         >
                           <span>All Gym</span>
                         </Link>
@@ -166,7 +167,7 @@ const Sidebar = ({
                       <li>
                         <Link
                           to="/manage-pending-gym"
-                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                         >
                           <span>Pending Gym</span>
                         </Link>
@@ -177,7 +178,7 @@ const Sidebar = ({
                       <li>
                         <Link
                           to="/manage-approved-gym"
-                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                         >
                           <span>Approved Gym</span>
                         </Link>
@@ -188,7 +189,7 @@ const Sidebar = ({
                       <li>
                         <Link
                           to="/manage-rejected-gym"
-                          className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                          className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                         >
                           <span>Rejected Gym</span>
                         </Link>
@@ -287,7 +288,7 @@ const Sidebar = ({
               <li>
                 <div
                   onClick={() => setIsSettingSubmenuOpen(!isSettingSubmenuOpen)}
-                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 cursor-pointer"
+                  className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800 cursor-pointer"
                 >
                   <BsGear className="w-5 h-5" />
                   {!initialIsCollapsed && (
@@ -306,7 +307,7 @@ const Sidebar = ({
                     <li>
                       <Link
                         to="/amenities"
-                        className="flex items-center py-2 px-4 rounded hover:bg-green-700"
+                        className="flex items-center py-2 px-4 rounded hover:bg-green-700 hover:text-white dark:hover:bg-green-800"
                       >
                         <span>Amenities</span>
                       </Link>
@@ -318,10 +319,10 @@ const Sidebar = ({
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-green-700">
+        <div className="p-4 border-t border-green-500 dark:border-green-900 bg-[#29a745] dark:bg-gray-800">
           <button
             onClick={handleLogout}
-            className="flex items-center w-full py-2 px-4 bg-black rounded hover:bg-red-600"
+            className="flex items-center w-full py-2 px-4 bg-black dark:bg-gray-600 rounded hover:bg-red-600 dark:hover:bg-red-700 text-white"
           >
             <BsBoxArrowRight className="w-5 h-5" />
             {!initialIsCollapsed && <span className="ml-3">Logout</span>}

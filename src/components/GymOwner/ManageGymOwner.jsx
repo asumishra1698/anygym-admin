@@ -72,12 +72,12 @@ const ManageGymOwner = () => {
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-4 md:mb-0">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-100 mb-4 md:mb-0">
           Gym Owners
         </h2>
         <div className="flex items-center space-x-4 w-full md:w-auto">
           <div className="relative w-full md:w-auto">
-            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+            <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
             <input
               type="text"
               placeholder="Search..."
@@ -86,14 +86,14 @@ const ManageGymOwner = () => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1); // Reset to first page on search
               }}
-              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
           </div>
 
           {/* Download Button */}
           <button
             onClick={handleExport}
-            className="flex items-center px-3 py-3 bg-black text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
+            className="flex items-center px-3 py-3 bg-black dark:bg-gray-800 text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
           >
             <DownloadIcon className="w-4 h-4 mr-2" />
             Download Owners
@@ -103,14 +103,14 @@ const ManageGymOwner = () => {
 
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && gymOwners.length === 0 && (
-        <p className="text-gray-600">No gym owners found.</p>
+        <p className="text-gray-600 dark:text-gray-300">No gym owners found.</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {gymOwners.map((owner) => (
           <div
             key={owner._id}
-            className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative"
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center relative"
           >
             {/* Badge for Status */}
             <span
@@ -123,19 +123,19 @@ const ManageGymOwner = () => {
               {owner.status}
             </span>
 
-            <h4 className="text-sm font-bold text-gray-800">
+            <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">
               Gym Owner : {owner.name}
             </h4>
-            <p className="text-sm text-gray-600">Email: {owner.email}</p>
-            <p className="text-sm text-gray-600">Number: {owner.mobile}</p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">Email: {owner.email}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Number: {owner.mobile}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Registered on: {new Date(owner.createdAt).toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-600">Id on: {owner._id}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Id on: {owner._id}</p>
             <div className="flex space-x-4 mt-4 items-center">
               <button
                 onClick={() => handleView(owner)}
-                className="p-2 bg-black text-white rounded-full hover:bg-blue-700"
+                className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
                 title="View"
               >
                 <EyeIcon className="w-3 h-3" />
@@ -145,7 +145,7 @@ const ManageGymOwner = () => {
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(owner._id)}
-                  className="p-2 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300"
+                  className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
                   title="More Actions"
                 >
                   <svg
@@ -165,10 +165,10 @@ const ManageGymOwner = () => {
                 </button>
 
                 {toolkitOpen === owner._id && (
-                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                     <button
                       onClick={() => handleToggleStatus(owner)}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       {owner.status === "Active" ? "Inactive" : "Activate"}
                     </button>
@@ -183,11 +183,11 @@ const ManageGymOwner = () => {
       {/* Pagination Controls (bottom, similar to ManageAllGym) */}
       <div className="flex flex-col md:flex-row justify-between items-center mt-8">
         <div className="flex items-center space-x-2">
-          <span className="text-gray-700">Rows per page:</span>
+          <span className="text-gray-700 dark:text-gray-100">Rows per page:</span>
           <select
             value={perPage}
             onChange={handleLimitChange}
-            className="border border-gray-300 rounded px-2 py-1"
+            className="border border-gray-300 dark:border-gray-700 rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100"
           >
             {[5, 10, 20, 50].map((size) => (
               <option key={size} value={size}>
@@ -202,13 +202,13 @@ const ManageGymOwner = () => {
             disabled={currentPage === 1}
             className={`px-4 py-2 rounded-lg ${
               currentPage === 1
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
             Prev
           </button>
-          <span className="text-gray-700">
+          <span className="text-gray-700 dark:text-gray-100">
             Page {currentPage} of {totalPages}
           </span>
           <button
@@ -216,7 +216,7 @@ const ManageGymOwner = () => {
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-4 py-2 rounded-lg ${
               currentPage === totalPages || totalPages === 0
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
                 : "bg-[#24963d] text-white hover:bg-[#24963d]"
             }`}
           >
@@ -228,27 +228,27 @@ const ManageGymOwner = () => {
       {/* Owner Details Popup */}
       {isPopupOpen && selectedOwner && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Owner Details</h2>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Owner Details</h2>
               <button
                 onClick={closePopup}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
               >
                 ✕
               </button>
             </div>
             <div className="flex flex-col items-center">
-              <h3 className="text-lg font-bold text-gray-800">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
                 {selectedOwner.name}
               </h3>
-              <p className="text-sm text-gray-600">{selectedOwner.email}</p>
-              <p className="text-sm text-gray-600">{selectedOwner.mobile}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">{selectedOwner.email}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{selectedOwner.mobile}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Registered on:{" "}
                 {new Date(selectedOwner.createdAt).toLocaleDateString()}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Status: {selectedOwner.status}
               </p>
             </div>

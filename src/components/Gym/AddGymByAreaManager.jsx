@@ -112,16 +112,18 @@ const AddGymByAreaManager = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Add Gym</h1>
+      <main className="bg-gray-100 dark:bg-gray-900 overflow-y-auto min-h-screen">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+          Add Gym
+        </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {/* Gym Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Gym Name
             </label>
             <input
@@ -130,14 +132,14 @@ const AddGymByAreaManager = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter gym name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
-          {/* Gym Name */}
+          {/* Gym Owner Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Gym Owner Name
             </label>
             <input
@@ -146,14 +148,14 @@ const AddGymByAreaManager = () => {
               value={formData.gymOwnerName}
               onChange={handleChange}
               placeholder="Enter Gym Owner Name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Mobile */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Mobile
             </label>
             <input
@@ -162,14 +164,14 @@ const AddGymByAreaManager = () => {
               value={formData.mobile}
               onChange={handleChange}
               placeholder="Enter mobile number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Email
             </label>
             <input
@@ -178,14 +180,14 @@ const AddGymByAreaManager = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Address */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Address
             </label>
             <input
@@ -194,14 +196,14 @@ const AddGymByAreaManager = () => {
               value={formData.address}
               onChange={handleChange}
               placeholder="Enter address"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Longitude */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Longitude
             </label>
             <input
@@ -210,14 +212,14 @@ const AddGymByAreaManager = () => {
               value={formData.coordinates.longitude}
               onChange={handleChange}
               placeholder="Enter longitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Latitude */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Latitude
             </label>
             <input
@@ -226,14 +228,14 @@ const AddGymByAreaManager = () => {
               value={formData.coordinates.latitude}
               onChange={handleChange}
               placeholder="Enter latitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Gym Pincode */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Gym Pincode
             </label>
             <input
@@ -242,14 +244,14 @@ const AddGymByAreaManager = () => {
               value={formData.gymPincode}
               onChange={handleChange}
               placeholder="Enter gym pincode"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Opening Time */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Opening Time
             </label>
             <input
@@ -257,14 +259,14 @@ const AddGymByAreaManager = () => {
               name="opening_time"
               value={formData.opening_time}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Closing Time */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Closing Time
             </label>
             <input
@@ -272,14 +274,14 @@ const AddGymByAreaManager = () => {
               name="closing_time"
               value={formData.closing_time}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Days Open */}
           <div className="md:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Days Open
             </label>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -299,7 +301,7 @@ const AddGymByAreaManager = () => {
                     onChange={handleCheckboxChange}
                     className="form-checkbox"
                   />
-                  <span>{day}</span>
+                  <span className="dark:text-gray-100">{day}</span>
                 </label>
               ))}
             </div>
@@ -307,7 +309,7 @@ const AddGymByAreaManager = () => {
 
           {/* Amenities */}
           <div className="md:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Amenities
             </label>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -322,7 +324,7 @@ const AddGymByAreaManager = () => {
                     onChange={handleAmenitiesChange}
                     className="form-checkbox"
                   />
-                  <span>{amenity.name}</span>
+                  <span className="dark:text-gray-100">{amenity.name}</span>
                 </label>
               ))}
             </div>
@@ -331,7 +333,7 @@ const AddGymByAreaManager = () => {
           {/* Charges */}
           {["hourly", "weekly", "monthly", "yearly"].map((chargeType) => (
             <div key={chargeType}>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                 {`${
                   chargeType.charAt(0).toUpperCase() + chargeType.slice(1)
                 } Charges`}
@@ -342,32 +344,15 @@ const AddGymByAreaManager = () => {
                 value={formData[chargeType]}
                 onChange={handleChange}
                 placeholder={`Enter ${chargeType} charges`}
-                className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
                 required
               />
             </div>
           ))}
 
-          {/* Area Manager */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Area Manager
-            </label>
-            <input
-              type="text"
-              name="area_manager"
-              value={localStorage.getItem("_id") || formData.area_manager}
-              readOnly
-              onChange={handleChange}
-              placeholder="Enter area manager ID"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div> */}
-
           {/* About Gym */}
           <div className="md:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               About Gym
             </label>
             <textarea
@@ -375,7 +360,7 @@ const AddGymByAreaManager = () => {
               value={formData.about_gym}
               onChange={handleChange}
               placeholder="Enter details about the gym"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               rows="4"
               required
             ></textarea>
@@ -385,7 +370,7 @@ const AddGymByAreaManager = () => {
           <div className="md:col-span-3 flex justify-end">
             <button
               type="submit"
-              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition duration-300"
+              className="bg-black dark:bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-700 transition duration-300"
               disabled={loading}
             >
               {loading ? "Adding..." : "Add Gym"}

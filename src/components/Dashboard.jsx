@@ -148,63 +148,71 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      {loading && <div className="text-center py-8">Loading...</div>}
-      {error && <div className="text-center text-red-500 py-8">{error}</div>}
-      {!loading && !error && (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">
-                Admin Metrics
-              </h2>
-              <div className="h-64 md:h-80">
-                <Bar data={getAdminData()} options={options} />
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">
-                Active vs Inactive Area Managers
-              </h2>
-              <div className="h-64 md:h-80">
-                <Pie data={areaManagerData} />
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">
-                Active vs Inactive Gyms
-              </h2>
-              <div className="h-64 md:h-80">
-                <Pie data={gymData} />
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">
-                Active vs Inactive Gym Owners
-              </h2>
-              <div className="h-64 md:h-80">
-                <Pie data={gymOwnerData} />
-              </div>
-            </div>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+        {loading && (
+          <div className="text-center py-8 text-gray-700 dark:text-gray-200">
+            Loading...
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {adminLabels.map((label, index) => (
-              <div
-                key={label}
-                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <h2 className="text-lg font-semibold text-gray-700">{label}</h2>
-                <p className="text-4xl font-bold text-blue-600 mt-4">
-                  {getTotalCounts()[index]}
-                </p>
+        )}
+        {error && <div className="text-center text-red-500 py-8">{error}</div>}
+        {!loading && !error && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                  Admin Metrics
+                </h2>
+                <div className="h-64 md:h-80">
+                  <Bar data={getAdminData()} options={options} />
+                </div>
               </div>
-            ))}
-          </div>
-        </>
-      )}
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                  Active vs Inactive Area Managers
+                </h2>
+                <div className="h-64 md:h-80">
+                  <Pie data={areaManagerData} />
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                  Active vs Inactive Gyms
+                </h2>
+                <div className="h-64 md:h-80">
+                  <Pie data={gymData} />
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                  Active vs Inactive Gym Owners
+                </h2>
+                <div className="h-64 md:h-80">
+                  <Pie data={gymOwnerData} />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {adminLabels.map((label, index) => (
+                <div
+                  key={label}
+                  className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-100">
+                    {label}
+                  </h2>
+                  <p className="text-4xl font-bold text-blue-600 dark:text-blue-400 mt-4">
+                    {getTotalCounts()[index]}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </Layout>
   );
 };

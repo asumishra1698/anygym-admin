@@ -15,7 +15,6 @@ const AddAreaManager = () => {
     email: "",
     mobile: "",
     dob: "",
-    // referral_id: "",
     status: "Pending",
     profileImage: null,
     location: {
@@ -86,18 +85,18 @@ const AddAreaManager = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-100 overflow-y-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <main className="bg-gray-100 dark:bg-gray-900 overflow-y-auto min-h-screen">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">
           Add Area Manager
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Name
             </label>
             <input
@@ -106,14 +105,14 @@ const AddAreaManager = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter full name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Email
             </label>
             <input
@@ -122,14 +121,14 @@ const AddAreaManager = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Mobile */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Mobile
             </label>
             <input
@@ -138,14 +137,14 @@ const AddAreaManager = () => {
               value={formData.mobile}
               onChange={handleChange}
               placeholder="Enter mobile number"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* DOB */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               DOB
             </label>
             <input
@@ -153,14 +152,14 @@ const AddAreaManager = () => {
               name="dob"
               value={formData.dob}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Address */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Address
             </label>
             <input
@@ -169,14 +168,14 @@ const AddAreaManager = () => {
               value={formData.location.address}
               onChange={handleChange}
               placeholder="Enter address"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Longitude */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Longitude
             </label>
             <input
@@ -185,14 +184,14 @@ const AddAreaManager = () => {
               value={formData.location.coordinates[0]}
               onChange={handleChange}
               placeholder="Enter longitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Latitude */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Latitude
             </label>
             <input
@@ -201,14 +200,14 @@ const AddAreaManager = () => {
               value={formData.location.coordinates[1]}
               onChange={handleChange}
               placeholder="Enter latitude"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Area Pin Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Area Pin Code
             </label>
             <input
@@ -217,36 +216,21 @@ const AddAreaManager = () => {
               value={formData.areaPincode}
               onChange={handleChange}
               placeholder="Enter Area Pincode"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
-          {/* Referral ID */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Referral ID
-            </label>
-            <input
-              type="text"
-              name="referral_id"
-              value={formData.referral_id}
-              onChange={handleChange}
-              placeholder="Enter referral ID"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
-            />
-          </div> */}
-
           {/* Status */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Status
             </label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             >
               <option value="Pending">Pending</option>
@@ -256,7 +240,7 @@ const AddAreaManager = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Password
             </label>
             <input
@@ -265,14 +249,14 @@ const AddAreaManager = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Confirm Password
             </label>
             <input
@@ -281,21 +265,21 @@ const AddAreaManager = () => {
               value={formData.cpassword}
               onChange={handleChange}
               placeholder="Confirm password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               required
             />
           </div>
 
           {/* Profile Picture */}
           <div className="md:col-span-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Upload Profile Picture
             </label>
             <input
               type="file"
               name="profileImage"
               onChange={handleFileChange}
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 dark:bg-gray-900 dark:text-gray-100"
               accept="image/*"
             />
           </div>
@@ -304,7 +288,7 @@ const AddAreaManager = () => {
           <div className="md:col-span-3 flex justify-end">
             <button
               type="submit"
-              className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition duration-300"
+              className="bg-black dark:bg-gray-900 text-white py-2 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-700 transition duration-300"
             >
               Submit
             </button>
