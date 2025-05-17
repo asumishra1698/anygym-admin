@@ -40,7 +40,7 @@ const ManageAllGym = () => {
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");  
+  const [filterStatus, setFilterStatus] = useState("");
   const [areaManagerDropdownOpen, setAreaManagerDropdownOpen] = useState(false);
   const [selectedAreaManagers, setSelectedAreaManagers] = useState([]);
   const areaManagerDropdownRef = useRef(null);
@@ -58,11 +58,11 @@ const ManageAllGym = () => {
     dispatch(fetchAmenitiesRequest());
     dispatch(fetchAreaManagersRequest(1, 1000, ""));
   }, [dispatch]);
- 
+
   useEffect(() => {
     setPage(1);
   }, [filterStatus, searchQuery, selectedAreaManagers]);
-  
+
   useEffect(() => {
     if (uploadStarted && !uploadLoading && isUploadModalOpen && !uploadError) {
       setIsUploadModalOpen(false);
@@ -75,7 +75,7 @@ const ManageAllGym = () => {
       setUploadStarted(false);
     }
   }, [uploadLoading, uploadError, isUploadModalOpen, uploadStarted]);
-  
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -97,12 +97,12 @@ const ManageAllGym = () => {
 
   const itemsPerPageOptions = [12, 20, 50, 100, 1000, 2000];
   const userType = localStorage.getItem("userType");
-  
+
   const getAreaManagerName = (id) => {
     const manager = areaManagers.find((am) => am._id === id);
     return manager ? manager.name : id;
   };
- 
+
   const handleAreaManagerCheckbox = (id) => {
     setSelectedAreaManagers((prev) =>
       prev.includes(id) ? prev.filter((amId) => amId !== id) : [...prev, id]
@@ -119,7 +119,7 @@ const ManageAllGym = () => {
     .filter((gym) =>
       gym.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  
+
   const totalPages = Math.ceil(filteredGyms.length / limit);
   const paginatedGyms = filteredGyms.slice((Page - 1) * limit, Page * limit);
 
@@ -224,7 +224,6 @@ const ManageAllGym = () => {
             fileUrl,
           })
         );
-        // Refresh gym details in modal if open
         if (isModalOpen && selectedGym && selectedGym._id === gymId) {
           dispatch(fetchGymByIdRequest(gymId));
         }
@@ -356,7 +355,9 @@ const ManageAllGym = () => {
           >
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
-                gym.status === "Approved" || gym.status === "Active" || gym.status === "Accept"
+                gym.status === "Approved" ||
+                gym.status === "Active" ||
+                gym.status === "Accept"
                   ? "bg-green-100 text-green-800"
                   : gym.status === "Inactive" || gym.status === "Reject"
                   ? "bg-red-100 text-red-800"
