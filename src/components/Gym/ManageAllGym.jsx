@@ -27,29 +27,39 @@ import {
 const ManageAllGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const gymsState = useSelector((state) => state.allGyms);
-  const allGyms = Array.isArray(gymsState.gyms) ? gymsState.gyms : [];
-  const { loading, error, selectedGym } = gymsState;
+  const {
+    gyms = [],
+    loading,
+    error,
+    selectedGym,
+  } = useSelector((state) => state.allGyms);
+  const allGyms = Array.isArray(gyms) ? gyms : [];
+
   const { areaManagers = [] } = useSelector((state) => state.areaManager);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const { amenities = [] } = useSelector((state) => state.amenity);
+
   const { loading: uploadLoading, error: uploadError } = useSelector(
     (state) => state.uploadGallery
   );
+
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [searchQuery, setSearchQuery] = useState("");
+
   const [filterStatus, setFilterStatus] = useState("");
   const [areaManagerDropdownOpen, setAreaManagerDropdownOpen] = useState(false);
   const [selectedAreaManagers, setSelectedAreaManagers] = useState([]);
   const areaManagerDropdownRef = useRef(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
     service: [],
     videos: [],
   });
+
   const [uploadGymId, setUploadGymId] = useState(null);
   const [uploadStarted, setUploadStarted] = useState(false);
 
@@ -96,7 +106,9 @@ const ManageAllGym = () => {
   }, [areaManagerDropdownOpen]);
 
   const itemsPerPageOptions = [12, 20, 50, 100, 1000, 2000];
-  const userType = localStorage.getItem("userType");
+  const userType =
+    useSelector((state) => state.auth?.userType) ||
+    localStorage.getItem("userType");
 
   const getAreaManagerName = (id) => {
     const manager = areaManagers.find((am) => am._id === id);
