@@ -84,7 +84,7 @@ const ManageGymOwner = () => {
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
-                setCurrentPage(1); 
+                setCurrentPage(1);
               }}
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
@@ -126,12 +126,18 @@ const ManageGymOwner = () => {
             <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">
               Gym Owner : {owner.name}
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Email: {owner.email}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Number: {owner.mobile}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Email: {owner.email}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Number: {owner.mobile}
+            </p>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Registered on: {new Date(owner.createdAt).toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Id on: {owner._id}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Id on: {owner._id}
+            </p>
             <div className="flex space-x-4 mt-4 items-center">
               <button
                 onClick={() => handleView(owner)}
@@ -183,7 +189,9 @@ const ManageGymOwner = () => {
       {/* Pagination Controls (bottom, similar to ManageAllGym) */}
       <div className="flex flex-col md:flex-row justify-between items-center mt-8">
         <div className="flex items-center space-x-2">
-          <span className="text-gray-700 dark:text-gray-100">Rows per page:</span>
+          <span className="text-gray-700 dark:text-gray-100">
+            Rows per page:
+          </span>
           <select
             value={perPage}
             onChange={handleLimitChange}
@@ -230,7 +238,9 @@ const ManageGymOwner = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Owner Details</h2>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+                Owner Details
+              </h2>
               <button
                 onClick={closePopup}
                 className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
@@ -242,8 +252,12 @@ const ManageGymOwner = () => {
               <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
                 {selectedOwner.name}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{selectedOwner.email}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{selectedOwner.mobile}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                {selectedOwner.email}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                {selectedOwner.mobile}
+              </p>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Registered on:{" "}
                 {new Date(selectedOwner.createdAt).toLocaleDateString()}

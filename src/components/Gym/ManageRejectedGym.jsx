@@ -13,7 +13,6 @@ import { MEDIA_URL } from "../../config";
 const ManageRejectedGym = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userType = localStorage.getItem("userType");
 
   // Fetch gyms from Redux state
   const {
@@ -32,6 +31,9 @@ const ManageRejectedGym = () => {
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
   const { amenities = [] } = useSelector((state) => state.amenity);
+  const userType =
+    useSelector((state) => state.auth?.userType) ||
+    localStorage.getItem("userType");
 
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest({ page, limit, search }));
@@ -213,7 +215,7 @@ const ManageRejectedGym = () => {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
-               <p className="text-sm text-gray-600 dark:text-gray-300">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                   <strong>Amenities:</strong>{" "}
                   {getAmenityNames(selectedGym.amenities)}
                 </p>

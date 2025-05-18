@@ -24,8 +24,6 @@ import {
 import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
 import { MEDIA_URL } from "../../config";
 
-const userType = localStorage.getItem("userType");
-
 const ManagePendingGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,6 +52,10 @@ const ManagePendingGym = () => {
     videos: [],
   });
   const [uploadCompleted, setUploadCompleted] = useState(false);
+  const userType =
+    useSelector((state) => state.auth?.userType) ||
+    localStorage.getItem("userType");
+
 
   const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(currentLimit);
@@ -427,9 +429,9 @@ const ManagePendingGym = () => {
                       {selectedGym.charges.yearly}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                      <strong>Amenities:</strong>{" "}
-                      {getAmenityNames(selectedGym.amenities)}
-                    </p>
+                  <strong>Amenities:</strong>{" "}
+                  {getAmenityNames(selectedGym.amenities)}
+                </p>
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">

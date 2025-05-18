@@ -23,8 +23,6 @@ import {
 } from "../../redux/actions/uploadActions";
 import { MEDIA_URL } from "../../config";
 
-const userType = localStorage.getItem("userType");
-
 const ManageApprovedGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,6 +59,9 @@ const ManageApprovedGym = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
+  const userType =
+    useSelector((state) => state.auth?.userType) ||
+    localStorage.getItem("userType");
 
   useEffect(() => {
     // Pass status: "Approved" to backend for correct pagination
