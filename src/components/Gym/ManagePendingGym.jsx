@@ -15,6 +15,7 @@ import {
   approveGymRequest,
   rejectGymRequest,
 } from "../../redux/actions/pendingGymActions";
+import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import {
   uploadGalleryRequest,
@@ -57,6 +58,7 @@ const ManagePendingGym = () => {
   const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
+  const { amenities = [] } = useSelector((state) => state.amenity);
 
   // Sync local page with API page
   useEffect(() => {
@@ -65,6 +67,7 @@ const ManagePendingGym = () => {
 
   useEffect(() => {
     dispatch(fetchPendingGymsRequest({ page, limit, search }));
+    dispatch(fetchAmenitiesRequest());
   }, [dispatch, page, limit, search]);
 
   // Close upload modal after upload completes
@@ -79,6 +82,18 @@ const ManagePendingGym = () => {
       setUploadCompleted(false);
     }
   }, [uploadCompleted, isUploadModalOpen, uploadLoading]);
+
+  const getAmenityNames = (amenityIds) => {
+    if (!Array.isArray(amenityIds) || amenityIds.length === 0) {
+      return "No Amenities Available";
+    }
+    return amenityIds
+      .map((id) => {
+        const amenity = amenities.find((item) => item._id === id);
+        return amenity ? amenity.name : "Unknown Amenity";
+      })
+      .join(", ");
+  };
 
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
@@ -413,9 +428,7 @@ const ManagePendingGym = () => {
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                       <strong>Amenities:</strong>{" "}
-                      {Array.isArray(selectedGym.amenities)
-                        ? selectedGym.amenities.join(", ")
-                        : ""}
+                      {getAmenityNames(selectedGym.amenities)}
                     </p>
                   </div>
                   <div>

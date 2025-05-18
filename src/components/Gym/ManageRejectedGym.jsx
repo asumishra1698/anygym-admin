@@ -6,6 +6,7 @@ import Layout from "../../reuseable/Layout";
 import { fetchApprovedGymsRequest } from "../../redux/actions/approvedGymActions";
 import { exportGymDataRequest } from "../../redux/actions/exportDataActions";
 import { fetchGymByIdRequest } from "../../redux/actions/allGymActions";
+import { fetchAmenitiesRequest } from "../../redux/actions/amenityActions";
 
 import { MEDIA_URL } from "../../config";
 
@@ -30,9 +31,11 @@ const ManageRejectedGym = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
+  const { amenities = [] } = useSelector((state) => state.amenity);
 
   useEffect(() => {
     dispatch(fetchApprovedGymsRequest({ page, limit, search }));
+    dispatch(fetchAmenitiesRequest());
   }, [dispatch, page, limit, search]);
 
   const handleViewDetails = (gym) => {
@@ -41,6 +44,18 @@ const ManageRejectedGym = () => {
   };
   const handleDownload = () => {
     dispatch(exportGymDataRequest());
+  };
+
+  const getAmenityNames = (amenityIds) => {
+    if (!Array.isArray(amenityIds) || amenityIds.length === 0) {
+      return "No Amenities Available";
+    }
+    return amenityIds
+      .map((id) => {
+        const amenity = amenities.find((item) => item._id === id);
+        return amenity ? amenity.name : "Unknown Amenity";
+      })
+      .join(", ");
   };
 
   return (
@@ -198,8 +213,9 @@ const ManageRejectedGym = () => {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Amenities:</strong> {selectedGym.amenities.join(", ")}
+               <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <strong>Amenities:</strong>{" "}
+                  {getAmenityNames(selectedGym.amenities)}
                 </p>
               </div>
 
