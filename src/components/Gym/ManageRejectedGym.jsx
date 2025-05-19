@@ -28,7 +28,6 @@ const ManageRejectedGym = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Fetch gyms from Redux state
   const {
     gyms: allGyms,
     loading,
@@ -40,6 +39,7 @@ const ManageRejectedGym = () => {
   } = useSelector((state) => state.approvedGyms);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAnimation, setModalAnimation] = useState(false);
   const selectedGym = useSelector((state) => state.allGyms.selectedGym);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(currentLimit);
@@ -57,7 +57,14 @@ const ManageRejectedGym = () => {
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
+    setTimeout(() => setModalAnimation(true), 10);
   };
+
+  const closeModal = () => {
+    setModalAnimation(false);
+    setTimeout(() => setIsModalOpen(false), 200);
+  };
+
   const handleDownload = () => {
     dispatch(exportGymDataRequest());
   };
@@ -73,6 +80,7 @@ const ManageRejectedGym = () => {
       })
       .join(", ");
   };
+
   const handleDeleteMedia = (gymId, type, fileUrl) => {
     Swal.fire({
       title: "Are you sure?",
@@ -95,6 +103,11 @@ const ManageRejectedGym = () => {
       }
     });
   };
+
+  const rejectedGyms = Array.isArray(allGyms)
+    ? allGyms.filter((gym) => gym.status === "Reject")
+    : [];
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -102,7 +115,6 @@ const ManageRejectedGym = () => {
           Rejected Gyms
         </h2>
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          {/* Search Input */}
           <div className="relative w-full md:w-auto">
             <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
             <input
@@ -116,8 +128,6 @@ const ManageRejectedGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
           </div>
-
-          {/* Add Gym Button */}
           {userType === "AREA_MANAGER" && (
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
@@ -126,7 +136,6 @@ const ManageRejectedGym = () => {
               + Add Gym
             </button>
           )}
-
           <button
             onClick={handleDownload}
             className="flex items-center px-3 py-3 bg-black dark:bg-gray-800 text-white text-xs font-medium rounded-lg shadow hover:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 whitespace-nowrap"
@@ -137,69 +146,60 @@ const ManageRejectedGym = () => {
         </div>
       </div>
 
-      {/* Loading, Error, and Empty States */}
       {loading && (
         <p className="text-gray-600 dark:text-gray-300">Loading...</p>
       )}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading &&
-        !error &&
-        allGyms.filter((gym) => gym.status === "Reject").length === 0 && (
-          <p className="text-gray-600 dark:text-gray-300">
-            No rejected gyms available.
-          </p>
-        )}
+      {!loading && !error && rejectedGyms.length === 0 && (
+        <p className="text-gray-600 dark:text-gray-300">
+          No rejected gyms available.
+        </p>
+      )}
 
-      {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allGyms
-          .filter((gym) => gym.status === "Reject")
-          .map((gym) => (
-            <div
-              key={gym._id}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
-            >
-              {/* Status Badge */}
-              <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
-                Rejected
-              </span>
-
-              {/* Gym Image */}
-              <img
-                src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
-                alt="Gym Front"
-                className="w-full h-40 object-cover rounded-lg mb-2"
-              />
-
-              {/* Gym Details */}
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                {gym.name}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Address: {gym.location.address}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Status: {gym.status}
-              </p>
-
-              {/* Action Icons */}
-              <div className="absolute bottom-4 right-4 flex space-x-2">
-                {/* View Icon */}
-                <button
-                  onClick={() => handleViewDetails(gym)}
-                  className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
-                  title="View"
-                >
-                  <EyeIcon className="w-4 h-4" />
-                </button>
-              </div>
+        {rejectedGyms.map((gym) => (
+          <div
+            key={gym._id}
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
+          >
+            <span className="absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded bg-red-100 text-red-800">
+              Rejected
+            </span>
+            <img
+              src={`${MEDIA_URL}${gym.gallery.gym_front_gallery[0]}`}
+              alt="Gym Front"
+              className="w-full h-40 object-cover rounded-lg mb-2"
+            />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              {gym.name}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Address: {gym.location.address}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Status: {gym.status}
+            </p>
+            <div className="absolute bottom-4 right-4 flex space-x-2">
+              <button
+                onClick={() => handleViewDetails(gym)}
+                className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
+                title="View"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </button>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
 
       {isModalOpen && selectedGym && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all">
+          <div
+            className={`bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all duration-200
+              ${modalAnimation ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+            `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <div className="flex justify-between items-center px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-t-3xl">
               <div className="flex items-center gap-4">
                 <FaBuilding className="text-blue-500 w-8 h-8" />
@@ -208,14 +208,13 @@ const ManageRejectedGym = () => {
                 </h2>
               </div>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-red-500 transition"
                 title="Close"
               >
                 <FaTimes className="w-7 h-7" />
               </button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 py-8">
               <div className="space-y-5">
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
@@ -232,6 +231,7 @@ const ManageRejectedGym = () => {
                     {selectedGym.location.coordinates.join(", ")}
                   </span>
                 </div>
+
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
                   <FaClock className="text-yellow-600" />
                   <span>
@@ -240,6 +240,7 @@ const ManageRejectedGym = () => {
                     {selectedGym.schedule.closing_time}
                   </span>
                 </div>
+
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
                   <FaCalendarAlt className="text-purple-600" />
                   <span>
@@ -247,6 +248,8 @@ const ManageRejectedGym = () => {
                     {selectedGym.schedule.day.join(", ")}
                   </span>
                 </div>
+                
+
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
                   {selectedGym.status === "Active" && (
                     <FaCheckCircle className="text-green-600" />
@@ -266,6 +269,13 @@ const ManageRejectedGym = () => {
                   <span>
                     <span className="font-semibold">Status:</span>{" "}
                     {selectedGym.status}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
+                  <FaClock className="text-yellow-600" />
+                  <span>
+                    <span className="font-semibold">Reject Reason: </span>
+                    {selectedGym.rejection_reason}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -307,7 +317,6 @@ const ManageRejectedGym = () => {
                   </span>
                 </div>
               </div>
-
               <div className="space-y-8">
                 <div>
                   <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">

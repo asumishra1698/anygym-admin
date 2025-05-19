@@ -22,7 +22,6 @@ import {
 } from "react-icons/fa";
 import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
-
 import {
   fetchApprovedGymsRequest,
   updateGymStatusRequest,
@@ -52,16 +51,17 @@ const ManageApprovedGym = () => {
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
-  // Remove frontend filter here!
   const gymsToShow = Array.isArray(approvedGyms)
     ? approvedGyms.filter((gym) => gym.status === "Approved")
     : [];
   const [toolkitOpen, setToolkitOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAnimation, setModalAnimation] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadModalAnimation, setUploadModalAnimation] = useState(false);
   const selectedGym = useSelector((state) => state.allGyms.selectedGym);
   const { amenities = [] } = useSelector((state) => state.amenity);
 
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
     service: [],
@@ -77,15 +77,14 @@ const ManageApprovedGym = () => {
     localStorage.getItem("userType");
 
   useEffect(() => {
-    // Pass status: "Approved" to backend for correct pagination
     dispatch(fetchApprovedGymsRequest({ page, limit, search }));
     dispatch(fetchAmenitiesRequest());
   }, [dispatch, page, limit, search]);
 
-  // Close upload modal after upload completes
   useEffect(() => {
     if (uploadCompleted && isUploadModalOpen && !uploadLoading) {
-      setIsUploadModalOpen(false);
+      setUploadModalAnimation(false);
+      setTimeout(() => setIsUploadModalOpen(false), 200);
       setSelectedFiles({
         gymFront: [],
         service: [],
@@ -110,6 +109,12 @@ const ManageApprovedGym = () => {
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
+    setTimeout(() => setModalAnimation(true), 10);
+  };
+
+  const closeModal = () => {
+    setModalAnimation(false);
+    setTimeout(() => setIsModalOpen(false), 200);
   };
 
   const handleToggleStatus = (gym) => {
@@ -133,6 +138,12 @@ const ManageApprovedGym = () => {
   const handleUploadClick = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsUploadModalOpen(true);
+    setTimeout(() => setUploadModalAnimation(true), 10);
+  };
+
+  const closeUploadModal = () => {
+    setUploadModalAnimation(false);
+    setTimeout(() => setIsUploadModalOpen(false), 200);
   };
 
   const handleUploadSubmit = (e) => {
@@ -163,11 +174,7 @@ const ManageApprovedGym = () => {
     );
     selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
 
-    dispatch(
-      uploadGalleryRequest({
-        formData,
-      })
-    );
+    dispatch(uploadGalleryRequest({ formData }));
     setUploadCompleted(true);
   };
 
@@ -189,13 +196,7 @@ const ManageApprovedGym = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(
-          deleteMediaRequest({
-            gymId,
-            type,
-            fileUrl,
-          })
-        );
+        dispatch(deleteMediaRequest({ gymId, type, fileUrl }));
         Swal.fire("Deleted!", "Your media has been deleted.", "success");
       }
     });
@@ -286,7 +287,6 @@ const ManageApprovedGym = () => {
               >
                 <EyeIcon className="w-4 h-4" />
               </button>
-
               <button
                 onClick={() => handleUploadClick(gym)}
                 className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -294,7 +294,6 @@ const ManageApprovedGym = () => {
               >
                 <UploadIcon className="w-4 h-4" />
               </button>
-
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(gym._id)}
@@ -316,7 +315,6 @@ const ManageApprovedGym = () => {
                     />
                   </svg>
                 </button>
-
                 {toolkitOpen === gym._id && (
                   <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                     <button
@@ -335,7 +333,12 @@ const ManageApprovedGym = () => {
 
       {isModalOpen && selectedGym && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all">
+          <div
+            className={`bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all duration-200
+              ${modalAnimation ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+            `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <div className="flex justify-between items-center px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-t-3xl">
               <div className="flex items-center gap-4">
                 <FaBuilding className="text-blue-500 w-8 h-8" />
@@ -344,14 +347,13 @@ const ManageApprovedGym = () => {
                 </h2>
               </div>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-red-500 transition"
                 title="Close"
               >
                 <FaTimes className="w-7 h-7" />
               </button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 py-8">
               <div className="space-y-5">
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
@@ -443,7 +445,6 @@ const ManageApprovedGym = () => {
                   </span>
                 </div>
               </div>
-
               <div className="space-y-8">
                 <div>
                   <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
@@ -546,7 +547,16 @@ const ManageApprovedGym = () => {
 
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div
+            className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md transition-all duration-200
+              ${
+                uploadModalAnimation
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-95"
+              }
+            `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Upload Gym Images and Videos
             </h2>
@@ -581,7 +591,6 @@ const ManageApprovedGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Service Images
@@ -612,7 +621,6 @@ const ManageApprovedGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Gym Videos
@@ -643,7 +651,6 @@ const ManageApprovedGym = () => {
                   ))}
                 </div>
               </div>
-
               <button
                 type="submit"
                 className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
@@ -652,7 +659,7 @@ const ManageApprovedGym = () => {
               </button>
             </form>
             <button
-              onClick={() => setIsUploadModalOpen(false)}
+              onClick={closeUploadModal}
               className="mt-4 w-full bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-100 py-2 px-4 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-300"
             >
               Cancel

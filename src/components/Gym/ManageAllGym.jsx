@@ -8,7 +8,6 @@ import {
   DownloadIcon,
   SelectorIcon,
 } from "@heroicons/react/solid";
-
 import {
   FaMapMarkerAlt,
   FaClock,
@@ -22,7 +21,6 @@ import {
   FaVideo,
   FaImage,
 } from "react-icons/fa";
-
 import Layout from "../../reuseable/Layout";
 import {
   fetchGymsRequest,
@@ -49,34 +47,31 @@ const ManageAllGym = () => {
     selectedGym,
   } = useSelector((state) => state.allGyms);
   const allGyms = Array.isArray(gyms) ? gyms : [];
-
   const { areaManagers = [] } = useSelector((state) => state.areaManager);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [toolkitOpen, setToolkitOpen] = useState(null);
   const { amenities = [] } = useSelector((state) => state.amenity);
-
   const { loading: uploadLoading, error: uploadError } = useSelector(
     (state) => state.uploadGallery
   );
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toolkitOpen, setToolkitOpen] = useState(null);
   const [Page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [modalAnimation, setModalAnimation] = useState(false);
   const [filterStatus, setFilterStatus] = useState("");
   const [areaManagerDropdownOpen, setAreaManagerDropdownOpen] = useState(false);
   const [selectedAreaManagers, setSelectedAreaManagers] = useState([]);
   const areaManagerDropdownRef = useRef(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
     service: [],
     videos: [],
   });
-
   const [uploadGymId, setUploadGymId] = useState(null);
   const [uploadStarted, setUploadStarted] = useState(false);
+  const [areaManagerSearch, setAreaManagerSearch] = useState("");
 
   useEffect(() => {
     dispatch(fetchGymsRequest(1, 1000));
@@ -153,6 +148,7 @@ const ManageAllGym = () => {
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
+    setTimeout(() => setModalAnimation(true), 10);
   };
 
   const handleToggleStatus = (gym) => {
@@ -188,16 +184,25 @@ const ManageAllGym = () => {
   const handleUploadClick = (gym) => {
     setUploadGymId(gym._id);
     setIsUploadModalOpen(true);
+    setTimeout(() => setModalAnimation(true), 10);
+  };
+
+  const closeModal = () => {
+    setModalAnimation(false);
+    setTimeout(() => setIsModalOpen(false), 200);
+  };
+
+  const closeUploadModal = () => {
+    setModalAnimation(false);
+    setTimeout(() => setIsUploadModalOpen(false), 200);
   };
 
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-
     if (!uploadGymId) {
       alert("Gym ID is required.");
       return;
     }
-
     if (
       selectedFiles.gymFront.length === 0 &&
       selectedFiles.service.length === 0 &&
@@ -206,10 +211,8 @@ const ManageAllGym = () => {
       alert("Please select files to upload.");
       return;
     }
-
     const formData = new FormData();
     formData.append("gym_id", uploadGymId);
-
     selectedFiles.gymFront.forEach((file) =>
       formData.append("gym_front_gallery", file)
     );
@@ -217,13 +220,8 @@ const ManageAllGym = () => {
       formData.append("service_gallery", file)
     );
     selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
-
     setUploadStarted(true);
-    dispatch(
-      uploadGalleryRequest({
-        formData,
-      })
-    );
+    dispatch(uploadGalleryRequest({ formData }));
   };
 
   const handleDeleteFile = (type, index) => {
@@ -244,13 +242,7 @@ const ManageAllGym = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(
-          deleteMediaRequest({
-            gymId,
-            type,
-            fileUrl,
-          })
-        );
+        dispatch(deleteMediaRequest({ gymId, type, fileUrl }));
         if (isModalOpen && selectedGym && selectedGym._id === gymId) {
           dispatch(fetchGymByIdRequest(gymId));
         }
@@ -262,8 +254,6 @@ const ManageAllGym = () => {
   const handleDownload = () => {
     dispatch(exportGymDataRequest());
   };
-
-  const [areaManagerSearch, setAreaManagerSearch] = useState("");
 
   return (
     <Layout>
@@ -286,11 +276,9 @@ const ManageAllGym = () => {
               </span>
               <SelectorIcon className="w-4 h-4 text-gray-500 dark:text-gray-300" />
             </button>
-
             {areaManagerDropdownOpen && (
               <div className="absolute left-0 mt-2 w-56 max-h-64 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20">
                 <div className="p-2">
-                  {/* Search input for area managers */}
                   <input
                     type="text"
                     placeholder="Search Area Manager..."
@@ -329,7 +317,6 @@ const ManageAllGym = () => {
               </div>
             )}
           </div>
-          {/* Filter Dropdown */}
           <div className="relative w-full sm:w-auto">
             <select
               className="border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full sm:w-auto dark:bg-gray-800 dark:text-gray-100"
@@ -347,7 +334,6 @@ const ManageAllGym = () => {
               <option value="Reject">Rejected</option>
             </select>
           </div>
-          {/* Search and Download in one line, responsive */}
           <div className="flex w-full sm:w-auto gap-2">
             <div className="relative flex-1">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
@@ -420,7 +406,7 @@ const ManageAllGym = () => {
               Assign to: {getAreaManagerName(gym.assign_id)}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Schedule: {gym.status}
+              Status: {gym.status}
             </p>
             <div className="absolute bottom-4 right-4 flex space-x-2">
               <button
@@ -437,7 +423,6 @@ const ManageAllGym = () => {
               >
                 <UploadIcon className="w-4 h-4" />
               </button>
-              {/* Three-Dot Menu */}
               <div className="relative">
                 <button
                   onClick={() => toggleToolkit(gym._id)}
@@ -459,7 +444,6 @@ const ManageAllGym = () => {
                     />
                   </svg>
                 </button>
-
                 {toolkitOpen === gym._id && (
                   <div className="absolute left-0 bottom-8 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                     <button
@@ -476,151 +460,14 @@ const ManageAllGym = () => {
         ))}
       </div>
 
-      {/* {isModalOpen && selectedGym && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-y-auto max-h-screen">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-                {selectedGym.name}
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Address:</strong> {selectedGym.location.address}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Coordinates:</strong>{" "}
-                  {selectedGym.location.coordinates.join(", ")}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Schedule:</strong> {selectedGym.schedule.opening_time}{" "}
-                  - {selectedGym.schedule.closing_time}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Days:</strong> {selectedGym.schedule.day.join(", ")}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Status:</strong> {selectedGym.status}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Hourly Charges:</strong> ₹{selectedGym.charges.hourly}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Weekly Charges:</strong> ₹{selectedGym.charges.weekly}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Monthly Charges:</strong> ₹
-                  {selectedGym.charges.monthly}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Yearly Charges:</strong> ₹{selectedGym.charges.yearly}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <strong>Amenities:</strong>{" "}
-                  {getAmenityNames(selectedGym.amenities)}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                  GYM Front
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {selectedGym.gallery.gym_front_gallery.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={`${MEDIA_URL}${image}`}
-                        alt={`Gallery ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg shadow"
-                      />
-                      <button
-                        onClick={() =>
-                          handleDeleteMedia(
-                            selectedGym._id,
-                            "gym_front_gallery",
-                            image
-                          )
-                        }
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="mt-6">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                <strong>About:</strong> {selectedGym.about_gym}
-              </p>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Service Gallery
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {selectedGym.gallery.service_gallery.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={`${MEDIA_URL}${image}`}
-                      alt={`Service ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg shadow"
-                    />
-                    <button
-                      onClick={() =>
-                        handleDeleteMedia(
-                          selectedGym._id,
-                          "service_gallery",
-                          image
-                        )
-                      }
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Videos
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedGym.gallery.gym_video.map((video, index) => (
-                  <div key={index} className="relative">
-                    <video
-                      controls
-                      className="w-full h-40 object-cover rounded-lg shadow"
-                    >
-                      <source src={`${MEDIA_URL}${video}`} type="video/mp4" />
-                    </video>
-                    <button
-                      onClick={() =>
-                        handleDeleteMedia(selectedGym._id, "gym_video", video)
-                      }
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       {isModalOpen && selectedGym && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all">
+          <div
+            className={`bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all duration-200
+        ${modalAnimation ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+      `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <div className="flex justify-between items-center px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-t-3xl">
               <div className="flex items-center gap-4">
                 <FaBuilding className="text-blue-500 w-8 h-8" />
@@ -629,14 +476,13 @@ const ManageAllGym = () => {
                 </h2>
               </div>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-red-500 transition"
                 title="Close"
               >
                 <FaTimes className="w-7 h-7" />
               </button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 py-8">
               <div className="space-y-5">
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
@@ -728,7 +574,6 @@ const ManageAllGym = () => {
                   </span>
                 </div>
               </div>
-
               <div className="space-y-8">
                 <div>
                   <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
@@ -831,7 +676,12 @@ const ManageAllGym = () => {
 
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div
+            className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md transition-all duration-200
+        ${modalAnimation ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+      `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Upload Gym Images and Videos
             </h2>
@@ -866,7 +716,6 @@ const ManageAllGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Service Images
@@ -897,7 +746,6 @@ const ManageAllGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Gym Videos
@@ -928,7 +776,6 @@ const ManageAllGym = () => {
                   ))}
                 </div>
               </div>
-
               <button
                 type="submit"
                 className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
@@ -937,7 +784,7 @@ const ManageAllGym = () => {
               </button>
             </form>
             <button
-              onClick={() => setIsUploadModalOpen(false)}
+              onClick={closeUploadModal}
               className="mt-4 w-full bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-100 py-2 px-4 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-300"
             >
               Cancel
@@ -946,7 +793,6 @@ const ManageAllGym = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex items-center space-x-2">
           <label htmlFor="limit" className="text-gray-700 dark:text-gray-100">
@@ -968,9 +814,7 @@ const ManageAllGym = () => {
             ))}
           </select>
         </div>
-
         <div className="flex items-center space-x-4">
-          {/* Previous Button */}
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={Page === 1}
@@ -982,13 +826,9 @@ const ManageAllGym = () => {
           >
             Previous
           </button>
-
-          {/* Page Indicator */}
           <span className="text-gray-700 dark:text-gray-100">
             Page {Page} of {totalPages}
           </span>
-
-          {/* Next Button */}
           <button
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={Page === totalPages || totalPages === 0}

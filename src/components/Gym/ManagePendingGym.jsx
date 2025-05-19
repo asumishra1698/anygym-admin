@@ -21,7 +21,6 @@ import {
   FaVideo,
   FaImage,
 } from "react-icons/fa";
-
 import Layout from "../../reuseable/Layout";
 import Swal from "sweetalert2";
 import {
@@ -42,7 +41,6 @@ const ManagePendingGym = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redux state
   const {
     gyms: pendingGyms = [],
     loading,
@@ -55,10 +53,10 @@ const ManagePendingGym = () => {
   const { loading: uploadLoading } = useSelector(
     (state) => state.uploadGallery
   );
-
-  // Local state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAnimation, setModalAnimation] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadModalAnimation, setUploadModalAnimation] = useState(false);
   const [uploadGymId, setUploadGymId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState({
     gymFront: [],
@@ -69,13 +67,11 @@ const ManagePendingGym = () => {
   const userType =
     useSelector((state) => state.auth?.userType) ||
     localStorage.getItem("userType");
-
   const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(currentLimit);
   const [search, setSearch] = useState("");
   const { amenities = [] } = useSelector((state) => state.amenity);
 
-  // Sync local page with API page
   useEffect(() => {
     setPage(currentPage);
   }, [currentPage]);
@@ -85,10 +81,10 @@ const ManagePendingGym = () => {
     dispatch(fetchAmenitiesRequest());
   }, [dispatch, page, limit, search]);
 
-  // Close upload modal after upload completes
   useEffect(() => {
     if (uploadCompleted && isUploadModalOpen && !uploadLoading) {
-      setIsUploadModalOpen(false);
+      setUploadModalAnimation(false);
+      setTimeout(() => setIsUploadModalOpen(false), 200);
       setSelectedFiles({
         gymFront: [],
         service: [],
@@ -113,6 +109,12 @@ const ManagePendingGym = () => {
   const handleViewDetails = (gym) => {
     dispatch(fetchGymByIdRequest(gym._id));
     setIsModalOpen(true);
+    setTimeout(() => setModalAnimation(true), 10);
+  };
+
+  const closeModal = () => {
+    setModalAnimation(false);
+    setTimeout(() => setIsModalOpen(false), 200);
   };
 
   const handleApprove = (gymId) => {
@@ -159,6 +161,7 @@ const ManagePendingGym = () => {
     dispatch(fetchGymByIdRequest(gym._id));
     setUploadGymId(gym._id);
     setIsUploadModalOpen(true);
+    setTimeout(() => setUploadModalAnimation(true), 10);
     setSelectedFiles({
       gymFront: [],
       service: [],
@@ -166,9 +169,13 @@ const ManagePendingGym = () => {
     });
   };
 
+  const closeUploadModal = () => {
+    setUploadModalAnimation(false);
+    setTimeout(() => setIsUploadModalOpen(false), 200);
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-
     if (!uploadGymId) {
       alert("Gym ID is required.");
       return;
@@ -183,7 +190,6 @@ const ManagePendingGym = () => {
     }
     const formData = new FormData();
     formData.append("gym_id", uploadGymId);
-
     selectedFiles.gymFront.forEach((file) =>
       formData.append("gym_front_gallery", file)
     );
@@ -191,12 +197,7 @@ const ManagePendingGym = () => {
       formData.append("service_gallery", file)
     );
     selectedFiles.videos.forEach((file) => formData.append("gym_video", file));
-
-    dispatch(
-      uploadGalleryRequest({
-        formData,
-      })
-    );
+    dispatch(uploadGalleryRequest({ formData }));
     setUploadCompleted(true);
   };
 
@@ -218,13 +219,7 @@ const ManagePendingGym = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(
-          deleteMediaRequest({
-            gymId,
-            type,
-            fileUrl,
-          })
-        );
+        dispatch(deleteMediaRequest({ gymId, type, fileUrl }));
         Swal.fire("Deleted!", "Your media has been deleted.", "success");
       }
     });
@@ -234,7 +229,6 @@ const ManagePendingGym = () => {
     dispatch(exportGymDataRequest());
   };
 
-  // Only show gyms with these statuses
   const gymsToShow = Array.isArray(pendingGyms)
     ? pendingGyms.filter(
         (gym) =>
@@ -251,7 +245,6 @@ const ManagePendingGym = () => {
           Pending Gyms
         </h2>
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          {/* Search Input */}
           <div className="relative w-full md:w-auto">
             <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
             <input
@@ -265,7 +258,6 @@ const ManagePendingGym = () => {
               className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
             />
           </div>
-
           {userType === "AREA_MANAGER" && (
             <button
               onClick={() => navigate("/add-gym-by-area-manager")}
@@ -284,7 +276,6 @@ const ManagePendingGym = () => {
         </div>
       </div>
 
-      {/* Loading, Error, and Empty States */}
       {loading && (
         <p className="text-gray-600 dark:text-gray-300">Loading...</p>
       )}
@@ -295,14 +286,12 @@ const ManagePendingGym = () => {
         </p>
       )}
 
-      {/* Gym List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {gymsToShow.map((gym) => (
           <div
             key={gym._id}
             className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow relative"
           >
-            {/* Status Badge */}
             <span
               className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
                 gym.status === "Approved"
@@ -316,8 +305,6 @@ const ManagePendingGym = () => {
             >
               {gym.status}
             </span>
-
-            {/* Gym Image */}
             <img
               src={
                 gym.gallery &&
@@ -329,8 +316,6 @@ const ManagePendingGym = () => {
               alt="Gym Front"
               className="w-full h-40 object-cover rounded-lg mb-2"
             />
-
-            {/* Gym Details */}
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
               {gym.name}
             </h3>
@@ -340,10 +325,7 @@ const ManagePendingGym = () => {
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Address: {gym.location.address}
             </p>
-
-            {/* Action Icons */}
             <div className="absolute bottom-4 right-4 flex space-x-2">
-              {/* View Icon */}
               <button
                 onClick={() => handleViewDetails(gym)}
                 className="p-2 bg-black dark:bg-gray-700 text-white rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
@@ -351,7 +333,6 @@ const ManagePendingGym = () => {
               >
                 <EyeIcon className="w-4 h-4" />
               </button>
-
               <button
                 onClick={() => handleUploadClick(gym)}
                 className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-100 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -359,8 +340,6 @@ const ManagePendingGym = () => {
               >
                 <UploadIcon className="w-4 h-4" />
               </button>
-
-              {/* Approve Icon */}
               <button
                 onClick={() => handleApprove(gym._id)}
                 className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700"
@@ -368,8 +347,6 @@ const ManagePendingGym = () => {
               >
                 <FaCheck className="w-4 h-4" />
               </button>
-
-              {/* Reject Icon */}
               <button
                 onClick={() => handleReject(gym._id)}
                 className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
@@ -384,7 +361,12 @@ const ManagePendingGym = () => {
 
       {isModalOpen && selectedGym && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all">
+          <div
+            className={`bg-white dark:bg-gray-900 p-0 rounded-3xl shadow-2xl w-full max-w-5xl overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700 transition-all duration-200
+              ${modalAnimation ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+            `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <div className="flex justify-between items-center px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-t-3xl">
               <div className="flex items-center gap-4">
                 <FaBuilding className="text-blue-500 w-8 h-8" />
@@ -393,14 +375,13 @@ const ManagePendingGym = () => {
                 </h2>
               </div>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-red-500 transition"
                 title="Close"
               >
                 <FaTimes className="w-7 h-7" />
               </button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 py-8">
               <div className="space-y-5">
                 <div className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-200">
@@ -492,7 +473,6 @@ const ManagePendingGym = () => {
                   </span>
                 </div>
               </div>
-
               <div className="space-y-8">
                 <div>
                   <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
@@ -592,10 +572,19 @@ const ManagePendingGym = () => {
           </div>
         </div>
       )}
-      {/* Upload Modal */}
+
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div
+            className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md transition-all duration-200
+              ${
+                uploadModalAnimation
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-95"
+              }
+            `}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Upload Gym Images and Videos
             </h2>
@@ -630,7 +619,6 @@ const ManagePendingGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Service Images
@@ -661,7 +649,6 @@ const ManagePendingGym = () => {
                   ))}
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Gym Videos
@@ -692,7 +679,6 @@ const ManagePendingGym = () => {
                   ))}
                 </div>
               </div>
-
               <button
                 type="submit"
                 className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
@@ -701,7 +687,7 @@ const ManagePendingGym = () => {
               </button>
             </form>
             <button
-              onClick={() => setIsUploadModalOpen(false)}
+              onClick={closeUploadModal}
               className="mt-4 w-full bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-100 py-2 px-4 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-300"
             >
               Cancel
@@ -710,7 +696,6 @@ const ManagePendingGym = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex items-center space-x-2">
           <label htmlFor="limit" className="text-gray-700 dark:text-gray-100">
