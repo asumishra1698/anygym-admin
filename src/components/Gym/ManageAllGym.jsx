@@ -263,6 +263,8 @@ const ManageAllGym = () => {
     dispatch(exportGymDataRequest());
   };
 
+  const [areaManagerSearch, setAreaManagerSearch] = useState("");
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -280,39 +282,49 @@ const ManageAllGym = () => {
               className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-2 mr-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 w-full sm:w-auto"
             >
               <span className="mr-2 text-gray-700 dark:text-gray-100 text-sm truncate">
-                {selectedAreaManagers.length === 0
-                  ? "Filter by Area Manager"
-                  : areaManagers
-                      .filter((am) => selectedAreaManagers.includes(am._id))
-                      .map((am) => am.name)
-                      .join(", ")}
+                Filter by Area Manager
               </span>
               <SelectorIcon className="w-4 h-4 text-gray-500 dark:text-gray-300" />
             </button>
+
             {areaManagerDropdownOpen && (
               <div className="absolute left-0 mt-2 w-56 max-h-64 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20">
                 <div className="p-2">
+                  {/* Search input for area managers */}
+                  <input
+                    type="text"
+                    placeholder="Search Area Manager..."
+                    value={areaManagerSearch}
+                    onChange={(e) => setAreaManagerSearch(e.target.value)}
+                    className="w-full mb-2 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
+                  />
                   {areaManagers.length === 0 && (
                     <div className="text-gray-500 dark:text-gray-300 text-sm">
                       No Area Managers
                     </div>
                   )}
-                  {areaManagers.map((am) => (
-                    <label
-                      key={am._id}
-                      className="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedAreaManagers.includes(am._id)}
-                        onChange={() => handleAreaManagerCheckbox(am._id)}
-                        className="mr-2"
-                      />
-                      <span className="text-gray-700 dark:text-gray-100 text-sm">
-                        {am.name}
-                      </span>
-                    </label>
-                  ))}
+                  {areaManagers
+                    .filter((am) =>
+                      am.name
+                        .toLowerCase()
+                        .includes(areaManagerSearch.toLowerCase())
+                    )
+                    .map((am) => (
+                      <label
+                        key={am._id}
+                        className="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedAreaManagers.includes(am._id)}
+                          onChange={() => handleAreaManagerCheckbox(am._id)}
+                          className="mr-2"
+                        />
+                        <span className="text-gray-700 dark:text-gray-100 text-sm">
+                          {am.name}
+                        </span>
+                      </label>
+                    ))}
                 </div>
               </div>
             )}
