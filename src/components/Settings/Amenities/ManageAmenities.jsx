@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../../reuseable/Layout";
+import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { PencilIcon, TrashIcon, SearchIcon } from "@heroicons/react/solid";
 import {
@@ -39,6 +40,9 @@ const ManageAmenities = () => {
         dispatch(addAmenityRequest({ name: amenityName }));
         toast.success("Amenity added successfully!");
       }
+      setTimeout(() => {
+        dispatch(fetchAmenitiesRequest());
+      }, 0);
       setIsModalOpen(false);
       setAmenityName("");
       setIsEditMode(false);
@@ -56,10 +60,20 @@ const ManageAmenities = () => {
   };
 
   const handleDeleteClick = (amenityId) => {
-    if (window.confirm("Are you sure you want to delete this amenity?")) {
-      dispatch(deleteAmenityRequest(amenityId));
-      toast.success("Amenity deleted successfully!");
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteAmenityRequest(amenityId));
+        toast.success("Amenity deleted successfully!");
+      }
+    });
   };
 
   useEffect(() => {
