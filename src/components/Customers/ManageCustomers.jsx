@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersRequest } from "../../redux/actions/userActions";
+import {MEDIA_URL} from "../../config"
 
 const ManageUsers = () => {
   const dispatch = useDispatch();
@@ -13,11 +14,7 @@ const ManageUsers = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
 
-  const {
-  loading,
-  users = [],
-  error,
-} = useSelector((state) => state.user);
+  const { loading, users = [], error } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(fetchUsersRequest({ search: searchQuery, page, limit }));
@@ -28,10 +25,9 @@ const ManageUsers = () => {
       <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-100 mb-4 md:mb-0">
-            All users
+            All Users
           </h2>
           <div className="flex items-center space-x-4 w-full md:w-auto">
-            {/* Search Input */}
             <div className="relative w-full md:w-auto">
               <SearchIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" />
               <input
@@ -40,18 +36,11 @@ const ManageUsers = () => {
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  setPage(1); // Reset to first page on search
+                  setPage(1);
                 }}
                 className="w-full md:w-auto pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
-            {/* Add users Button (optional) */}
-            {/* <button
-              onClick={() => navigate("/add-user")}
-              className="px-3 py-3 bg-black dark:bg-gray-800 text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 dark:hover:bg-gray-700"
-            >
-              + Add users
-            </button> */}
           </div>
         </div>
         {loading && <p className="text-center">Loading...</p>}
@@ -62,52 +51,51 @@ const ManageUsers = () => {
               No users found.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">Name</th>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">Mobile</th>
-                    <th className="px-4 py-2">Gender</th>
-                    <th className="px-4 py-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user._id}>
-                      <td className="px-4 py-2">{user.name}</td>
-                      <td className="px-4 py-2">{user.email}</td>
-                      <td className="px-4 py-2">{user.mobile}</td>
-                      <td className="px-4 py-2">{user.gender}</td>
-                      <td className="px-4 py-2">{user.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+              {users.map((user) => (
+                <div
+                  key={user._id}
+                  className="relative bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center text-center"
+                >
+                  {/* Status Badge */}
+                  <span
+                    className={`absolute top-2 right-2 text-xs font-medium px-2.5 py-0.5 rounded ${
+                      user.status.toLowerCase() === "active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                  {/* Profile Picture */}
+                  <img
+                    src={
+                      user.profile ? `${MEDIA_URL}/${user.profile}` : "/default-profile.png"
+                    }
+                    alt={user.name}
+                    className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-gray-300 dark:border-gray-700"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                    {user.name}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-1">
+                    <span className="font-medium">Email:</span> {user.email}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-1">
+                    <span className="font-medium">Mobile:</span> {user.mobile}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-1">
+                    <span className="font-medium">Gender:</span> {user.gender}
+                  </p>
+                  {/* Created At */}
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
+                    Created At: {new Date(user.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
             </div>
           )}
         </div>
-        {/* Pagination */}
-        {/* <div className="flex justify-center mt-4">
-          <button
-            disabled={page <= 1}
-            onClick={() => setPage(page - 1)}
-            className="px-3 py-1 mx-1 bg-gray-300 dark:bg-gray-700 rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span className="px-3 py-1 mx-1">
-            Page {page} of {pagination.totalPages || 1}
-          </span>
-          <button
-            disabled={page >= (pagination.totalPages || 1)}
-            onClick={() => setPage(page + 1)}
-            className="px-3 py-1 mx-1 bg-gray-300 dark:bg-gray-700 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div> */}
       </div>
     </Layout>
   );
