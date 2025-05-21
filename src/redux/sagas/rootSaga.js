@@ -10,7 +10,7 @@ import watchaddGymSaga from "./addGymSaga";
 import watchUploadGallery from "./uploadSaga";
 import watchExportData from "./exportDataSaga";
 import dashboardSaga from "./dashboardSaga"; 
-
+import userSaga from "./userSaga"; 
 
 
 export default function* rootSaga() {
@@ -26,5 +26,6 @@ export default function* rootSaga() {
     watchUploadGallery(),
     watchExportData(),
     dashboardSaga(),
+    userSaga(),
   ]);
 }
