@@ -8,6 +8,9 @@ import {
 const initialState = {
   loading: false,
   users: [],
+  currentPage: 1,
+  perPage: 10,
+  totalRecords: 0,
   error: null,
 };
 
@@ -20,6 +23,9 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         users: action.payload || [],
+        currentPage: action.payload.page,
+        perPage: action.payload.per_page,
+        totalRecords: action.payload.total_records,
         error: null,
       };
     case FETCH_USERS_FAILURE:

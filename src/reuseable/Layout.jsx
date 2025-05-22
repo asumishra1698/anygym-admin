@@ -25,6 +25,7 @@ const Layout = ({ children }) => {
   const { loading: approvedGymsLoading } = useSelector(
     (state) => state.approvedGyms
   );
+  const { loading: userLoading } = useSelector((state) => state.user);
 
   const { loading: amenityLoading } = useSelector((state) => state.amenity);
 
@@ -33,7 +34,8 @@ const Layout = ({ children }) => {
     gymOwnerLoading ||
     pendingGymsLoading ||
     approvedGymsLoading ||
-    amenityLoading;
+    amenityLoading ||
+    userLoading;
 
   const handleLogout = () => {
     localStorage.clear();

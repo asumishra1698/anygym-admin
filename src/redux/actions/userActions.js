@@ -4,12 +4,16 @@ import {
   FETCH_USERS_FAILURE,
 } from "./actionTypes";
 
-export const fetchUsersRequest = (params) => ({
+export const fetchUsersRequest = ({
+  page = 1,
+  limit = 10,
+  search = "",
+} = {}) => ({
   type: FETCH_USERS_REQUEST,
-  payload: params,
+  payload: { page, limit, search },
 });
 
-export const fetchUsersSuccess = (data) => {  
+export const fetchUsersSuccess = (data) => {
   return {
     type: FETCH_USERS_SUCCESS,
     payload: data,

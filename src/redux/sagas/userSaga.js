@@ -4,10 +4,10 @@ import { fetchUsersSuccess, fetchUsersFailure } from "../actions/userActions";
 import { BASE_URL } from "../../config";
 import { getRequest } from "../../utils/apiHelper";
 
-
-function* fetchUsersSaga() {
+function* fetchUsersSaga(action) {
   try {
-    const url = `${BASE_URL}/user/get-all-users`;
+    const { page, limit, search } = action.payload;
+    const url = `${BASE_URL}/user/get-all-users/?page=${page}&limit=${limit}&search=${search}`;
     const response = yield call(getRequest, url);
     if (response.status === 200 && response.data.users) {
       yield put(fetchUsersSuccess(response.data.users));
